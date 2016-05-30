@@ -2,13 +2,16 @@ var GuillaumeScript = {
 
 	init : function( tw )
 	{
-		
+        var size = 10;
+        var step = 1;
+
+        var gridHelper = new THREE.GridHelper( size, step );
+        tw.scenes.main.add( gridHelper );
 	},
 
 	update : function ( tw , deltaTime )
 	{
 		
-
 	}
 }
 
@@ -34,11 +37,4 @@ var GuillaumeScript = {
         var line = new THREE.Line(geometry, material);
 
         me.scenes.main.add(line);  
-        
-        var size = 10;
-        var step = 1;
-
-        var gridHelper = new THREE.GridHelper( size, step );
-        me.scenes.main.add( gridHelper );
->>>>>>> e11e7ec93bb0be6d9d0199c06581cdd9900368d9
 */
