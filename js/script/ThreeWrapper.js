@@ -193,7 +193,7 @@ ThreeWrapper.prototype  = {
 			{
 				if (me.scripts[i].update)
 				{
-					me.scripts[i].update(this, clock.getDelta());
+					me.scripts[i].update(me, clock.getDelta());
 				}
 			}
 
