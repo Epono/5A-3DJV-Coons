@@ -7,7 +7,7 @@ ThreeWrapper.prototype  = {
 	VIEW_ANGLE : 45,
 	NEAR : 1,
 	FAR : 10000,
-	CAMERA_Z : 2000,
+	CAMERA_Z : 100,
 	//
 	paused : false,
 	entitiesSpeedFactor : 1,
@@ -133,6 +133,33 @@ ThreeWrapper.prototype  = {
 		pointLight.position.z = 3000;
 
 		//me.scenes.main.add(pointLight);
+        
+        var geometry = new THREE.BoxGeometry(1,1,1);
+
+        var material = new THREE.MeshBasicMaterial({color:0x00ff20});
+
+        var cube = new THREE.Mesh(geometry,material);
+
+        console.log(cube.rotation);
+
+        me.scenes.main.add(cube);  
+        
+         var geometry = new THREE.Geometry();
+        geometry.vertices.push(new THREE.Vector3(-10, 0, 0));
+        geometry.vertices.push(new THREE.Vector3(0, 10, 0));
+        geometry.vertices.push(new THREE.Vector3(10, 0, 0));
+        
+
+
+        var line = new THREE.Line(geometry, material);
+
+        me.scenes.main.add(line);  
+        
+        var size = 10;
+        var step = 1;
+
+        var gridHelper = new THREE.GridHelper( size, step );
+        me.scenes.main.add( gridHelper );
 
 		// add to the scene
 		me.scenes.main.add(pointLight);
