@@ -132,6 +132,7 @@ ThreeWrapper.prototype  = {
 		this.pointLight.position.y = 0;
 		this.pointLight.position.z = 1000;
 
+		
 		// add to the scene
 		this.scenes.main.add(this.pointLight);
 
