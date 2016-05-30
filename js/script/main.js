@@ -1,5 +1,11 @@
 $(document).ready(function()  {
 	
+	var customsScript = [
+		LucasScript,
+		ThomasScript,
+		GuillaumeScript
+	];
+
 	//*
 	var threeWrapper = new ThreeWrapper({
 		container : $('#main-canvas'),
@@ -9,10 +15,33 @@ $(document).ready(function()  {
 			width : $(document).width(),
 			height : $(document).height(),
 		},
-		orbitContainer : document.getElementById( 'main-canvas' ),
-		
+		scripts : customsScript,
+		orbitContainer : document.getElementById( 'main-canvas' )
 	});
 	//*/
+
+	/*
+	for (var i = 0; i < customsScript.length; ++i)
+	{
+		var actions = {};
+
+		if (!customsScript[i].inputs)
+		{
+			continue;
+		}
+
+		for (var k in customsScript[i].inputs)
+		{
+
+			actions[k] = function(three){
+				(function(index,key){
+
+					customsScript[index].inputs[key](customsScript[index], three);
+				})(i,k);
+			}
+		}
+	}
+	*/
 
 	var inputs = new InputsListeners({
 		context : threeWrapper,

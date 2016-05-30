@@ -7,34 +7,35 @@ ThreeWrapper.prototype  = {
 	VIEW_ANGLE : 45,
 	NEAR : 1,
 	FAR : 10000,
-	CAMERA_Z : 2000,
+	CAMERA_Z : 100,
 	//
 	paused : false,
 	entitiesSpeedFactor : 1,
 	entitiesManager : null,
 	inject : function(data){
 		var me = this;
-		me.evaluateMode = false;
 
-		me.size = data.size || {width : 800, height : 600};
-		me.imagePlaneSize = data.imagePlaneSize || {width : 800, height : 600};
-		me.paused = data.paused || false;
+		this.evaluateMode = false;
 
-		me.container = $('<div style="width:' + me.size.width + 'px;height:' + me.size.height + 'px;">');
+		this.size = data.size || {width : 800, height : 600};
+		this.imagePlaneSize = data.imagePlaneSize || {width : 800, height : 600};
+		this.paused = data.paused || false;
+
+		this.container = $('<div style="width:' + this.size.width + 'px;height:' + this.size.height + 'px;">');
 		
-		me.orbitContainer = data.orbitContainer;
+		this.orbitContainer = data.orbitContainer;
 
-		me.aspect = me.size.width / me.size.height;
-		me.scenes = {};
-		me.cameras = {};
-
+		this.aspect = this.size.width / this.size.height;
+		this.scenes = {};
+		this.cameras = {};
+		this.scripts = data.scripts;
 
 		
 		/*
 			MouseWheel listener
 		*/
 		// FireFox case
-		$(me.container).bind("DOMMouseScroll",function (e) {
+		$(this.container).bind("DOMMouseScroll",function (e) {
 			var factor = e.ctrlKey ? 50 : 5;
 
 			var fake = new THREE.Vector3(1,1,1),
@@ -67,7 +68,7 @@ ThreeWrapper.prototype  = {
 	
 
 		// Others
-		$(me.container).bind("mousewheel",function (e) {
+		$(this.container).bind("mousewheel",function (e) {
 			var factor = e.ctrlKey ? 50 : 5;
 
 			var fake = new THREE.Vector3(1,1,1),
@@ -94,48 +95,51 @@ ThreeWrapper.prototype  = {
 		   	return false;
 		});
 
-		data.container.append(me.container);
+		data.container.append(this.container);
 
-		me.initThree();
+		this.initThree();
 	},
 	initThree : function(){
-		var me = this;
 		THREE.ImageUtils.crossOrigin = "anonymous"; 
 
-		me.renderer = new THREE.WebGLRenderer();
+		this.renderer = new THREE.WebGLRenderer();
 
-		me.cameras.main = new THREE.PerspectiveCamera(
-			me.VIEW_ANGLE,
-			me.aspect,
-			me.NEAR,
-			me.FAR
+		this.cameras.main = new THREE.PerspectiveCamera(
+			this.VIEW_ANGLE,
+			this.aspect,
+			this.NEAR,
+			this.FAR
 		);
 
-		me.scenes.main = new THREE.Scene();
+		this.scenes.main = new THREE.Scene();
 
 
-		var controls = new THREE.OrbitControls( me.cameras.main , me.orbitContainer || document);
+		var controls = new THREE.OrbitControls( this.cameras.main , this.orbitContainer || document);
 
 
-		me.scenes.main.add(me.cameras.main);
+		this.scenes.main.add(this.cameras.main);
 
-		me.cameras.main.position.z = me.CAMERA_Z;
+		this.cameras.main.position.z = this.CAMERA_Z;
 
-		me.renderer.setSize(me.size.width, me.size.height);
+		this.renderer.setSize(this.size.width, this.size.height);
 
-		me.container.append(me.renderer.domElement);
+		this.container.append(this.renderer.domElement);
 
-		var pointLight = new THREE.PointLight(0xFFFFFF);
+		this.pointLight = new THREE.PointLight(0xFFFFFF);
 
 		// set its position
-		pointLight.position.x = 0;
-		pointLight.position.y = 0;
-		pointLight.position.z = 3000;
-
-		//me.scenes.main.add(pointLight);
+		this.pointLight.position.x = 0;
+		this.pointLight.position.y = 0;
+		this.pointLight.position.z = 1000;
 
 		// add to the scene
-		me.scenes.main.add(pointLight);
+		this.scenes.main.add(this.pointLight);
+
+		for (var i = 0; i < this.scripts.length; ++i)
+		{
+			this.scripts[i].init(this);
+		}
+		
 	},
 	// Doesnt work with negative range .. (as -10 -> 10).
 	getRandomPositionInRect : function(rect, z){
@@ -179,12 +183,18 @@ ThreeWrapper.prototype  = {
 		var clock = new THREE.Clock();
 		function run () {
 
-			//me.delta = clock.getDelta();
-
 			if(me.paused)
 				return;
 
 			requestAnimationFrame(run);
+			
+			for (var i = 0; i < me.scripts.length; ++i)
+			{
+				if (me.scripts[i].update)
+				{
+					me.scripts[i].update(this, clock.getDelta());
+				}
+			}
 
 			me.renderer.render(me.scenes.main, me.cameras.main);
 		}
