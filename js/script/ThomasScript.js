@@ -2,6 +2,7 @@ var ThomasScript = {
 
 	init : function( tw )
 	{
+
 		var me = this;
 
 		var size = 10;
@@ -10,6 +11,7 @@ var ThomasScript = {
         var gridHelper = new THREE.GridHelper( size, step );
         tw.scenes.main.add( gridHelper );
                 
+
         this.raycaster = new THREE.Raycaster();
         this.mouse = new THREE.Vector2();
         
@@ -42,12 +44,12 @@ var ThomasScript = {
         this.plane = plane;   
         tw.scenes.main.add( plane );
         
-        console.log(tw);
 
         tw.container[0].addEventListener( 'mousedown', 
         	function(e) {
 
         		me.onMouseDown(e, me);
+        		
         	},
         false );
 	},
@@ -97,15 +99,18 @@ var ThomasScript = {
         }
     },
 
-	curveCornerCutting : function ()
+	curveCornerCutting : function (line)
 	{
 
+		console.log(line);
 	},
 
 	inputs : {
-		'a' : function (me, tw)
+
+		's' : function(me, tw)
 		{
-			console.log(me);
+			me.curveCornerCutting(me.line);
 		}
 	}
 }
+
