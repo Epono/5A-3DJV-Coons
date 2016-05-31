@@ -56,6 +56,14 @@ var LucasScript = {
         
         /* var materialFacette = new THREE.MeshPhongMaterial( { color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading, side : THREE.DoubleSide} )*/
 
+        var directionalLight = new THREE.DirectionalLight( 0xffffff );
+        directionalLight.position.set( 0, 10, 0 );
+        tw.scenes.main.add( directionalLight );
+        
+        /*var light = new THREE.PointLight( 0xff0000, 1, 100 );
+        light.position.set( 0, 5, 0 );
+        tw.scenes.main.add( light );*/
+        
     },
 
     update: function (tw, deltaTime) {

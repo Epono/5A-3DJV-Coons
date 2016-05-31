@@ -2,6 +2,9 @@ var GuillaumeScript = {
 
 	init : function( tw )
 	{
+        //POUR AFFICHAGE
+        this.cpt = 0;
+        
         var size = 10;
         var step = 1;
 
@@ -145,6 +148,7 @@ var GuillaumeScript = {
            //tw.scenes.main.add( point );
         }  
         
+        //POINT BLEU
         for(var i = 0; i < verticesPlaneLeftRight.length; ++i) {
             var point = new THREE.Mesh( geometryPoint, materialLeftRight );
             point.position.x = verticesPlaneLeftRight[i].x;
@@ -176,13 +180,21 @@ var GuillaumeScript = {
         
         var materialBoth = new THREE.MeshBasicMaterial( {color: 0xff0000, side: THREE.DoubleSide} );
 
+        this.myVerticesBoth = [];
         for(var i = 0; i < verticesBoth.length; ++i) {
             var point = new THREE.Mesh( geometryPoint, materialBoth );
+            point.visible = false;
             point.position.x = verticesBoth[i].x;
             point.position.y = verticesBoth[i].y;
             point.position.z = verticesBoth[i].z;
+            this.myVerticesBoth.push(point);
             tw.scenes.main.add( point );
+            
+            
         }
+        
+         
+        
         
         var geometryFacetteDeCoons = new THREE.Geometry();
         
@@ -227,13 +239,15 @@ var GuillaumeScript = {
             }
         }
         
-       
-        var materialFacette = new THREE.MeshBasicMaterial( {color: 0xff0000, side: THREE.DoubleSide} );
+        //DEFINITION DU MATERIEL UTILISE PAR LES FACETTES
+        var materialFacette = new THREE.MeshPhongMaterial( { color: 0xff00ff, specular: 0x009900, shininess: 30, shading: THREE.FlatShading, side : THREE.DoubleSide} )
         
         for( var i = 0; i < triangles.length; i+=3 ){
             geometryFacetteDeCoons.faces.push( new THREE.Face3( triangles[i], triangles[i+1], triangles[i+2] ));
         }
-
+        
+        
+        //AFFICHAGE DE LA FACETTE
         tw.scenes.main.add(new THREE.Mesh( geometryFacetteDeCoons, materialFacette ));
         
         // REPERE
@@ -255,6 +269,7 @@ var GuillaumeScript = {
         cubeY.position.y = 2;
         cubeY.rotation.z = 90 * Math.PI / 180;
         tw.scenes.main.add( cubeY );
+        
     },
 
 	update : function ( tw , deltaTime )
@@ -263,11 +278,34 @@ var GuillaumeScript = {
     },
     
     inputs : {
-		'p' : function (me, tw)
+		'i' : function (me, tw)
 		{
-			this.points = [];
-            console.log(this);
+           /* this.cpt++;
+            if(cpt == 0)
+                {
+                    
+                }
+            if(cpt == 1) {*/
+                     for(var i = 0; i < me.myVerticesBoth.length; ++i)
+                 {
+                     me.myVerticesBoth[i].visible = !me.myVerticesBoth[i].visible;
+                 }
+              /*  }
+            else if(cpt == 2)
+                {
+                    
+                }
+            else if(cpt == 3)
+                {
+                    cpt = 0;
+                }*/
+            
+            //console.log(me.myVerticesBoth);
+            
+			
 		}
+        
+        
 	},
     
     onMouseDown : function(event) 
