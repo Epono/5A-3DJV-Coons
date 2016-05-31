@@ -3,7 +3,7 @@ $(document).ready(function()  {
 	var customsScript = [
 		LucasScript,
 		ThomasScript,
-		GuillaumeScript
+		//GuillaumeScript
 	];
 
 	//*
@@ -20,7 +20,7 @@ $(document).ready(function()  {
 	});
 	//*/
 
-	/*
+	
 	for (var i = 0; i < customsScript.length; ++i)
 	{
 		var actions = {};
@@ -33,15 +33,20 @@ $(document).ready(function()  {
 		for (var k in customsScript[i].inputs)
 		{
 
-			actions[k] = function(three){
-				(function(index,key){
-
+			(function(index,key){
+				actions[key] = function(three)
+				{
 					customsScript[index].inputs[key](customsScript[index], three);
-				})(i,k);
-			}
+				}
+			})(i,k);
 		}
+
+		new InputsListeners({
+		context : threeWrapper,
+		keys : actions});
+
 	}
-	*/
+	
 
 	var inputs = new InputsListeners({
 		context : threeWrapper,
