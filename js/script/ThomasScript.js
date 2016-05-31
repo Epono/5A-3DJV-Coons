@@ -2,15 +2,17 @@ var ThomasScript = {
 
 	init : function( tw )
 	{
+		console.info("** ThomasScript how to use : **");
+		console.info("left click + shift : set a point.");
+
 		var me = this;
 		
-		this.u = 0.3;
+		this.u = 0.25;
 		this.v = 0.25;
-		this.MAX_LINE_VERTICES = 200;
-		var size = 10;
-        var step = 1;
+		this.MAX_LINE_VERTICES = 10;
 
-        var gridHelper = new THREE.GridHelper( size, step );
+
+        var gridHelper = new THREE.GridHelper( 10, 1 );
         tw.scenes.main.add( gridHelper );
                 
 
@@ -18,24 +20,16 @@ var ThomasScript = {
         this.mouse = new THREE.Vector2();
         
         this.tw = tw;
-       
 
         this.lineMaterial = new THREE.LineBasicMaterial({
-            color: 0xff0000,
-            linewidth: 5
+            color: 0x0000FF,
         });
         
-        var lineGeometry = new Geometry();
-        for (i = 0; i < this.MAX_LINE_VERTICES; i++){
-            lineGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
-        }
+        this.currIndex = 0;
+       
         
-        this.line = new THREE.Line(lineGeometry, this.lineMaterial);
-        // pourquoi ?
-        this.line.geometry.dynamic = true;
+        
 
-        tw.scenes.main.add(this.line);  
-        
         var geometryPlane = new THREE.PlaneGeometry( 20, 20, 32 );
         var materialPlane = new THREE.MeshBasicMaterial( {color: 0x777777, side: THREE.DoubleSide} );
         var plane = new THREE.Mesh( geometryPlane, materialPlane );
@@ -43,14 +37,14 @@ var ThomasScript = {
         //plane.rotation.x = 2;
         plane.rotation.x = Math.PI / 2;
         plane.position.y = - 0.1;
-        this.plane = plane;   
+        this.plane = plane;
         tw.scenes.main.add( plane );
-        
 
         tw.container[0].addEventListener( 'mousedown', 
         	function(e) {
 
-        		me.onMouseDown(e, me);
+        		if (e.button === 0 && e.shiftKey)
+        			me.onMouseDown(e, me);
 
         	},
         false );
@@ -58,8 +52,59 @@ var ThomasScript = {
 
 	update : function ( tw , deltaTime )
 	{
-		
+		if(this.line)
+			this.line.geometry.verticesNeedUpdate = true;
 
+	},
+
+	upLine : function(nextCoor)
+	{
+		if (this.line)
+		{
+			this.tw.scenes.main.remove(this.line);
+
+			var nextGeometry = new Geometry(),
+			nextLineVertices = [];
+
+			for (var i = 0; i < this.line.geometry.vertices.length; ++i)
+			{
+				nextLineVertices.push(this.line.geometry.vertices[i]);
+			}
+
+			nextLineVertices.push(nextCoor);
+
+			nextGeometry.vertices = nextLineVertices;
+
+
+			this.line = new THREE.Line(nextGeometry, this.lineMaterial);
+		}
+		else
+		{
+			var nextGeometry = new Geometry();
+
+			nextGeometry.vertices.push(nextCoor);
+
+			this.line = new THREE.Line(nextGeometry, this.lineMaterial);
+		}
+
+ 		this.tw.scenes.main.add(this.line);
+         
+        
+	},
+
+	setLine : function(coors)
+	{
+		if (this.line)
+		{
+			this.tw.scenes.main.remove(this.line);
+		}
+		var nextGeometry = new Geometry();
+
+		nextGeometry.vertices = coors;
+
+		this.line = new THREE.Line(nextGeometry, this.lineMaterial);
+
+		this.tw.scenes.main.add(this.line);
 	},
 
 	onMouseDown : function(event, ctx) 
@@ -76,68 +121,72 @@ var ThomasScript = {
         // calculate objects intersecting the picking ray
         var intersects = ctx.raycaster.intersectObjects( ctx.tw.scenes.main.children );
 
+
         for ( var i = 0; i < intersects.length; i++ ) {
             if(intersects[ i ].object == ctx.plane) {
-                //console.log(intersects[ i ]);
-                
-                //this.GuillaumeScctxript.line.geometry.vertices.push(new THREE.Vector3(intersects[ i ].point.x, intersects[ i ].point.y, intersects[ i ].point.z));
-                
-                ctx.line.geometry.vertices.push(ctx.line.geometry.vertices.shift()); //shift the array
-                ctx.line.geometry.vertices[100 - 1] = new THREE.Vector3(intersects[ i ].point.x, 0, intersects[ i ].point.z); //add the point to the end of the array
-                ctx.line.geometry.verticesNeedUpdate = true;
+            	
 
-                /*
-                var geometry = new THREE.BoxGeometry(1,1,1);
-                var material = new THREE.MeshBasicMaterial({color:0x00ff20});
-                var cube = new THREE.Mesh(geometry,material);
-                cube.position.x = intersects[ i ].point.x;
-                cube.position.y = intersects[ i ].point.y;
-                cube.position.z = intersects[ i ].point.z;
-                this.GuillaumeScript.tw.scenes.main.add(cube); 
-                */
-                
+            	ctx.upLine( new THREE.Vector3(intersects[ i ].point.x, 0.1, intersects[ i ].point.z));
+              	
                 break;
             }
         }
     },
 
-	curveCornerCutting : function (line)
+	curveCornerCutting : function (geometry, close=false)
 	{ 
-		var nextLineGeometry = new Geometry();
-        for (i = 0; i < this.MAX_LINE_VERTICES; i++){
-            nextLineGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
-        }
+		var nextLineGeometry = [],
+			first = true,
+			vec0 = new THREE.Vector3(0,0,0);
 
 
-        for (var i = 0; i < line.vertices.length; ++i)
-        {
-
-        	if (
-        		0 !== i &&
-        		line.vertices[i].x !== 0 &&
-        		line.vertices[i].y !== 0 &&
-        		line.vertices[i].z !== 0
-        		)
-        	{
-        		var workingVec = new THREE.Vector3();
-        		nextLineGeometry[i]
-        	}
-        	else
-        	{
-        		break;
-        	}
-        }
 		
+
+        for (var i = 0; i + 1< geometry.vertices.length; ++i)
+        {
+    	
+			var p1 = geometry.vertices[i],
+    			p2 = geometry.vertices[i+1];
+
+    		var vecDir = p2.clone().sub(p1);
+
+    		
+    		var nextP1 = p1.clone().add(
+    				new THREE.Vector3(
+        				vecDir.x * this.u,
+        				vecDir.y * this.u,
+        				vecDir.z * this.u
+    				)
+    			),
+    			nextP2 = nextP1.clone().add(
+    				vecDir.clone().multiplyScalar(
+    					1 - (this.u + this.v)
+    				)
+    			);
+
+			nextLineGeometry.push(nextP1);
+			nextLineGeometry.push(nextP2);
+        }
+
+        if (close) {
+
+			nextLineGeometry.push(nextLineGeometry[0]);
+		}
+
+
+        return nextLineGeometry;
 	},
-
-
-
 
 	inputs : {
 
 		's' : function(me, tw)
 		{
-			me.curveCornerCutting(me.line);
+			var next = me.curveCornerCutting(me.line.geometry, true);
+
+
+			me.setLine(next);
+
+			
 		}
 	}
 }

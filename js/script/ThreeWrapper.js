@@ -7,7 +7,7 @@ ThreeWrapper.prototype  = {
 	VIEW_ANGLE : 45,
 	NEAR : 1,
 	FAR : 10000,
-	CAMERA_Z : 100,
+	CAMERA_Z : 50,
 	//
 	paused : false,
 	entitiesSpeedFactor : 1,
