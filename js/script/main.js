@@ -3,7 +3,8 @@ $(document).ready(function()  {
 	var customsScript = [
 		LucasScript,
 		ThomasScript,
-		//GuillaumeScript
+		KevinScript,
+		GuillaumeScript
 	];
 
 	//*
@@ -58,76 +59,8 @@ $(document).ready(function()  {
 			minus : function(three) {
 				three.slowDown();
 			},
-
-			'z' : function(three){
-				three.entities[three.entities.length-1].add(new THREE.Vector3(0, three.gridStep, 0));
-			},
-			's' : function(three){
-				three.entities[three.entities.length-1].add(new THREE.Vector3(0, -three.gridStep, 0));
-			},
-			'q' : function(three){
-				three.entities[three.entities.length-1].add(new THREE.Vector3(-three.gridStep, 0, 0));
-			},
-			'd' : function(three){
-				three.entities[three.entities.length-1].add(new THREE.Vector3(three.gridStep, 0, 0));
-			},
 			'p' : function(three) {
 				three.pause();
-			},
-			'n' : function(three) {
-				
-				three.initSquaredEntities({count : 1});
-				//three.initEntities({count : 10});
-
-			},
-			't' : function(three) {
-				three.executeActions(new Actions( {validate : [three.entitiesManager.last] } ) );
-			},
-			'y' : function(three) {
-				console.log(three.grid.gridToString());
-			},
-			'c' : function(three) {
-
-				for(var k in three.entitiesManager.entities){
-
-					var col = three.entitiesManager.entities[k].actions.rules.getsquare(three);
-					
-			
-
-					if(col){
-						three.entitiesManager.entities[k].setColor(col);
-					}
-	
-				}
-				
-			},
-			'm' : function(three) {
-
-				for(var k in three.entitiesManager.entities){
-					three.entitiesManager.entities[k].destination = three.getRandomPositionInImagePlane(
-						three.entitiesManager.entities[k].object.position.z
-					);
-				}
-			},
-			'r' : function (three) {
-
-				if(three.entitiesManager.last.old){
-					three.entitiesManager.last.destination = new THREE.Vector3(1,1,1);
-					
-					three.entitiesManager.last.destination.copy(three.entitiesManager.last.old);
-
-					delete three.entitiesManager.last.old;
-				}
-				else {
-					three.entitiesManager.last.old = new THREE.Vector3(1,1,1);
-					three.entitiesManager.last.old.copy(three.entitiesManager.last.getPosition());
-
-					three.entitiesManager.last.destination = new THREE.Vector3(
-					three.entitiesManager.last.getPosition().x, 
-					three.entitiesManager.last.getPosition().y,
-					0);
-				}
-			
 			}
 		}
 	});
