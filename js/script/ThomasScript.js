@@ -101,7 +101,7 @@ var ThomasScript = {
 
 	curveCornerCutting : function (line)
 	{
-
+		
 		console.log(line);
 	},
 
