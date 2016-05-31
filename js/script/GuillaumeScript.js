@@ -49,29 +49,29 @@ var GuillaumeScript = {
         
         // Devant
         var geometryCurve1 = new THREE.Geometry();
-        for(var i = 0; i <= 20; ++i) {
-            geometryCurve1.vertices.push(new THREE.Vector3(-10 + (i/20)*20, 5 + Math.random(), 10));
+        for(var i = 0; i < 21; ++i) {
+            geometryCurve1.vertices.push(new THREE.Vector3(-10 + i, 5 + Math.random(), 10));
         }
 
         //Derrière
         var geometryCurve2 = new THREE.Geometry();
-        for(var i = 0; i <= 20; ++i) {
-            geometryCurve2.vertices.push(new THREE.Vector3(-10 + (i/20)*20, 5 + Math.random(), -10));
+        for(var i = 0; i < 21; ++i) {
+            geometryCurve2.vertices.push(new THREE.Vector3(-10 + i, 5 + Math.random(), -10));
         }
         
         // Gauche
         var geometryCurve3 = new THREE.Geometry();
         geometryCurve3.vertices.push(new THREE.Vector3(geometryCurve1.vertices[0].x, geometryCurve1.vertices[0].y, geometryCurve1.vertices[0].z));
-        for(var i = 1; i <= 19; ++i) {
-            geometryCurve3.vertices.push(new THREE.Vector3(-10, 5 + Math.random(), 10 - (i/20)*20));
+        for(var i = 1; i < 20; ++i) {
+            geometryCurve3.vertices.push(new THREE.Vector3(-10, 5 + Math.random(), 10 - i));
         }
         geometryCurve3.vertices.push(new THREE.Vector3(geometryCurve2.vertices[0].x, geometryCurve2.vertices[0].y, geometryCurve2.vertices[0].z));
         
         // Droite
         var geometryCurve4 = new THREE.Geometry();
         geometryCurve4.vertices.push(new THREE.Vector3(geometryCurve1.vertices[20].x, geometryCurve1.vertices[20].y, geometryCurve1.vertices[20].z));
-        for(var i = 1; i <= 19; ++i) {
-            geometryCurve4.vertices.push(new THREE.Vector3(10, 5 + Math.random(), 10 - (i/20)*20));
+        for(var i = 1; i < 20; ++i) {
+            geometryCurve4.vertices.push(new THREE.Vector3(10, 5 + Math.random(), 10 - i));
         }
         geometryCurve4.vertices.push(new THREE.Vector3(geometryCurve2.vertices[20].x, geometryCurve2.vertices[20].y, geometryCurve2.vertices[20].z));
 
@@ -85,10 +85,10 @@ var GuillaumeScript = {
         
         // PLAN entre devant/derrière
         var verticesPlaneFrontBack = [];
-        for(var t = 0; t <= 20; ++t) {
-            var tt = t / 21;
-            for(var s = 0; s <= 20; ++s) {
-                var ss = s / 21;
+        for(var t = 0; t < 21; ++t) {
+            var tt = t / 20;
+            for(var s = 0; s < 21; ++s) {
+                var ss = s / 20;
                 var vertice = new THREE.Vector3((1 - tt) * geometryCurve1.vertices[s].x + tt * geometryCurve2.vertices[s].x, (1 - tt) * geometryCurve1.vertices[s].y + tt * geometryCurve2.vertices[s].y, (1 - tt) * geometryCurve1.vertices[s].z + tt * geometryCurve2.vertices[s].z);
                 verticesPlaneFrontBack.push(vertice);
             }
@@ -96,10 +96,10 @@ var GuillaumeScript = {
         
         // PLAN entre gauche/droite
         var verticesPlaneLeftRight = [];
-        for(var t = 0; t <= 20; ++t) {
-            var tt = t / 21;
-            for(var s = 0; s <= 20; ++s) {
-                var ss = s / 21;
+        for(var t = 0; t < 21; ++t) {
+            var tt = t / 20;
+            for(var s = 0; s < 21; ++s) {
+                var ss = s / 20;
                 var vertice = new THREE.Vector3((1 - tt) * geometryCurve3.vertices[s].x + tt * geometryCurve4.vertices[s].x, (1 - tt) * geometryCurve3.vertices[s].y + tt * geometryCurve4.vertices[s].y, (1 - tt) * geometryCurve3.vertices[s].z + tt * geometryCurve4.vertices[s].z);
                 verticesPlaneLeftRight.push(vertice);
             }
@@ -151,9 +151,9 @@ var GuillaumeScript = {
                 
         var verticesBoth = [];
         for(var t = 0; t <= 20; ++t) {
-            var tt = t / 21;
+            var tt = t / 20;
             for(var s = 0; s <= 20; ++s) {
-                var ss = s / 21;
+                var ss = s / 20;
                 
                 var bst = new THREE.Vector3(
                     geometryCurve1.vertices[0].x * (1 - ss) * (1 - tt) + geometryCurve1.vertices[20].x * ss * (1 - tt) + geometryCurve2.vertices[0].x * (1 - ss) * tt + geometryCurve2.vertices[20].x * ss * tt, 
@@ -167,7 +167,7 @@ var GuillaumeScript = {
             }
         }
         
-        var materialBoth = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+        var materialBoth = new THREE.MeshBasicMaterial( {color: 0xff0000, side: THREE.DoubleSide} );
 
         for(var i = 0; i < verticesBoth.length; ++i) {
             var point = new THREE.Mesh( geometryPoint, materialBoth );
@@ -204,6 +204,23 @@ var GuillaumeScript = {
         }
         triangles = earcut(verticesBothTemp, null, 3);
         console.log(triangles);
+        
+        triangles = [];
+        for(var i = 0; i < verticesBoth.length - 21; i++) {
+            triangles.push(i);
+            triangles.push(i + 1);
+            triangles.push(i + 21);
+            
+            triangles.push(i + 1);
+            triangles.push(i + 22);
+            triangles.push(i + 21);
+            
+            if(i % 21 == 19) {
+                i++;
+            }
+        }
+        
+        var materialBoth = new THREE.MeshBasicMaterial( {color: 0xff0000, side: THREE.DoubleSide} );
         
         for( var i = 0; i < triangles.length; i+=3 ){
             geometryFacetteDeCoons.faces.push( new THREE.Face3( triangles[i], triangles[i+1], triangles[i+2] ));
