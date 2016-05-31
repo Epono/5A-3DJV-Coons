@@ -52,6 +52,9 @@ var LucasScript = {
         tw.scenes.main.add(this.frontface_plane);
         tw.scenes.main.add(this.leftface_plane);
         tw.scenes.main.add(this.rightface_plane);
+        
+        
+        /* var materialFacette = new THREE.MeshPhongMaterial( { color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading, side : THREE.DoubleSide} )*/
 
     },
 

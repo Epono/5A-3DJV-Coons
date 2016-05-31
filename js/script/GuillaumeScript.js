@@ -220,13 +220,14 @@ var GuillaumeScript = {
             }
         }
         
-        var materialBoth = new THREE.MeshBasicMaterial( {color: 0xff0000, side: THREE.DoubleSide} );
+       
+        var materialFacette = new THREE.MeshBasicMaterial( {color: 0xff0000, side: THREE.DoubleSide} );
         
         for( var i = 0; i < triangles.length; i+=3 ){
             geometryFacetteDeCoons.faces.push( new THREE.Face3( triangles[i], triangles[i+1], triangles[i+2] ));
         }
 
-        tw.scenes.main.add(new THREE.Mesh( geometryFacetteDeCoons, materialBoth ));
+        tw.scenes.main.add(new THREE.Mesh( geometryFacetteDeCoons, materialFacette ));
         
         // REPERE
         var geometryRepere = new THREE.BoxGeometry( 4, 0.2, 0.2 );
