@@ -43,12 +43,140 @@ var GuillaumeScript = {
         
         this.points = [];
         
-       /* this.curves = [[new THREE.Vector3(-10, 0, -10), ], 
-                       [], 
-                       [], 
-                       []
-                      ];*/
+        var materialCurves = new THREE.LineBasicMaterial({
+            color: 0x007777
+        });
         
+        // Devant
+        var geometryCurve1 = new THREE.Geometry();
+        for(var i = 0; i <= 20; ++i) {
+            geometryCurve1.vertices.push(new THREE.Vector3(-10 + (i/20)*20, 5 + Math.random(), 10));
+        }
+
+        //Derrière
+        var geometryCurve2 = new THREE.Geometry();
+        for(var i = 0; i <= 20; ++i) {
+            geometryCurve2.vertices.push(new THREE.Vector3(-10 + (i/20)*20, 5 + Math.random(), -10));
+        }
+        
+        // Gauche
+        var geometryCurve3 = new THREE.Geometry();
+        geometryCurve3.vertices.push(new THREE.Vector3(geometryCurve1.vertices[0].x, geometryCurve1.vertices[0].y, geometryCurve1.vertices[0].z));
+        for(var i = 1; i <= 19; ++i) {
+            geometryCurve3.vertices.push(new THREE.Vector3(-10, 5 + Math.random(), 10 - (i/20)*20));
+        }
+        geometryCurve3.vertices.push(new THREE.Vector3(geometryCurve2.vertices[0].x, geometryCurve2.vertices[0].y, geometryCurve2.vertices[0].z));
+        
+        // Droite
+        var geometryCurve4 = new THREE.Geometry();
+        geometryCurve4.vertices.push(new THREE.Vector3(geometryCurve1.vertices[20].x, geometryCurve1.vertices[20].y, geometryCurve1.vertices[20].z));
+        for(var i = 1; i <= 19; ++i) {
+            geometryCurve4.vertices.push(new THREE.Vector3(10, 5 + Math.random(), 10 - (i/20)*20));
+        }
+        geometryCurve4.vertices.push(new THREE.Vector3(geometryCurve2.vertices[20].x, geometryCurve2.vertices[20].y, geometryCurve2.vertices[20].z));
+
+        var materialFrontBack = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+        var materialLeftRight = new THREE.MeshBasicMaterial( {color: 0x0000ff} );
+        
+        tw.scenes.main.add(new THREE.Line(geometryCurve1, materialFrontBack));  
+        tw.scenes.main.add(new THREE.Line(geometryCurve2, materialFrontBack));  
+        tw.scenes.main.add(new THREE.Line(geometryCurve3, materialLeftRight));  
+        tw.scenes.main.add(new THREE.Line(geometryCurve4, materialLeftRight));  
+        
+        // PLAN entre devant/derrière
+        var verticesPlaneFrontBack = [];
+        for(var t = 0; t <= 20; ++t) {
+            var tt = t / 21;
+            for(var s = 0; s <= 20; ++s) {
+                var ss = s / 21;
+                var vertice = new THREE.Vector3((1 - tt) * geometryCurve1.vertices[s].x + tt * geometryCurve2.vertices[s].x, (1 - tt) * geometryCurve1.vertices[s].y + tt * geometryCurve2.vertices[s].y, (1 - tt) * geometryCurve1.vertices[s].z + tt * geometryCurve2.vertices[s].z);
+                verticesPlaneFrontBack.push(vertice);
+            }
+        }
+        
+        // PLAN entre gauche/droite
+        var verticesPlaneLeftRight = [];
+        for(var t = 0; t <= 20; ++t) {
+            var tt = t / 21;
+            for(var s = 0; s <= 20; ++s) {
+                var ss = s / 21;
+                var vertice = new THREE.Vector3((1 - tt) * geometryCurve3.vertices[s].x + tt * geometryCurve4.vertices[s].x, (1 - tt) * geometryCurve3.vertices[s].y + tt * geometryCurve4.vertices[s].y, (1 - tt) * geometryCurve3.vertices[s].z + tt * geometryCurve4.vertices[s].z);
+                verticesPlaneLeftRight.push(vertice);
+            }
+        }
+        /*
+        var geometryMeshCurve1Curve2 = new THREE.Geometry();
+        var materialPlaneCurves = new THREE.MeshBasicMaterial();
+        
+        var holes = [];
+        var triangles, mesh;
+
+
+        geometryMeshCurve1Curve2.vertices = verticesPlaneFrontBack;
+
+        triangles = THREE.Shape.Utils.triangulateShape ( verticesPlaneFrontBack, holes );
+        console.log(triangles);
+          
+        for( var i = 0; i < triangles.length; i++ ){
+            geometryMeshCurve1Curve2.faces.push( new THREE.Face3( triangles[i][0], triangles[i][1], triangles[i][2] ));
+        }   
+        
+        triangles = earcut(verticesPlaneFrontBack, holes, 3);
+        console.log(triangles);
+        
+        for( var i = 0; i < triangles.length; i+=3 ){
+            geometryMeshCurve1Curve2.faces.push( new THREE.Face3( triangles[i], triangles[i+1], triangles[i+2] ));
+        }
+        
+        // tw.scenes.main.add(new THREE.Mesh( geometryMeshCurve1Curve2, materialPlaneCurves ));
+        */
+        
+        var geometryPoint = new THREE.SphereGeometry( 0.1, 0.1, 0.1 );
+        
+        for(var i = 0; i < verticesPlaneFrontBack.length; ++i) {
+            var point = new THREE.Mesh( geometryPoint, materialFrontBack );
+            point.position.x = verticesPlaneFrontBack[i].x;
+            point.position.y = verticesPlaneFrontBack[i].y;
+            point.position.z = verticesPlaneFrontBack[i].z;
+            //tw.scenes.main.add( point );
+        }  
+        
+        for(var i = 0; i < verticesPlaneLeftRight.length; ++i) {
+            var point = new THREE.Mesh( geometryPoint, materialLeftRight );
+            point.position.x = verticesPlaneLeftRight[i].x;
+            point.position.y = verticesPlaneLeftRight[i].y;
+            point.position.z = verticesPlaneLeftRight[i].z;
+            //tw.scenes.main.add( point );
+        }
+                
+        var verticesBoth = [];
+        for(var t = 0; t <= 20; ++t) {
+            var tt = t / 21;
+            for(var s = 0; s <= 20; ++s) {
+                var ss = s / 21;
+                
+                var bst = new THREE.Vector3(geometryCurve1.vertices[0].x * (1 - ss) * (1 - tt) + geometryCurve1.vertices[20].x * ss * (1 - tt) + geometryCurve2.vertices[0].x * (1 - ss) * tt + geometryCurve2.vertices[20].x * ss * tt, geometryCurve1.vertices[0].y * (1 - ss) * (1 - tt) + geometryCurve1.vertices[20].y * ss * (1 - tt) + geometryCurve2.vertices[0].y * (1 - ss) * tt + geometryCurve2.vertices[20].y * ss * tt, geometryCurve1.vertices[0].z * (1 - ss) * (1 - tt) + geometryCurve1.vertices[20].z * ss * (1 - tt) + geometryCurve2.vertices[0].z * (1 - ss) * tt + geometryCurve2.vertices[20].z * ss * tt);
+                
+                var vertice = new THREE.Vector3(verticesPlaneFrontBack[s + 21 * t].x + verticesPlaneLeftRight[s + 21 * t].x - bst.x, verticesPlaneFrontBack[s + 21 * t].y + verticesPlaneLeftRight[s + 21 * t].y - bst.y, verticesPlaneFrontBack[s + 21 * t].z + verticesPlaneLeftRight[s + 21 * t].z - bst.z);
+                
+                //console.log(bst);
+                //console.log(vertice);
+                verticesBoth.push(vertice);
+            }
+        }
+        
+        var materialBoth = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+
+        for(var i = 0; i < verticesBoth.length; ++i) {
+            var point = new THREE.Mesh( geometryPoint, materialBoth );
+            point.position.x = verticesBoth[i].x;
+            point.position.y = verticesBoth[i].y;
+            point.position.z = verticesBoth[i].z;
+            tw.scenes.main.add( point );
+        }
+        
+        
+        // REPERE
         var geometryRepere = new THREE.BoxGeometry( 4, 0.2, 0.2 );
         var materialRed = new THREE.MeshBasicMaterial( {color: 0xff0000} );
         var materialGreen = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
