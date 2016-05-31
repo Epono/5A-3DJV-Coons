@@ -42,6 +42,31 @@ var GuillaumeScript = {
         tw.container[0].addEventListener( 'mousedown', GuillaumeScript.onMouseDown, false );
         
         this.points = [];
+        
+       /* this.curves = [[new THREE.Vector3(-10, 0, -10), ], 
+                       [], 
+                       [], 
+                       []
+                      ];*/
+        
+        var geometryRepere = new THREE.BoxGeometry( 4, 0.2, 0.2 );
+        var materialRed = new THREE.MeshBasicMaterial( {color: 0xff0000} );
+        var materialGreen = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+        var materialBlue = new THREE.MeshBasicMaterial( {color: 0x0000ff} );
+        
+        var cubeX = new THREE.Mesh( geometryRepere, materialRed );
+        cubeX.position.x = 2;
+        tw.scenes.main.add( cubeX );
+               
+        var cubeZ = new THREE.Mesh( geometryRepere, materialGreen );
+        cubeZ.position.z = 2;
+        cubeZ.rotation.y = 90 * Math.PI / 180;
+        tw.scenes.main.add( cubeZ );
+                
+        var cubeY = new THREE.Mesh( geometryRepere, materialBlue );
+        cubeY.position.y = 2;
+        cubeY.rotation.z = 90 * Math.PI / 180;
+        tw.scenes.main.add( cubeY );
     },
 
 	update : function ( tw , deltaTime )
