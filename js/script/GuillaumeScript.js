@@ -39,14 +39,23 @@ var GuillaumeScript = {
         this.plane = plane;   
         tw.scenes.main.add( plane );
         
-        console.log(tw);
         tw.container[0].addEventListener( 'mousedown', GuillaumeScript.onMouseDown, false );
+        
+        this.points = [];
     },
 
 	update : function ( tw , deltaTime )
 	{
 
     },
+    
+    inputs : {
+		'p' : function (me, tw)
+		{
+			this.points = [];
+            console.log(this);
+		}
+	},
     
     onMouseDown : function(event) 
     {
@@ -81,6 +90,9 @@ var GuillaumeScript = {
                 cube.position.z = intersects[ i ].point.z;
                 this.GuillaumeScript.tw.scenes.main.add(cube); 
                 */
+                
+                GuillaumeScript.points.push(new THREE.Vector3(intersects[ i ].point.x, 0, intersects[ i ].point.z));
+                console.log(GuillaumeScript.points);
                 
                 break;
             }
