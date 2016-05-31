@@ -13,50 +13,90 @@ var GuillaumeScript = {
         plane.rotation.x = Math.PI / 2;
         //plane.position.y = - 0.1;
         tw.scenes.main.add(plane);
-        
-        tw.container[0].addEventListener( 'mousedown', GuillaumeScript.onMouseDown, false );
-        
-        this.points = [];
-        
-        var materialCurves = new THREE.LineBasicMaterial({
-            color: 0x007777
-        });
+                
+        var numberOfPoints = 21;
         
         // Devant
         var geometryCurve1 = new THREE.Geometry();
-        for(var i = 0; i < 21; ++i) {
+        for(var i = 0; i < numberOfPoints; ++i) {
             geometryCurve1.vertices.push(new THREE.Vector3(-10 + i, 5 + Math.random(), 10));
         }
 
         //Derrière
         var geometryCurve2 = new THREE.Geometry();
-        for(var i = 0; i < 21; ++i) {
+        for(var i = 0; i < numberOfPoints; ++i) {
             geometryCurve2.vertices.push(new THREE.Vector3(-10 + i, 5 + Math.random(), -10));
         }
         
         // Gauche
         var geometryCurve3 = new THREE.Geometry();
         geometryCurve3.vertices.push(new THREE.Vector3(geometryCurve1.vertices[0].x, geometryCurve1.vertices[0].y, geometryCurve1.vertices[0].z));
-        for(var i = 1; i < 20; ++i) {
+        for(var i = 1; i < numberOfPoints - 1; ++i) {
             geometryCurve3.vertices.push(new THREE.Vector3(-10, 5 + Math.random(), 10 - i));
         }
         geometryCurve3.vertices.push(new THREE.Vector3(geometryCurve2.vertices[0].x, geometryCurve2.vertices[0].y, geometryCurve2.vertices[0].z));
         
         // Droite
         var geometryCurve4 = new THREE.Geometry();
-        geometryCurve4.vertices.push(new THREE.Vector3(geometryCurve1.vertices[20].x, geometryCurve1.vertices[20].y, geometryCurve1.vertices[20].z));
-        for(var i = 1; i < 20; ++i) {
+        geometryCurve4.vertices.push(new THREE.Vector3(geometryCurve1.vertices[numberOfPoints - 1].x, geometryCurve1.vertices[numberOfPoints - 1].y, geometryCurve1.vertices[numberOfPoints - 1].z));
+        for(var i = 1; i < numberOfPoints - 1; ++i) {
             geometryCurve4.vertices.push(new THREE.Vector3(10, 5 + Math.random(), 10 - i));
         }
-        geometryCurve4.vertices.push(new THREE.Vector3(geometryCurve2.vertices[20].x, geometryCurve2.vertices[20].y, geometryCurve2.vertices[20].z));
+        geometryCurve4.vertices.push(new THREE.Vector3(geometryCurve2.vertices[numberOfPoints - 1].x, geometryCurve2.vertices[numberOfPoints - 1].y, geometryCurve2.vertices[numberOfPoints - 1].z));
 
         var materialFrontBack = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
         var materialLeftRight = new THREE.MeshBasicMaterial( {color: 0x0000ff} );
+
+        var verticesCurve1 = ThomasScript.curveCornerCutting(geometryCurve1, false);
+        var verticesCurve2 = ThomasScript.curveCornerCutting(geometryCurve2, false);
+        var verticesCurve3 = ThomasScript.curveCornerCutting(geometryCurve3, false);
+        var verticesCurve4 = ThomasScript.curveCornerCutting(geometryCurve4, false);
+                
+        var firstGeometryCurve1 = geometryCurve1.vertices[0];
+        var lastGeometryCurve1 = geometryCurve1.vertices[geometryCurve1.vertices.length - 1];
+        
+        var firstGeometryCurve2 = geometryCurve2.vertices[0];
+        var lastGeometryCurve2 = geometryCurve2.vertices[geometryCurve2.vertices.length - 1];
+        
+        var firstGeometryCurve3 = geometryCurve3.vertices[0];
+        var lastGeometryCurve3 = geometryCurve3.vertices[geometryCurve3.vertices.length - 1];
+        
+        var firstGeometryCurve4 = geometryCurve4.vertices[0];
+        var lastGeometryCurve4 = geometryCurve4.vertices[geometryCurve4.vertices.length - 1];
+        
+        geometryCurve1 = new THREE.Geometry();
+        geometryCurve2 = new THREE.Geometry();
+        geometryCurve3 = new THREE.Geometry();
+        geometryCurve4 = new THREE.Geometry();
+        
+        geometryCurve1.vertices.push(firstGeometryCurve1);
+        for(var i = 0; i < verticesCurve1.length; ++i) {
+            geometryCurve1.vertices.push(verticesCurve1[i]);
+        }
+        geometryCurve1.vertices.push(lastGeometryCurve1);
+        
+        geometryCurve2.vertices.push(firstGeometryCurve2);
+        for(var i = 0; i < verticesCurve2.length; ++i) {
+            geometryCurve2.vertices.push(verticesCurve2[i]);
+        }
+        geometryCurve2.vertices.push(lastGeometryCurve2);
+                
+        geometryCurve3.vertices.push(firstGeometryCurve3);
+        for(var i = 0; i < verticesCurve3.length; ++i) {
+            geometryCurve3.vertices.push(verticesCurve3[i]);
+        }
+        geometryCurve3.vertices.push(lastGeometryCurve3);
+        
+        geometryCurve4.vertices.push(firstGeometryCurve4);
+        for(var i = 0; i < verticesCurve4.length; ++i) {
+            geometryCurve4.vertices.push(verticesCurve4[i]);
+        }
+        geometryCurve4.vertices.push(lastGeometryCurve4);
         
         tw.scenes.main.add(new THREE.Line(geometryCurve1, materialFrontBack));  
-        tw.scenes.main.add(new THREE.Line(geometryCurve2, materialFrontBack));  
-        tw.scenes.main.add(new THREE.Line(geometryCurve3, materialLeftRight));  
-        tw.scenes.main.add(new THREE.Line(geometryCurve4, materialLeftRight));  
+        tw.scenes.main.add(new THREE.Line(geometryCurve2, materialFrontBack));
+        tw.scenes.main.add(new THREE.Line(geometryCurve3, materialLeftRight));
+        tw.scenes.main.add(new THREE.Line(geometryCurve4, materialLeftRight));
         
         // PLAN entre devant/derrière
         var verticesPlaneFrontBack = this.computeSurfaceReglee(geometryCurve1.vertices, geometryCurve2.vertices);
@@ -108,7 +148,7 @@ var GuillaumeScript = {
         var geometryFacetteDeCoons = new THREE.Geometry();
         geometryFacetteDeCoons.vertices = verticesBoth;
         
-        var triangles = this.computeTriangles(verticesBoth, 21);
+        var triangles = this.computeTriangles(verticesBoth, numberOfPoints * 2);
         
         // DEFINITION DU MATERIEL UTILISE PAR LES FACETTES
         var materialFacette = new THREE.MeshPhongMaterial( { color: 0xff00ff, specular: 0x009900, shininess: 30, shading: THREE.FlatShading, side : THREE.DoubleSide} )

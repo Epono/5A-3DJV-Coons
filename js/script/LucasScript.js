@@ -64,6 +64,9 @@ var LucasScript = {
         light.position.set( 0, 5, 0 );
         tw.scenes.main.add( light );*/
         
+        tw.cameras.main.position.z = 25;
+        tw.cameras.main.position.y = 9;
+        tw.cameras.main.rotation.x = -20 * Math.PI / 180;
     },
 
     update: function (tw, deltaTime) {
@@ -92,7 +95,7 @@ var LucasScript = {
         '2': function (me, tw) {
             tw.changeCamera(me.myCamera);
             me.myCamera.position.x = 0;
-            me.myCamera.position.y = 10;
+            me.myCamera.position.y = 6;
             me.myCamera.position.z = 10;
 
 
@@ -107,7 +110,7 @@ var LucasScript = {
         '8': function (me, tw) {
             tw.changeCamera(me.myCamera);
             me.myCamera.position.x = 0;
-            me.myCamera.position.y = 10;
+            me.myCamera.position.y = 6;
             me.myCamera.position.z = -10;
             //NOT GOOD
 
@@ -121,7 +124,7 @@ var LucasScript = {
         '4': function (me, tw) {
             tw.changeCamera(me.myCamera);
             me.myCamera.position.x = -10;
-            me.myCamera.position.y = 10;
+            me.myCamera.position.y = 6;
             me.myCamera.position.z = 0;
 
             me.myCamera.rotation.x = 0 * Math.PI / 180;
@@ -134,7 +137,7 @@ var LucasScript = {
         '6': function (me, tw) {
             tw.changeCamera(me.myCamera);
             me.myCamera.position.x = 10;
-            me.myCamera.position.y = 10;
+            me.myCamera.position.y = 6;
             me.myCamera.position.z = 0;
 
             me.myCamera.rotation.x = 0 * Math.PI / 180;
