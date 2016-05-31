@@ -89,7 +89,9 @@ var GuillaumeScript = {
             var tt = t / 20;
             for(var s = 0; s < 21; ++s) {
                 var ss = s / 20;
-                var vertice = new THREE.Vector3((1 - tt) * geometryCurve1.vertices[s].x + tt * geometryCurve2.vertices[s].x, (1 - tt) * geometryCurve1.vertices[s].y + tt * geometryCurve2.vertices[s].y, (1 - tt) * geometryCurve1.vertices[s].z + tt * geometryCurve2.vertices[s].z);
+                var vertice = new THREE.Vector3((1 - tt) * geometryCurve1.vertices[s].x + tt * geometryCurve2.vertices[s].x,
+                                                (1 - tt) * geometryCurve1.vertices[s].y + tt * geometryCurve2.vertices[s].y, 
+                                                (1 - tt) * geometryCurve1.vertices[s].z + tt * geometryCurve2.vertices[s].z);
                 verticesPlaneFrontBack.push(vertice);
             }
         }
@@ -100,7 +102,9 @@ var GuillaumeScript = {
             var tt = t / 20;
             for(var s = 0; s < 21; ++s) {
                 var ss = s / 20;
-                var vertice = new THREE.Vector3((1 - tt) * geometryCurve3.vertices[s].x + tt * geometryCurve4.vertices[s].x, (1 - tt) * geometryCurve3.vertices[s].y + tt * geometryCurve4.vertices[s].y, (1 - tt) * geometryCurve3.vertices[s].z + tt * geometryCurve4.vertices[s].z);
+                var vertice = new THREE.Vector3((1 - tt) * geometryCurve3.vertices[s].x + tt * geometryCurve4.vertices[s].x,
+                                                (1 - tt) * geometryCurve3.vertices[s].y + tt * geometryCurve4.vertices[s].y, 
+                                                (1 - tt) * geometryCurve3.vertices[s].z + tt * geometryCurve4.vertices[s].z);
                 verticesPlaneLeftRight.push(vertice);
             }
         }
@@ -138,7 +142,7 @@ var GuillaumeScript = {
             point.position.x = verticesPlaneFrontBack[i].x;
             point.position.y = verticesPlaneFrontBack[i].y;
             point.position.z = verticesPlaneFrontBack[i].z;
-            //tw.scenes.main.add( point );
+           //tw.scenes.main.add( point );
         }  
         
         for(var i = 0; i < verticesPlaneLeftRight.length; ++i) {
@@ -150,19 +154,22 @@ var GuillaumeScript = {
         }
                 
         var verticesBoth = [];
-        for(var t = 0; t <= 20; ++t) {
+        for(var t = 0; t < 21; ++t) {
             var tt = t / 20;
-            for(var s = 0; s <= 20; ++s) {
+            for(var s = 0; s < 21; ++s) {
                 var ss = s / 20;
                 
                 var bst = new THREE.Vector3(
                     geometryCurve1.vertices[0].x * (1 - ss) * (1 - tt) + geometryCurve1.vertices[20].x * ss * (1 - tt) + geometryCurve2.vertices[0].x * (1 - ss) * tt + geometryCurve2.vertices[20].x * ss * tt, 
                     geometryCurve1.vertices[0].y * (1 - ss) * (1 - tt) + geometryCurve1.vertices[20].y * ss * (1 - tt) + geometryCurve2.vertices[0].y * (1 - ss) * tt + geometryCurve2.vertices[20].y * ss * tt, geometryCurve1.vertices[0].z * (1 - ss) * (1 - tt) + geometryCurve1.vertices[20].z * ss * (1 - tt) + geometryCurve2.vertices[0].z * (1 - ss) * tt + geometryCurve2.vertices[20].z * ss * tt);
                 
-                var vertice = new THREE.Vector3(verticesPlaneFrontBack[s + 21 * t].x + verticesPlaneLeftRight[s + 21 * t].x - bst.x, verticesPlaneFrontBack[s + 21 * t].y + verticesPlaneLeftRight[s + 21 * t].y - bst.y, verticesPlaneFrontBack[s + 21 * t].z + verticesPlaneLeftRight[s + 21 * t].z - bst.z);
+                var vertice = new THREE.Vector3(verticesPlaneFrontBack[s + 21 * t].x + verticesPlaneLeftRight[s * 21 + t].x - bst.x, 
+                                                verticesPlaneFrontBack[s + 21 * t].y + verticesPlaneLeftRight[s * 21 + t].y - bst.y, 
+                                                verticesPlaneFrontBack[s + 21 * t].z + verticesPlaneLeftRight[s * 21 + t].z - bst.z);
                 
                 //console.log(bst);
-                //console.log(vertice);
+                //console.log(verticesPlaneFrontBack[s + 21 * t]);
+                //console.log(verticesPlaneLeftRight[s + 21 * t]);
                 verticesBoth.push(vertice);
             }
         }
