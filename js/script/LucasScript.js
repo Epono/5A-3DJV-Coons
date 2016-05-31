@@ -3,7 +3,7 @@ var LucasScript = {
 	init : function( tw )
 	{
        
-        
+        this.myCamera = new THREE.OrthographicCamera(-20, 20, 20/tw.aspect, -20/tw.aspect, 0, 1000 );
         
 	},
 
@@ -18,11 +18,14 @@ var LucasScript = {
     
     '5': function(me,tw)
     {
-        tw.cameras.main = new THREE.OrthographicCamera(-20, 20, 20/tw.aspect, -20/tw.aspect, 0, 1000 );
-        tw.cameras.main.position.x = 0;
-        tw.cameras.main.position.y = 10;
-        tw.cameras.main.position.z = 0;
-        tw.cameras.main.rotation.x = -90 * Math.PI / 180;
+        tw.changeCamera(me.myCamera); 
+       console.log("t");
+        me.myCamera.position.x = 0;
+        me.myCamera.position.y = 10;
+        me.myCamera.position.z = 0;
+        
+        me.myCamera.rotation.x = -90 * Math.PI / 180;
+        me.myCamera.rotation.y = 0 * Math.PI / 180;
         
         
     },
@@ -31,11 +34,15 @@ var LucasScript = {
     //Camera front face
     '2' : function(me,tw)
     {
-        tw.cameras.main = new THREE.OrthographicCamera(-20, 20, 20/tw.aspect, -20/tw.aspect, 0, 1000 );
-        tw.cameras.main.position.x = 0;
-        tw.cameras.main.position.y = 0;
-        tw.cameras.main.position.z = 10;
-      
+        tw.changeCamera(me.myCamera); 
+        me.myCamera.position.x = 0;
+        me.myCamera.position.y = 0;
+        me.myCamera.position.z = 10;
+        
+        
+        me.myCamera.rotation.x = 0 * Math.PI / 180;
+        me.myCamera.rotation.y = 0 * Math.PI / 180;
+        
         
     },
         
@@ -43,12 +50,14 @@ var LucasScript = {
     //Camera back face
     '8' : function(me,tw)
     {
-       tw.cameras.main = new THREE.OrthographicCamera(-20, 20, 20/tw.aspect, -20/tw.aspect, 0, 1000 );
-        tw.cameras.main.position.x = 0;
-        tw.cameras.main.position.y = 0;
-        tw.cameras.main.position.z = -10;
+        tw.changeCamera(me.myCamera); 
+        me.myCamera.position.x = 0;
+        me.myCamera.position.y = 0;
+        me.myCamera.position.z = -10;
         //NOT GOOD
-        tw.cameras.main.rotation.y = 180 * Math.PI / 180;
+        
+        me.myCamera.rotation.x = -0 * Math.PI / 180;
+        me.myCamera.rotation.y = 180 * Math.PI / 180;
         
     },
         
@@ -56,11 +65,13 @@ var LucasScript = {
     //Camera left face
     '4' : function(me,tw)
     {
-       tw.cameras.main = new THREE.OrthographicCamera(-20, 20, 20/tw.aspect, -20/tw.aspect, 0, 1000 );
-        tw.cameras.main.position.x = -10;
-        tw.cameras.main.position.y = 0;
-        tw.cameras.main.position.z = 0;
-        tw.cameras.main.rotation.y = -90 * Math.PI / 180;
+        tw.changeCamera(me.myCamera); 
+        me.myCamera.position.x = -10;
+        me.myCamera.position.y = 0;
+        me.myCamera.position.z = 0;
+        
+        me.myCamera.rotation.x = 0 * Math.PI / 180;
+        me.myCamera.rotation.y = -90 * Math.PI / 180;
         
     },
         
@@ -68,26 +79,21 @@ var LucasScript = {
         //Camera right face
     '6' : function(me,tw)
     {
-       tw.cameras.main = new THREE.OrthographicCamera(-20, 20, 20/tw.aspect, -20/tw.aspect, 0, 1000 );
-        tw.cameras.main.position.x = 10;
-        tw.cameras.main.position.y = 0;
-        tw.cameras.main.position.z = 0;
-        tw.cameras.main.rotation.y = 90 * Math.PI / 180;
+       tw.changeCamera(me.myCamera); 
+        me.myCamera.position.x = 10;
+       me.myCamera.position.y = 0;
+        me.myCamera.position.z = 0;
+       
+        me.myCamera.rotation.x = 0 * Math.PI / 180;
+        me.myCamera.rotation.y = 90 * Math.PI / 180;
         
     },
     
         //Perspective camera
     'c' : function(me,tw)
     {
-            tw.cameras.main = new THREE.PerspectiveCamera(
-			tw.VIEW_ANGLE,
-			tw.aspect,
-			tw.NEAR,
-			tw.FAR
-		);
-            
-            
-        tw.cameras.main.position.z = tw.CAMERA_Z;
+        tw.changeCamera(tw.cameras.main);
+           
     },
         
         
