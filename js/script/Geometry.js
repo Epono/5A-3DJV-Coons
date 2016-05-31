@@ -4,9 +4,4 @@ class Geometry extends THREE.Geometry
 	{
 		super();
 	}
-
-	super()
-	{
-		return "super";
-	}
 }
