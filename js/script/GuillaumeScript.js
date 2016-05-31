@@ -155,7 +155,9 @@ var GuillaumeScript = {
             for(var s = 0; s <= 20; ++s) {
                 var ss = s / 21;
                 
-                var bst = new THREE.Vector3(geometryCurve1.vertices[0].x * (1 - ss) * (1 - tt) + geometryCurve1.vertices[20].x * ss * (1 - tt) + geometryCurve2.vertices[0].x * (1 - ss) * tt + geometryCurve2.vertices[20].x * ss * tt, geometryCurve1.vertices[0].y * (1 - ss) * (1 - tt) + geometryCurve1.vertices[20].y * ss * (1 - tt) + geometryCurve2.vertices[0].y * (1 - ss) * tt + geometryCurve2.vertices[20].y * ss * tt, geometryCurve1.vertices[0].z * (1 - ss) * (1 - tt) + geometryCurve1.vertices[20].z * ss * (1 - tt) + geometryCurve2.vertices[0].z * (1 - ss) * tt + geometryCurve2.vertices[20].z * ss * tt);
+                var bst = new THREE.Vector3(
+                    geometryCurve1.vertices[0].x * (1 - ss) * (1 - tt) + geometryCurve1.vertices[20].x * ss * (1 - tt) + geometryCurve2.vertices[0].x * (1 - ss) * tt + geometryCurve2.vertices[20].x * ss * tt, 
+                    geometryCurve1.vertices[0].y * (1 - ss) * (1 - tt) + geometryCurve1.vertices[20].y * ss * (1 - tt) + geometryCurve2.vertices[0].y * (1 - ss) * tt + geometryCurve2.vertices[20].y * ss * tt, geometryCurve1.vertices[0].z * (1 - ss) * (1 - tt) + geometryCurve1.vertices[20].z * ss * (1 - tt) + geometryCurve2.vertices[0].z * (1 - ss) * tt + geometryCurve2.vertices[20].z * ss * tt);
                 
                 var vertice = new THREE.Vector3(verticesPlaneFrontBack[s + 21 * t].x + verticesPlaneLeftRight[s + 21 * t].x - bst.x, verticesPlaneFrontBack[s + 21 * t].y + verticesPlaneLeftRight[s + 21 * t].y - bst.y, verticesPlaneFrontBack[s + 21 * t].z + verticesPlaneLeftRight[s + 21 * t].z - bst.z);
                 
@@ -175,6 +177,39 @@ var GuillaumeScript = {
             tw.scenes.main.add( point );
         }
         
+        var geometryFacetteDeCoons = new THREE.Geometry();
+        
+        var holes = [];
+        var triangles, mesh;
+
+
+        geometryFacetteDeCoons.vertices = verticesBoth;
+        
+        console.log(verticesBoth);
+
+        /*
+        triangles = THREE.Shape.Utils.triangulateShape ( verticesBoth, holes );
+        console.log(triangles);
+         
+        for( var i = 0; i < triangles.length; i++ ){
+            geometryFacetteDeCoons.faces.push( new THREE.Face3( triangles[i][0], triangles[i][1], triangles[i][2] ));
+        }   
+        */
+        
+        var verticesBothTemp = [];
+        for(var i = 0; i < verticesBoth.length; ++i) {
+            verticesBothTemp.push(verticesBoth[i].x);
+            verticesBothTemp.push(verticesBoth[i].y);
+            verticesBothTemp.push(verticesBoth[i].z);
+        }
+        triangles = earcut(verticesBothTemp, null, 3);
+        console.log(triangles);
+        
+        for( var i = 0; i < triangles.length; i+=3 ){
+            geometryFacetteDeCoons.faces.push( new THREE.Face3( triangles[i], triangles[i+1], triangles[i+2] ));
+        }
+
+        tw.scenes.main.add(new THREE.Mesh( geometryFacetteDeCoons, materialBoth ));
         
         // REPERE
         var geometryRepere = new THREE.BoxGeometry( 4, 0.2, 0.2 );
