@@ -140,6 +140,9 @@ ThreeWrapper.prototype  = {
 		{
 			this.scripts[i].init(this);
 		}
+
+		this.cameras.CURRENT = this.cameras.main;
+		this.scenes.CURRENT = this.scenes.main;
 		
 	},
 	// Doesnt work with negative range .. (as -10 -> 10).
@@ -149,6 +152,9 @@ ThreeWrapper.prototype  = {
 			Math.floor(Math.random() * (rect.bottomRight.y - rect.topLeft.y + 1)) + rect.bottomRight.y,
 			z
 		);
+	},
+	changeCamera : function(camera){
+		this.cameras.CURRENT = camera;
 	},
 	// TO USE
 	changeFramerate : function(time){
@@ -197,7 +203,7 @@ ThreeWrapper.prototype  = {
 				}
 			}
 
-			me.renderer.render(me.scenes.main, me.cameras.main);
+			me.renderer.render(me.scenes.CURRENT, me.cameras.CURRENT);
 		}
 
 		run();
