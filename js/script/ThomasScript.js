@@ -2,9 +2,11 @@ var ThomasScript = {
 
 	init : function( tw )
 	{
-
 		var me = this;
-
+		
+		this.u = 0.3;
+		this.v = 0.25;
+		this.MAX_LINE_VERTICES = 200;
 		var size = 10;
         var step = 1;
 
@@ -16,19 +18,19 @@ var ThomasScript = {
         this.mouse = new THREE.Vector2();
         
         this.tw = tw;
-        
-        var geometry = new THREE.Geometry();
-        var material = new THREE.LineBasicMaterial({
+       
+
+        this.lineMaterial = new THREE.LineBasicMaterial({
             color: 0xff0000,
             linewidth: 5
         });
         
-        // 100 = nombre max de points
-        for (i = 0; i < 100; i++){
-            geometry.vertices.push(new THREE.Vector3(0, 0, 0));
+        var lineGeometry = new Geometry();
+        for (i = 0; i < this.MAX_LINE_VERTICES; i++){
+            lineGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
         }
         
-        this.line = new THREE.Line(geometry, material);
+        this.line = new THREE.Line(lineGeometry, this.lineMaterial);
         // pourquoi ?
         this.line.geometry.dynamic = true;
 
@@ -49,7 +51,7 @@ var ThomasScript = {
         	function(e) {
 
         		me.onMouseDown(e, me);
-        		
+
         	},
         false );
 	},
@@ -100,10 +102,36 @@ var ThomasScript = {
     },
 
 	curveCornerCutting : function (line)
-	{
+	{ 
+		var nextLineGeometry = new Geometry();
+        for (i = 0; i < this.MAX_LINE_VERTICES; i++){
+            nextLineGeometry.vertices.push(new THREE.Vector3(0, 0, 0));
+        }
+
+
+        for (var i = 0; i < line.vertices.length; ++i)
+        {
+
+        	if (
+        		0 !== i &&
+        		line.vertices[i].x !== 0 &&
+        		line.vertices[i].y !== 0 &&
+        		line.vertices[i].z !== 0
+        		)
+        	{
+        		var workingVec = new THREE.Vector3();
+        		nextLineGeometry[i]
+        	}
+        	else
+        	{
+        		break;
+        	}
+        }
 		
-		console.log(line);
 	},
+
+
+
 
 	inputs : {
 
