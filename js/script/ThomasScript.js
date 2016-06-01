@@ -35,8 +35,8 @@ var ThomasScript = {
 
 
 		/* CurveCornerCutting  */
-		this.u = DEFAULT_U;
-		this.v = DEFAULT_V;
+		this.u = ThomasScript.DEFAULT_U;
+		this.v = ThomasScript.DEFAULT_V;
 
 		/* CurveCornerCutting Interface */
 		this.MAX_LINE_VERTICES = 10;
@@ -238,8 +238,8 @@ var ThomasScript = {
 			vec0 = new THREE.Vector3(0,0,0);
 
 
-		this.u = this.u || DEFAULT_U;
-		this.v = this.v || DEFAULT_V;
+		this.u = this.u || ThomasScript.DEFAULT_U;
+		this.v = this.v || ThomasScript.DEFAULT_V;
 
         for (var i = 0; i + 1< geometry.vertices.length; ++i)
         {
