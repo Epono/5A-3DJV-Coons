@@ -64,6 +64,7 @@ var ThomasScript = {
 	    var cubeMesh = new Mesh();
 
 	    console.log("customCubeVertices :: ", customCubeVertices);
+	    
 		cubeMesh.pushPolygoneAsVertices(
 			[
 				customCubeVertices[0],
@@ -88,6 +89,33 @@ var ThomasScript = {
 				customCubeVertices[4],
 				customCubeVertices[5],
 				customCubeVertices[1]
+			]
+		);
+
+		cubeMesh.pushPolygoneAsVertices(
+			[
+				customCubeVertices[4],
+				customCubeVertices[0],
+				customCubeVertices[3],
+				customCubeVertices[7]
+			]
+		);
+
+		cubeMesh.pushPolygoneAsVertices(
+			[
+				customCubeVertices[5],
+				customCubeVertices[4],
+				customCubeVertices[7],
+				customCubeVertices[6]
+			]
+		);
+
+		cubeMesh.pushPolygoneAsVertices(
+			[
+				customCubeVertices[3],
+				customCubeVertices[2],
+				customCubeVertices[6],
+				customCubeVertices[7]
 			]
 		);
 

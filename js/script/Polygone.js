@@ -66,7 +66,10 @@ class Polygone
         var arrayLength = tmpVertice.length;
         if(arrayLength > 0)
         {
-            this.facePoint = tmpVertice[0].clone();
+            var vec3 = tmpVertice[0].clone();
+            
+            this.facePoint = new Vertex(vec3.x, vec3.y, vec3.z);
+            
             for(i = 1; i < arrayLength; ++i)
                 this.facePoint.add(tmpVertice[i]);
 
