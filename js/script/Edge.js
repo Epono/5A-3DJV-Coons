@@ -51,24 +51,18 @@ class Edge
     // Affect le polygone en paramètre au left ou right polygone
     // On affect le polygone à gauche ou à droite 
     // si il n'y a rien sur un des coté et si de l'autre coté le polygone n'existe pas deja
-    setPolygone(polygone)
+    setPolygone( polygone )
     {
-        if(
-            this.leftPolygone &&
-            this.rightPolygone &&
-            this.rightPolygone.id != polygone.id
-        )
-        {
-            this.leftPolygone = polygone;
-        }
-        else if(
-            this.rightPolygone && 
-            this.leftPolygone &&
-            this.leftPolygone.id != polygone.id
-        )
+
+        if (!this.rightPolygone && !this.leftPolygone)
         {
             this.rightPolygone = polygone;
         }
+        else if (!this.leftPolygone && polygone.id != this.rightPolygone.id)
+        {
+           this.leftPolygone = polygone;
+        }
+
     }
     
     // Affect le triangle en paramètre au left ou right polygone

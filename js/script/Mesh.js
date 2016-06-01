@@ -50,8 +50,10 @@ class Mesh
 					edgesInfos[i].owner.id != edgesInfos[j].owner.id
 				)
 				{
+					console.log("Ok");
 					edgesInfos[i].edge.setPolygone(edgesInfos[j].owner);
 					edgesInfos[j].edge.setPolygone(edgesInfos[i].owner);
+
 				}
 			}
 		}
@@ -59,13 +61,14 @@ class Mesh
 		for (var i = 0; i < edgesInfos.length; ++i)
 		{
 
-			/*console.log(
-				edgesInfos[i].edge.rightPolygone
-				edgesInfos[i].edge.leftPolygone
-			);*/
+			console.log(
+				"edgesInfos [" + (i < 10 ? i+ " " : i )+ "] = " +
+				(edgesInfos[i].edge.rightPolygone != null) + " | " +
+				(edgesInfos[i].edge.leftPolygone != null)
+			);
 		}
 	}
-
+	
 	getPolygonesEdgesInfos()
 	{
 		var res = [];
