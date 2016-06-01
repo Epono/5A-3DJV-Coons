@@ -33,6 +33,7 @@ var GuillaumeScript = {
         
         var inputData = this.getDebugCurves(numberOfPoints);
         var inputData2 = this.getDebugCurves2(numberOfPoints);
+        var inputDataWing = this.getDebugCurvesWing(numberOfPoints);
         
         var otherData = {
             materialFrontBack : new THREE.MeshBasicMaterial( {color: 0x00ff00} ),
@@ -44,7 +45,8 @@ var GuillaumeScript = {
         };
         
         this.drawFacetteDeCoons(inputData, otherData);
-        this.drawFacetteDeCoons(inputData2, otherData);
+        //this.drawFacetteDeCoons(inputData2, otherData);
+        //this.drawFacetteDeCoons(inputDataWing, otherData);        
     },
 
 	update : function ( tw , deltaTime )
@@ -224,6 +226,45 @@ var GuillaumeScript = {
         // Droite
         for(var i = 0; i < numberOfPoints; ++i) {
            curves.verticesPolygonalChainRight.push(new THREE.Vector3(30, 5 + Math.pow((i - numberOfPoints) / 10, 2), 10 - i));
+        }
+        
+        return curves;
+    },
+    
+    getDebugCurvesWing : function(numberOfPoints) {
+        var curves = {
+            numberOfPoints : numberOfPoints,
+            verticesPolygonalChainFront : [],
+            verticesPolygonalChainBack : [],
+            verticesPolygonalChainLeft : [],
+            verticesPolygonalChainRight : []
+        };
+        
+        var width = 10;
+        var width2 = 5;
+        
+        // Devant
+        for(var i = 0; i < numberOfPoints; ++i) {
+            var x = - width + i * (2*width / (numberOfPoints - 1));
+            var value = Math.pow(width/2, 2) - Math.pow(Math.abs(x/2), 2);
+            curves.verticesPolygonalChainFront.push(new THREE.Vector3((-width + i)/3, 2 + value, width*2));
+        }
+
+        //Derrière
+        for(var i = 0; i < numberOfPoints; ++i) {
+            var x = - width2 + i * (2*width2 / (numberOfPoints - 1));
+            var value = Math.pow(width2/2, 2) - Math.pow(Math.abs(x/2), 2);
+            curves.verticesPolygonalChainBack.push(new THREE.Vector3((-width + i)/3, 2 + value, -width*2));
+        }
+        
+        // Gauche
+        for(var i = 0; i < numberOfPoints; ++i) {
+            curves.verticesPolygonalChainLeft.push(new THREE.Vector3(-width/3, 2, (width - i)*2));
+        }
+        
+        // Droite
+        for(var i = 0; i < numberOfPoints; ++i) {
+           curves.verticesPolygonalChainRight.push(new THREE.Vector3(width/3, 2, (width - i)*2));
         }
         
         return curves;
