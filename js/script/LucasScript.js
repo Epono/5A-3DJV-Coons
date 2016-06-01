@@ -120,8 +120,16 @@ var LucasScript = {
         for ( var i = 0; i < intersects.length; i++ ) {
             if(intersects[ i ].object == ctx.tabOfFace[0]) {
             	
-               
-            	ctx.tabBackLinePoint.push(new THREE.Vector3(intersects[ i ].point.x, intersects[i].point.y, 10.0));
+                var fixedCoord;
+                if(ctx.tabBackLinePoint.length == 0) {
+                    fixedCoord = -10;
+                } else if(ctx.tabBackLinePoint.length == ctx.numberOfPoints - 1) {
+                    fixedCoord = 10;
+                } else {
+                    fixedCoord = intersects[ i ].point.x;
+                }
+                
+            	ctx.tabBackLinePoint.push(new THREE.Vector3(fixedCoord, intersects[i].point.y, 10.0));
                 
                 console.log("POINT PLACE BACK");
                 if(ctx.tabBackLinePoint.length > 1)
@@ -149,7 +157,20 @@ var LucasScript = {
             }
             if(intersects[i].object == ctx.tabOfFace[1])
             {
-                ctx.tabLeftLinePoint.push(new THREE.Vector3(10.0, intersects[i].point.y, intersects[i].point.z));
+                
+                var fixedCoord, fixedCoord2;
+                if(ctx.tabLeftLinePoint.length == 0) {
+                    fixedCoord = 10;
+                    fixedCoord2 = ctx.tabBackLinePoint[ctx.numberOfPoints - 1].y;
+                } else if(ctx.tabLeftLinePoint.length == ctx.numberOfPoints - 1) {
+                    fixedCoord = -10;
+                    fixedCoord2 = intersects[i].point.y;
+                } else {
+                    fixedCoord = intersects[ i ].point.z;
+                    fixedCoord2 = intersects[i].point.y;
+                }
+                
+                ctx.tabLeftLinePoint.push(new THREE.Vector3(10.0, fixedCoord2, fixedCoord));
                 
                 console.log("POINT PLACE LEFTc");
                 if(ctx.tabLeftLinePoint.length > 1)
@@ -176,7 +197,20 @@ var LucasScript = {
             }
             if(intersects[i].object == ctx.tabOfFace[2])
             {
-                ctx.tabFrontLinePoint.push(new THREE.Vector3(intersects[ i ].point.x, intersects[i].point.y, -10.0));
+                
+                var fixedCoord, fixedCoord2;
+                if(ctx.tabFrontLinePoint.length == 0) {
+                    fixedCoord = 10;
+                    fixedCoord2 = ctx.tabLeftLinePoint[ctx.numberOfPoints - 1].y;
+                } else if(ctx.tabFrontLinePoint.length == ctx.numberOfPoints - 1) {
+                    fixedCoord = -10;
+                    fixedCoord2 = intersects[i].point.y;
+                } else {
+                    fixedCoord = intersects[ i ].point.x;
+                    fixedCoord2 = intersects[i].point.y;
+                }
+                
+                ctx.tabFrontLinePoint.push(new THREE.Vector3(fixedCoord, fixedCoord2, -10.0));
                 
                 console.log("POINT PLACE FRONT");
                 if(ctx.tabFrontLinePoint.length > 1)
@@ -203,7 +237,20 @@ var LucasScript = {
             }
             if(intersects[i].object == ctx.tabOfFace[3])
             {
-                ctx.tabRightLinePoint.push(new THREE.Vector3(-10.0, intersects[i].point.y, intersects[i].point.z));
+                
+                var fixedCoord, fixedCoord2;
+                if(ctx.tabRightLinePoint.length == 0) {
+                    fixedCoord = -10;
+                    fixedCoord2 = ctx.tabFrontLinePoint[ctx.numberOfPoints - 1].y;
+                } else if(ctx.tabRightLinePoint.length == ctx.numberOfPoints - 1) {
+                    fixedCoord = 10;
+                    fixedCoord2 = ctx.tabBackLinePoint[0].y;
+                } else {
+                    fixedCoord = intersects[ i ].point.z;
+                    fixedCoord2 = intersects[i].point.y;
+                }
+                
+                ctx.tabRightLinePoint.push(new THREE.Vector3(-10.0, fixedCoord2, fixedCoord));
                 
                 console.log("POINT PLACE RIGHT");
                 if(ctx.tabRightLinePoint.length > 1)
@@ -348,12 +395,6 @@ var LucasScript = {
             
             me.tabBackLinePoint.reverse();
             me.tabRightLinePoint.reverse();
-            
-            console.log(this.numberOfPoints);
-            console.log(me.tabBackLinePoint);
-            console.log(me.tabFrontLinePoint);
-            console.log(me.tabLeftLinePoint);
-            console.log(me.tabRightLinePoint);
             
             GuillaumeScript.drawFacetteDeCoons({
                 numberOfPoints : me.numberOfPoints,
