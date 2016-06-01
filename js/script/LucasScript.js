@@ -2,6 +2,16 @@ var LucasScript = {
 
     init: function (tw) {
 
+        
+        var me = this;
+        
+        this.tabFrontLinePoint = [];
+        this.tabBackLinePoint = [];
+        this.tabRightLinePoint = [];
+        this.tabLeftLinePoint = [];
+        this.tabForTotalPoint = [];
+        this.tabOfFace = [];
+        
         this.myCamera = new THREE.OrthographicCamera(-20, 20, 20 / tw.aspect, -20 / tw.aspect, 0, 1000);
 
         //only one geometry necessary   
@@ -32,6 +42,10 @@ var LucasScript = {
         this.leftface_plane = new THREE.Mesh( geometry, white_material );
         this.rightface_plane = new THREE.Mesh( geometry, white_material );
 
+        this.tabOfFace.push(this.backface_plane);
+        this.tabOfFace.push(this.frontface_plane);
+        this.tabOfFace.push(this.leftface_plane);
+        this.tabOfFace.push(this.rightface_plane);
 
         this.backface_plane.position.y = 10;
         this.backface_plane.position.z = -10;
@@ -53,27 +67,157 @@ var LucasScript = {
         tw.scenes.main.add(this.leftface_plane);
         tw.scenes.main.add(this.rightface_plane);
         
-        
-        /* var materialFacette = new THREE.MeshPhongMaterial( { color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading, side : THREE.DoubleSide} )*/
-
+        //Lumiere sur les facettes de coons
         var directionalLight = new THREE.DirectionalLight( 0xffffff );
         directionalLight.position.set( 0, 10, 0 );
         tw.scenes.main.add( directionalLight );
-        
-        /*var light = new THREE.PointLight( 0xff0000, 1, 100 );
-        light.position.set( 0, 5, 0 );
-        tw.scenes.main.add( light );*/
-        
+          
         tw.cameras.main.position.z = 25;
         tw.cameras.main.position.y = 9;
         tw.cameras.main.rotation.x = -20 * Math.PI / 180;
+        
+        //POUR LE PICKING (VIEN DU  SCRIPT DE THOMAS)
+        this.raycaster = new THREE.Raycaster();
+        this.mouse = new THREE.Vector2();
+        this.tw = tw;
+        
+        tw.container[0].addEventListener( 'mousedown', 
+        	function(e) {
+            
+        		if (e.button === 0 && e.ctrlKey)
+                {
+                        
+        			 me.onMouseDown(e, me);
+                }
+
+        	},
+        false );
+        
     },
 
-    update: function (tw, deltaTime) {
+    update: function (tw, deltaTime) {8
 
 
     },
 
+    
+    onMouseDown : function(event, ctx) 
+    {
+    	// calculate mouse position in normalized device coordinates
+        // (-1 to +1) for both components
+        
+        ctx.mouse.x = ( event.layerX / ctx.tw.size.width ) * 2 - 1;
+        ctx.mouse.y = - ( event.layerY / ctx.tw.size.height ) * 2 + 1;	
+        
+        // update the picking ray with the camera and mouse position	
+        ctx.raycaster.setFromCamera( ctx.mouse, ctx.tw.cameras.CURRENT);	
+
+        // calculate objects intersecting the picking ray
+        var intersects = ctx.raycaster.intersectObjects( ctx.tw.scenes.main.children );
+
+
+        for ( var i = 0; i < intersects.length; i++ ) {
+            if(intersects[ i ].object == ctx.tabOfFace[0]) {
+            	
+               
+            	ctx.tabBackLinePoint.push(new THREE.Vector3(intersects[ i ].point.x, intersects[i].point.y, 10.0));
+                
+                console.log("POINT PLACE BACK");
+                if(ctx.tabBackLinePoint.length > 1)
+                {
+                    var material = new THREE.LineBasicMaterial({
+                    color: 0x0000ff });
+                        
+                    var geometry = new THREE.Geometry();
+                    for(var j = 0 ; j < ctx.tabBackLinePoint.length;j++)
+                    {
+                        geometry.vertices.push(ctx.tabBackLinePoint[j]);  
+                    }
+                   
+
+                    var line = new THREE.Line( geometry, material );
+                    //line.visible = false;
+                    ctx.tw.scenes.main.add( line ); 
+                                    }
+                
+              	
+                break;
+            }
+            if(intersects[i].object == ctx.tabOfFace[1])
+            {
+                ctx.tabFrontLinePoint.push(new THREE.Vector3(intersects[ i ].point.x, intersects[i].point.y, -10.0));
+                
+                console.log("POINT PLACE FRONT");
+                if(ctx.tabFrontLinePoint.length > 1)
+                {
+                    var material = new THREE.LineBasicMaterial({
+                    color: 0x0000ff });
+                        
+                    var geometry = new THREE.Geometry();
+                    for(var j = 0 ; j < ctx.tabFrontLinePoint.length;j++)
+                    {
+                        geometry.vertices.push(ctx.tabFrontLinePoint[j]);  
+                    }
+                   /*geometry.vertices[ctx.tabFrontLinePoint.length-1] = new THREE.Vector3(-10,geometry.vertices[ctx.tabFrontLinePoint.length-1].y,-10.0);*/
+
+                    var line = new THREE.Line( geometry, material );
+                    ctx.tw.scenes.main.add( line ); 
+                                    }
+                
+              	
+            break;
+            }
+            if(intersects[i].object == ctx.tabOfFace[2])
+            {
+                ctx.tabLeftLinePoint.push(new THREE.Vector3(10.0, intersects[i].point.y, intersects[i].point.z));
+                
+                console.log("POINT PLACE LEFTc");
+                if(ctx.tabLeftLinePoint.length > 1)
+                {
+                    var material = new THREE.LineBasicMaterial({
+                    color: 0x00ff00 });
+                        
+                    var geometry = new THREE.Geometry();
+                    for(var j = 0 ; j < ctx.tabLeftLinePoint.length;j++)
+                    {
+                        geometry.vertices.push(ctx.tabLeftLinePoint[j]);  
+                    }
+                   
+
+                    var line = new THREE.Line( geometry, material );
+                    ctx.tw.scenes.main.add( line ); 
+                                    }
+                
+              	
+            break;
+            }
+            if(intersects[i].object == ctx.tabOfFace[3])
+            {
+                ctx.tabRightLinePoint.push(new THREE.Vector3(-10.0, intersects[i].point.y, intersects[i].point.z));
+                
+                console.log("POINT PLACE RIGHT");
+                if(ctx.tabRightLinePoint.length > 1)
+                {
+                    var material = new THREE.LineBasicMaterial({
+                    color: 0x00ff00 });
+                        
+                    var geometry = new THREE.Geometry();
+                    for(var j = 0 ; j < ctx.tabRightLinePoint.length;j++)
+                    {
+                        geometry.vertices.push(ctx.tabRightLinePoint[j]);  
+                    }
+                   
+
+                    var line = new THREE.Line( geometry, material );
+                    ctx.tw.scenes.main.add( line ); 
+                                    }
+                
+              	
+            break;
+            }
+            
+        }
+    },
 
     inputs: {
 
@@ -150,6 +294,64 @@ var LucasScript = {
             tw.changeCamera(tw.cameras.main);
 
         },
+        
+        'y' : function (me, tw)
+        {
+            //Creation aile d'avion
+            
+            //TODO utilisation des fonctions de guillaume
+            
+            
+            
+        },
+        
+        'f' : function (me, tw)
+        {
+            this.tabForCoons = [];
+           /* var totalPointToAdd = me.tabFrontLinePoint.length + me.tabLeftLinePoint.length + me.tabBackLinePoint.length + me.tabRightLinePoint.length;*/
+            
+            for(var i = 0 ; i < me.tabFrontLinePoint.length ; i++)
+            {
+                this.tabForCoons.push(me.tabFrontLinePoint[i]);
+                
+            }
+            
+            for(var i = 0 ; i < me.tabRightLinePoint.length ; i++)
+            {
+                this.tabForCoons.push(me.tabRightLinePoint[i]);        
+            }
+            
+            for(var i = 0 ; i < me.tabBackLinePoint.length ; i++)
+            {
+                this.tabForCoons.push(me.tabBackLinePoint[i]);        
+            }
+            
+            for(var i = 0 ; i < me.tabLeftLinePoint.length ; i++)
+            {
+                this.tabForCoons.push(me.tabLeftLinePoint[i]);        
+            }
+            
+            this.tabForCoons.push(me.tabFrontLinePoint[0]);
+            
+            
+            
+             var material = new THREE.LineBasicMaterial({
+                    color: 0xff0000 });
+                        
+                    var geometry = new THREE.Geometry();
+                    for(var j = 0 ; j < this.tabForCoons.length;j++)
+                    {
+                        geometry.vertices.push(this.tabForCoons[j]);  
+                    }
+                   
+                    console.log("DESSIN LIGNE");
+                    var line = new THREE.Line( geometry, material );
+                    tw.scenes.main.add( line ); 
+            
+            
+            
+            
+        }
 
 
     }
