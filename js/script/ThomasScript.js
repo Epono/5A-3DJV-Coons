@@ -81,6 +81,17 @@ var ThomasScript = {
 			]
 		);
 
+	    cubeMesh.pushPolygoneAsVertices(
+			[
+				customCubeVertices[0],
+				customCubeVertices[4],
+				customCubeVertices[5],
+				customCubeVertices[1]
+			]
+		);
+
+	    tw.scenes.main.add(cubeMesh.buildThreeMesh());
+	    /*
 	    var geometry = new THREE.Geometry();
 
 		geometry.vertices.push(
@@ -125,9 +136,9 @@ var ThomasScript = {
 				} 
 			)
 		);
-
+		
 		tw.scenes.main.add(cube);
-
+		*/
 
 	    /* Mouse listener */
         this.tw.container[0].addEventListener( 'mousedown', 
