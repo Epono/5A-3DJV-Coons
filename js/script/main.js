@@ -3,7 +3,7 @@ $(document).ready(function()  {
 	var customsScript = [
 		//LucasScript,
 		ThomasScript,
-		KevinScript,
+		//KevinScript,
 		//GuillaumeScript
 	];
 
