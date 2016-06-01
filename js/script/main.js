@@ -1,10 +1,10 @@
 $(document).ready(function()  {
 	
 	var customsScript = [
-		LucasScript,
+		//LucasScript,
 		ThomasScript,
-		KevinScript,
-		GuillaumeScript
+		//KevinScript,
+		//GuillaumeScript
 	];
 
 	//*
@@ -25,6 +25,18 @@ $(document).ready(function()  {
 	for (var i = 0; i < customsScript.length; ++i)
 	{
 		var actions = {};
+
+		/*
+		if (customsScript[i].__params)
+		{
+			for (var k in customsScript[i].__params)
+			{
+				customsScript[i][k] = customsScript[i].__params[k];
+			}
+
+			delete customsScript[i].__params;
+		}
+		//*/
 
 		if (!customsScript[i].inputs)
 		{

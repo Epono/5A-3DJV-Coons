@@ -3,59 +3,103 @@ class Polygone
     // Constructeur
 	constructor()
 	{
-        this.vertice = [];        
+        this.edges = [];  
+        this.id = ++Polygone.ID;
         this.facePoint = null;
 	}
     
     
     // Setter
-    setVertice(vectice)
+    setEdges(edges)
     {
-        this.vertice = vertice;
-        
-        this.computeFacePoint();
+        this.edges = edges;
     }
     
     
-    // Calcul le facePoint du polygone
-    computeFacePoint()
+    // Ajoute une edge à la liste des edges
+    pushEdge(edge)
     {
-        var verticeLength = this.vertice.length;
-
-        this.facePoint = this.vertice[0];
-        
-        for(i = 1; i < verticeLength; ++i)
-            this.facePoint.add(this.vertice[i]);
-        
-        this.facePoint.divideScalar(verticeLength);
-    }
-    
-    // Ajoute un point à la liste des points
-    pushVertex(v)
-    {
-        this.vertice.push(v);
-        
-        this.computeFacePoint();
+        this.edges.push(edge);
     }
     
     // Enlève un point à la liste des points (s'il le point passé en paramètre se trouve dans la liste)
-    removeVertex(v)
+    removeEdges(edge)
     {
-        var indexToRemove = this.vertice.indexOf(v);
+        // Récupération de l'index de l'élément à enlever
+        var indexToRemove = this.edges.indexOf(edge);
         
+        // Si l'élément se trouve dans la liste
+        // On recrée une nouvelle liste sans l'élément à retirer (plus rapide en JS)
         if(indexToRemove != -1) 
         {
-            var tmpVertice = [];
+            var tmpEdges = [];
             
-            for(i = 0; i < this.vertice.length; ++i)
+            for(i = 0; i < this.edges.length; ++i)
             {
                 if(i != indexToRemove)
-                    tmpVertice.push(this.vertice[i]);
+                    tmpEdges.push(this.edges[i]);
             }
             
-            this.vertice = tmpVertice;
-            
-            this.computeFacePoint();
+            this.edges = tmpEdges;
         }
     }
+    
+        
+    // Calcul le facePoint du polygone (Catmull-Clark)
+    computeFacePoint()
+    {
+        var tmpVertice = [];
+        
+        // On récupère tous les vertices des edges composant le polygone
+        var arrayLength = this.edges.length;
+        
+        for(var i = 0; i < arrayLength; ++i)
+        {
+            if(tmpVertice.indexOf(this.edges.v1) == -1)
+                tmpVertice = this.edges.v1;
+            
+            if(tmpVertice.indexOf(this.edges.v2) == -1)
+                tmpVertice = this.edges.v2;
+        }
+        
+        // On calcule la moyenne des différents vertices appartenant aux edges composant le polygone
+        var arrayLength = tmpVertice.length;
+        if(arrayLength > 0)
+        {
+            var vec3 = tmpVertice[0].clone();
+            
+            this.facePoint = new Vertex(vec3.x, vec3.y, vec3.z);
+            
+            for(i = 1; i < arrayLength; ++i)
+                this.facePoint.add(tmpVertice[i]);
+
+            this.facePoint.divideScalar(arrayLength);
+        }
+    }
+
+    getUniqueVertices()
+    {
+        var res = [],
+            map = {};
+        
+        for(var i = 0, len = this.edges.length; i < len; ++i)
+        {
+            if (!map[this.edges[i].v1.toKey()])
+            {
+                res.push(this.edges[i].v1);
+                map[this.edges[i].v1.toKey()] = true;
+            }
+
+            if (!map[this.edges[i].v2.toKey()])
+            {
+                res.push(this.edges[i].v2);
+                map[this.edges[i].v2.toKey()] = true;
+                
+            }
+        }
+
+        return res;
+    }
 }
+
+Polygone.ID = 0;
