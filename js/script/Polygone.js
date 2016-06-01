@@ -17,9 +17,9 @@ class Polygone
     
     
     // Ajoute une edge à la liste des edges
-    pushEdges(edges)
+    pushEdge(edge)
     {
-        this.edges.push(edges);
+        this.edges.push(edge);
     }
     
     // Enlève un point à la liste des points (s'il le point passé en paramètre se trouve dans la liste)
@@ -72,5 +72,29 @@ class Polygone
 
             this.facePoint.divideScalar(arrayLength);
         }
+    }
+
+    getUniqueVertices()
+    {
+        var res = [],
+            map = {};
+        
+        for(var i = 0, len = this.edges.length; i < len; ++i)
+        {
+            if (!map[this.edges[i].v1.toKey()])
+            {
+                res.push(this.edges[i].v1);
+                map[this.edges[i].v1.toKey()] = true;
+            }
+            
+            if (!map[this.edges[i].v2.toKey()])
+            {
+                res.push(this.edges[i].v2);
+                map[this.edges[i].v2.toKey()] = true;
+                
+            }
+        }
+
+        return res;
     }
 }

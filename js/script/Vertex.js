@@ -108,6 +108,6 @@ class Vertex extends THREE.Vector3
 
     toKey()
     {
-        return "" + this.x + this.y + this.z;
+        return ("" + this.x + this.y + this.z).replace('[.]', '');
     }
 }
