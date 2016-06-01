@@ -1,6 +1,6 @@
 class Triangle
 {
-    // Constructor
+    // Constructor avec les 3 edges composant le triangle
 	constructor(e1, e2, e3)
     {
         this.e1 = e1;
@@ -8,6 +8,8 @@ class Triangle
         this.e3 = e3;
         
         this.facePoint = null;
+        
+        this.computeFacePoint();
     }
 
     
@@ -33,16 +35,21 @@ class Triangle
     // Calcul le facePoint
     computeFacePoint()
     {
+        // Récupération des 3 vertice composant le triangle
         var v1 = this.e1.getV1();
         var v2 = this.e1.getV2();
         var v3 = null;
-        
+        // Les deux premiers sommets se trouvent sur la première edge du triangle, 
+        // dont pour avoir le troisième vertex
+        // sur la deuxième edge du triangle, on va récupérer le vertex différent de v1 et v2
         if((v1 != this.e2.getV1()) && (v2 != this.e2.getV1()))
             v3 = this.e2.getV1();
         else
             v3 = this.e2.getV2();
         
-        this.facePoint.add(v1);
+        // Calcul du face point en faisant le moyenne avec les 3 vertices
+        // (v1 + v2 + v3)/3
+        this.facePoint = v1.clone();
         this.facePoint.add(v2);
         this.facePoint.add(v3);
         
