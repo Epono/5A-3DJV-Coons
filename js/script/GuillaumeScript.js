@@ -19,20 +19,20 @@ var GuillaumeScript = {
         // Devant
         var geometryCurve1 = new THREE.Geometry();
         for(var i = 0; i < numberOfPoints; ++i) {
-            geometryCurve1.vertices.push(new THREE.Vector3(-10 + i, 5 + Math.sqrt(i), 10));
+            geometryCurve1.vertices.push(new THREE.Vector3(-10 + i, 5 + Math.pow((i - numberOfPoints) / 10, 2), 10));
         }
 
         //Derrière
         var geometryCurve2 = new THREE.Geometry();
         for(var i = 0; i < numberOfPoints; ++i) {
-            geometryCurve2.vertices.push(new THREE.Vector3(-10 + i, 10 - Math.sqrt(i), -10));
+            geometryCurve2.vertices.push(new THREE.Vector3(-10 + i, 10 - Math.pow((i - numberOfPoints) / 10, 2), -10));
         }
         
         // Gauche
         var geometryCurve3 = new THREE.Geometry();
         geometryCurve3.vertices.push(new THREE.Vector3(geometryCurve1.vertices[0].x, geometryCurve1.vertices[0].y, geometryCurve1.vertices[0].z));
         for(var i = 1; i < numberOfPoints - 1; ++i) {
-            geometryCurve3.vertices.push(new THREE.Vector3(-10, 5 + Math.sqrt(i), 10 - i));
+            geometryCurve3.vertices.push(new THREE.Vector3(-10, 5 + Math.pow((i - numberOfPoints) / 10, 2), 10 - i));
         }
         geometryCurve3.vertices.push(new THREE.Vector3(geometryCurve2.vertices[0].x, geometryCurve2.vertices[0].y, geometryCurve2.vertices[0].z));
         
@@ -40,7 +40,7 @@ var GuillaumeScript = {
         var geometryCurve4 = new THREE.Geometry();
         geometryCurve4.vertices.push(new THREE.Vector3(geometryCurve1.vertices[numberOfPoints - 1].x, geometryCurve1.vertices[numberOfPoints - 1].y, geometryCurve1.vertices[numberOfPoints - 1].z));
         for(var i = 1; i < numberOfPoints - 1; ++i) {
-            geometryCurve4.vertices.push(new THREE.Vector3(10, 10 - Math.sqrt(i), 10 - i));
+            geometryCurve4.vertices.push(new THREE.Vector3(10, 10 - Math.pow((i - numberOfPoints) / 10, 2), 10 - i));
         }
         geometryCurve4.vertices.push(new THREE.Vector3(geometryCurve2.vertices[numberOfPoints - 1].x, geometryCurve2.vertices[numberOfPoints - 1].y, geometryCurve2.vertices[numberOfPoints - 1].z));
 
