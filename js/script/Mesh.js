@@ -81,7 +81,7 @@ class Mesh
 				refInfo.index = vertices.length -1;
 				refInfo.vector = currVectices[0];
 			}
-			
+
 			for (var i = 1; i + 1< currVectices.length; ++i)
 			{
 				var currFaceParam = {
@@ -192,7 +192,7 @@ class Mesh
 
 Mesh.DEFAULT_MAT = new THREE.MeshBasicMaterial( 
 	{
-		color: 0xFF33FF,
+		color: 0xFF0000,
 		side : THREE.BackSide,
 		//side : THREE.DoubleSide
 	} 

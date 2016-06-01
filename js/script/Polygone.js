@@ -4,7 +4,7 @@ class Polygone
 	constructor()
 	{
         this.edges = [];  
-        
+        this.id = ++Polygone.ID;
         this.facePoint = null;
 	}
     
@@ -86,7 +86,7 @@ class Polygone
                 res.push(this.edges[i].v1);
                 map[this.edges[i].v1.toKey()] = true;
             }
-            
+
             if (!map[this.edges[i].v2.toKey()])
             {
                 res.push(this.edges[i].v2);
@@ -98,3 +98,5 @@ class Polygone
         return res;
     }
 }
+
+Polygone.ID = 0;

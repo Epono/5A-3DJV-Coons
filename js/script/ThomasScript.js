@@ -63,6 +63,7 @@ var ThomasScript = {
 	    
 	    var cubeMesh = new Mesh();
 
+	    console.log("customCubeVertices :: ", customCubeVertices);
 		cubeMesh.pushPolygoneAsVertices(
 			[
 				customCubeVertices[0],

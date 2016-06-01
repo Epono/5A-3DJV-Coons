@@ -5,7 +5,7 @@ class Edge
 	{
         this.v1 = v1;
         this.v2 = v2;
-        
+        this.id = ++Edge.ID;
         // Pour Catmull-Clark
         this.leftPolygone = null;
         this.rightPolygone = null;
@@ -104,3 +104,5 @@ class Edge
         }
     }
 }
+
+Edge.ID = 0;

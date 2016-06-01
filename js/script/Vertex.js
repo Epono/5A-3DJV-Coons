@@ -5,6 +5,7 @@ class Vertex extends THREE.Vector3
     {
         super(x, y, z);
         
+        this.id = ++Vertex.ID;
         this.incidentEdges = [];
         
         this.vertexPoint = null;
@@ -111,3 +112,6 @@ class Vertex extends THREE.Vector3
         return ("" + this.x + this.y + this.z).replace('[.]', '');
     }
 }
+
+
+Vertex.ID = 0;
