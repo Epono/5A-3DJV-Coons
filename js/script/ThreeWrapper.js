@@ -113,11 +113,13 @@ ThreeWrapper.prototype  = {
 
 		this.scenes.main = new THREE.Scene();
 
+		this.cameras.CURRENT = this.cameras.main;
+		this.scenes.CURRENT = this.scenes.main;
 
-		var controls = new THREE.OrbitControls( this.cameras.main , this.orbitContainer || document);
+		var controls = new THREE.OrbitControls( this.cameras.CURRENT , this.orbitContainer || document);
 
 
-		this.scenes.main.add(this.cameras.main);
+		this.scenes.CURRENT.add(this.cameras.CURRENT);
 
 		this.cameras.main.position.z = this.CAMERA_Z;
 
@@ -134,15 +136,14 @@ ThreeWrapper.prototype  = {
 
 		
 		// add to the scene
-		this.scenes.main.add(this.pointLight);
+		this.scenes.CURRENT.add(this.pointLight);
 
 		for (var i = 0; i < this.scripts.length; ++i)
 		{
 			this.scripts[i].init(this);
 		}
 
-		this.cameras.CURRENT = this.cameras.main;
-		this.scenes.CURRENT = this.scenes.main;
+		
 		
 	},
 	// Doesnt work with negative range .. (as -10 -> 10).
@@ -155,6 +156,9 @@ ThreeWrapper.prototype  = {
 	},
 	changeCamera : function(camera){
 		this.cameras.CURRENT = camera;
+	},
+    changeScene : function(scene, empty=false){
+		this.scenes.CURRENT = scene;
 	},
 	// TO USE
 	changeFramerate : function(time){

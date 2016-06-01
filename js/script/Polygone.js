@@ -3,8 +3,10 @@ class Polygone
     // Constructeur
 	constructor()
 	{
-        this.edges = [];  
         this.id = ++Polygone.ID;
+        
+        this.edges = [];  
+        
         this.facePoint = null;
 	}
     
@@ -68,9 +70,7 @@ class Polygone
 
         if(arrayLength > 0)
         {
-            var vec3 = tmpVertice[0].clone();
-
-            this.facePoint = new Vertex(vec3.x, vec3.y, vec3.z);
+            this.facePoint = tmpVertice[0].clone();
             
             for(i = 1; i < arrayLength; ++i)
                 this.facePoint.add(tmpVertice[i]);

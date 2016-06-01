@@ -34,17 +34,56 @@ class Mesh
 		}
 
 		this.pushPolygone(poly);
+		this.defineEdgesNeighbourhood();
 	}
 
 	defineEdgesNeighbourhood()
 	{
-		for (var i = 0; i < this.polygones.length; ++i)
+		var edgesInfos = this.getPolygonesEdgesInfos();
+
+		for (var i = 0; i < edgesInfos.length; ++i)
 		{
-			for (var e = 0; e < this.polygones[i].edges.length)
+			for (var j = i + 1; j < edgesInfos.length; ++j)
 			{
-				
+				if (
+					edgesInfos[i].edge.equals(edgesInfos[j].edge) &&
+					edgesInfos[i].owner.id != edgesInfos[j].owner.id
+				)
+				{
+					edgesInfos[i].edge.setPolygone(edgesInfos[j].owner);
+					edgesInfos[j].edge.setPolygone(edgesInfos[i].owner);
+				}
 			}
 		}
+
+		for (var i = 0; i < edgesInfos.length; ++i)
+		{
+
+			/*console.log(
+				edgesInfos[i].edge.rightPolygone
+				edgesInfos[i].edge.leftPolygone
+			);*/
+		}
+	}
+
+	getPolygonesEdgesInfos()
+	{
+		var res = [];
+
+		for (var p = 0; p < this.polygones.length; ++p)
+		{
+			for (var e = 0; e < this.polygones[p].edges.length; ++e)
+			{
+				res.push(
+					{
+						edge : this.polygones[p].edges[e],
+						owner : this.polygones[p]
+					}
+				);
+			}
+		}
+
+		return res;
 	}
 
 	pushPolygone(poly)

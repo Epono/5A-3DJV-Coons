@@ -3,9 +3,11 @@ class Edge
     // Constructeur prenant en paramètre les 2 vertice le composant
 	constructor(v1, v2)
 	{
+        this.id = ++Edge.ID;
+        
         this.v1 = v1;
         this.v2 = v2;
-        this.id = ++Edge.ID;
+        
         // Pour Catmull-Clark
         this.leftPolygone = null;
         this.rightPolygone = null;
@@ -46,20 +48,37 @@ class Edge
         this.rightTriangle = triangle
     }
     
-    
+    // Affect le polygone en paramètre au left ou right polygone
+    // On affect le polygone à gauche ou à droite 
+    // si il n'y a rien sur un des coté et si de l'autre coté le polygone n'existe pas deja
     setPolygone(polygone)
     {
-        if((this.leftPolygone == null) && (this.rightPolygone != polygone))
-                this.leftPolygone = polygone;
-        else if((this.rightPolygone == null) && (this.leftPolygone != polygone))
+        if(
+            this.leftPolygone &&
+            this.rightPolygone &&
+            this.rightPolygone.id != polygone.id
+        )
+        {
+            this.leftPolygone = polygone;
+        }
+        else if(
+            this.rightPolygone && 
+            this.leftPolygone &&
+            this.leftPolygone.id != polygone.id
+        )
+        {
             this.rightPolygone = polygone;
+        }
     }
     
+    // Affect le triangle en paramètre au left ou right polygone
+    // On affect le triangle à gauche ou à droite 
+    // si il n'y a rien sur un des coté et si de l'autre coté le triangle n'existe pas deja
     setTriangle(triangle)
     {
-        if((this.leftTriangle == null) && (this.rightTriangle != triangle))
+        if((this.leftTriangle == null) && (this.rightTriangle.id != triangle.id))
                 this.rightTriangle = triangle;
-        else if((this.rightTriangle == null) && (this.leftTriangle != triangle))
+        else if((this.rightTriangle == null) && (this.leftTriangle.id != triangle.id))
             this.rightTriangle = triangle;
     }
     
@@ -79,6 +98,7 @@ class Edge
         return false;
     }
     
+    // Dit si l'edge est bien composé de 2 vertice
     hasTwoVertice()
     {
         if((this.v1 != null) && (this.v2 != null))
@@ -92,7 +112,7 @@ class Edge
         // Vérification s'il y a bien un polygone à gauche et à droite de l'edge
         if(this.hasLeftAndRightPolygone() && this.hasTwoVertice)
         {
-            // Calcule de l'edge point en faisant la moyenne entre
+            // Calcul de l'edge point en faisant la moyenne entre
             // les deux vertice de l'edge et les deux face points des faces gauche et droite
             // (v1 + v2 + fpg + fpd)/4
             this.edgePoint = this.v1.clone();
@@ -106,7 +126,15 @@ class Edge
 
     equals(edge)
     {
-        return this.v1.equals(edge.v1) && this.v2.equals(edge.v2);
+        return ((this.v1.equals(edge.v1) && this.v2.equals(edge.v2)) || (this.v1.equals(edge.v2) && this.v2.equals(edge.v1)));
+    }
+
+    toKey()
+    {
+        var k1 = this.v1.toKey(),
+            k2 = this.v2.toKey();
+
+        return k1 > k2 ? k1 + k2 : k2 + k1;
     }
 }
 
