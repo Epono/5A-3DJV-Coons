@@ -2,6 +2,7 @@ var LucasScript = {
 
     init: function (tw) {
 
+        this.numberOfPoints = 10;
         
         var me = this;
         
@@ -43,8 +44,8 @@ var LucasScript = {
         this.rightface_plane = new THREE.Mesh( geometry, white_material );
 
         this.tabOfFace.push(this.backface_plane);
-        this.tabOfFace.push(this.frontface_plane);
         this.tabOfFace.push(this.leftface_plane);
+        this.tabOfFace.push(this.frontface_plane);
         this.tabOfFace.push(this.rightface_plane);
 
         this.backface_plane.position.y = 10;
@@ -137,37 +138,16 @@ var LucasScript = {
 
                     var line = new THREE.Line( geometry, material );
                     //line.visible = false;
-                    ctx.tw.scenes.main.add( line ); 
+                    ctx.tw.scenes.main.add( line );
+                    if(ctx.tabBackLinePoint.length == ctx.numberOfPoints) {
+                        ctx.inputs['6'](ctx, ctx.tw);
+                    }
                                     }
                 
               	
                 break;
             }
             if(intersects[i].object == ctx.tabOfFace[1])
-            {
-                ctx.tabFrontLinePoint.push(new THREE.Vector3(intersects[ i ].point.x, intersects[i].point.y, -10.0));
-                
-                console.log("POINT PLACE FRONT");
-                if(ctx.tabFrontLinePoint.length > 1)
-                {
-                    var material = new THREE.LineBasicMaterial({
-                    color: 0x0000ff });
-                        
-                    var geometry = new THREE.Geometry();
-                    for(var j = 0 ; j < ctx.tabFrontLinePoint.length;j++)
-                    {
-                        geometry.vertices.push(ctx.tabFrontLinePoint[j]);  
-                    }
-                   /*geometry.vertices[ctx.tabFrontLinePoint.length-1] = new THREE.Vector3(-10,geometry.vertices[ctx.tabFrontLinePoint.length-1].y,-10.0);*/
-
-                    var line = new THREE.Line( geometry, material );
-                    ctx.tw.scenes.main.add( line ); 
-                                    }
-                
-              	
-            break;
-            }
-            if(intersects[i].object == ctx.tabOfFace[2])
             {
                 ctx.tabLeftLinePoint.push(new THREE.Vector3(10.0, intersects[i].point.y, intersects[i].point.z));
                 
@@ -186,6 +166,36 @@ var LucasScript = {
 
                     var line = new THREE.Line( geometry, material );
                     ctx.tw.scenes.main.add( line ); 
+                    if(ctx.tabLeftLinePoint.length == ctx.numberOfPoints) {
+                        ctx.inputs['8'](ctx, ctx.tw);
+                    }
+                                    }
+                
+              	
+            break;
+            }
+            if(intersects[i].object == ctx.tabOfFace[2])
+            {
+                ctx.tabFrontLinePoint.push(new THREE.Vector3(intersects[ i ].point.x, intersects[i].point.y, -10.0));
+                
+                console.log("POINT PLACE FRONT");
+                if(ctx.tabFrontLinePoint.length > 1)
+                {
+                    var material = new THREE.LineBasicMaterial({
+                    color: 0x0000ff });
+                        
+                    var geometry = new THREE.Geometry();
+                    for(var j = 0 ; j < ctx.tabFrontLinePoint.length;j++)
+                    {
+                        geometry.vertices.push(ctx.tabFrontLinePoint[j]);  
+                    }
+                   /*geometry.vertices[ctx.tabFrontLinePoint.length-1] = new THREE.Vector3(-10,geometry.vertices[ctx.tabFrontLinePoint.length-1].y,-10.0);*/
+
+                    var line = new THREE.Line( geometry, material );
+                    ctx.tw.scenes.main.add( line );
+                    if(ctx.tabFrontLinePoint.length == ctx.numberOfPoints) {
+                        ctx.inputs['4'](ctx, ctx.tw);
+                    }
                                     }
                 
               	
@@ -210,6 +220,9 @@ var LucasScript = {
 
                     var line = new THREE.Line( geometry, material );
                     ctx.tw.scenes.main.add( line ); 
+                    if(ctx.tabRightLinePoint.length == ctx.numberOfPoints) {
+                        ctx.inputs['c'](ctx, ctx.tw);
+                    }
                                     }
                 
               	
@@ -333,26 +346,36 @@ var LucasScript = {
             
             this.tabForCoons.push(me.tabFrontLinePoint[0]);
             
+            me.tabBackLinePoint.reverse();
+            me.tabRightLinePoint.reverse();
             
+            console.log(this.numberOfPoints);
+            console.log(me.tabBackLinePoint);
+            console.log(me.tabFrontLinePoint);
+            console.log(me.tabLeftLinePoint);
+            console.log(me.tabRightLinePoint);
             
-             var material = new THREE.LineBasicMaterial({
-                    color: 0xff0000 });
+            GuillaumeScript.drawFacetteDeCoons({
+                numberOfPoints : me.numberOfPoints,
+                verticesPolygonalChainFront : me.tabBackLinePoint,
+                verticesPolygonalChainBack : me.tabFrontLinePoint,
+                verticesPolygonalChainLeft : me.tabLeftLinePoint,
+                verticesPolygonalChainRight : me.tabRightLinePoint
+            }, GuillaumeScript.otherData);
+            
+            var material = new THREE.LineBasicMaterial({
+            color: 0xff0000 });
                         
-                    var geometry = new THREE.Geometry();
-                    for(var j = 0 ; j < this.tabForCoons.length;j++)
-                    {
-                        geometry.vertices.push(this.tabForCoons[j]);  
-                    }
+            var geometry = new THREE.Geometry();
+            for(var j = 0 ; j < this.tabForCoons.length;j++)
+            {
+                geometry.vertices.push(this.tabForCoons[j]);  
+            }
                    
-                    console.log("DESSIN LIGNE");
-                    var line = new THREE.Line( geometry, material );
-                    tw.scenes.main.add( line ); 
-            
-            
-            
-            
+            console.log("DESSIN LIGNE");
+            var line = new THREE.Line( geometry, material );
+            line.visible = false;
+            tw.scenes.main.add( line ); 
         }
-
-
     }
 }

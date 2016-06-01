@@ -35,7 +35,7 @@ var GuillaumeScript = {
         var inputData2 = this.getDebugCurves2(numberOfPoints);
         var inputDataWing = this.getDebugCurvesWing(numberOfPoints);
         
-        var otherData = {
+        this.otherData = {
             materialFrontBack : new THREE.MeshBasicMaterial( {color: 0x00ff00} ),
             materialLeftRight : new THREE.MeshBasicMaterial( {color: 0x0000ff} ),
             materialBoth : new THREE.MeshBasicMaterial( {color: 0xff0000, side: THREE.DoubleSide} ),
@@ -44,9 +44,9 @@ var GuillaumeScript = {
             geometryPoint : new THREE.SphereGeometry(0.1, 0.1, 0.1)
         };
         
-        this.drawFacetteDeCoons(inputData, otherData);
-        //this.drawFacetteDeCoons(inputData2, otherData);
-        //this.drawFacetteDeCoons(inputDataWing, otherData);        
+        //this.drawFacetteDeCoons(inputData, this.otherData);
+        //this.drawFacetteDeCoons(inputData2, this.otherData);
+        //this.drawFacetteDeCoons(inputDataWing, this.otherData);        
     },
 
 	update : function ( tw , deltaTime )
