@@ -53,10 +53,22 @@ class Edge
     // si il n'y a rien sur un des coté et si de l'autre coté le polygone n'existe pas deja
     setPolygone(polygone)
     {
-        if((this.leftPolygone == null) && (this.rightPolygone.id != polygone.id))
-                this.leftPolygone = polygone;
-        else if((this.rightPolygone == null) && (this.leftPolygone.id != polygone.id))
+        if(
+            this.leftPolygone &&
+            this.rightPolygone &&
+            this.rightPolygone.id != polygone.id
+        )
+        {
+            this.leftPolygone = polygone;
+        }
+        else if(
+            this.rightPolygone && 
+            this.leftPolygone &&
+            this.leftPolygone.id != polygone.id
+        )
+        {
             this.rightPolygone = polygone;
+        }
     }
     
     // Affect le triangle en paramètre au left ou right polygone
@@ -115,6 +127,14 @@ class Edge
     equals(edge)
     {
         return ((this.v1.equals(edge.v1) && this.v2.equals(edge.v2)) || (this.v1.equals(edge.v2) && this.v2.equals(edge.v1)));
+    }
+
+    toKey()
+    {
+        var k1 = this.v1.toKey(),
+            k2 = this.v2.toKey();
+
+        return k1 > k2 ? k1 + k2 : k2 + k1;
     }
 }
 

@@ -63,8 +63,6 @@ var ThomasScript = {
 	    
 	    var cubeMesh = new Mesh();
 
-	    console.log("customCubeVertices :: ", customCubeVertices);
-
 		cubeMesh.pushPolygoneAsVertices(
 			[
 				customCubeVertices[0],
@@ -119,7 +117,7 @@ var ThomasScript = {
 			]
 		);
 
-		var catmullClark = new CatmullClark(
+		/*var catmullClark = new CatmullClark(
 			customCubeVertices, 
 			cubeMesh.getEdges(), 
 			cubeMesh.polygones
@@ -127,7 +125,7 @@ var ThomasScript = {
 
 		var newPoly = catmullClark.launchCatmullClark();
 
-	    tw.scenes.main.add(newPoly.buildThreeMesh());
+	    tw.scenes.main.add(newPoly.buildThreeMesh());*/
 
 	    /*
 	    var geometry = new THREE.Geometry();
