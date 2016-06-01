@@ -1,6 +1,8 @@
 var GuillaumeScript = {
 	init : function(tw)
 	{    
+        this.tw = tw;
+        
         var size = 10;
         var step = 1;
 
@@ -11,159 +13,38 @@ var GuillaumeScript = {
         var materialPlane = new THREE.MeshBasicMaterial( {color: 0x777777, side: THREE.DoubleSide} );
         var plane = new THREE.Mesh( geometryPlane, materialPlane );
         plane.rotation.x = Math.PI / 2;
-        //plane.position.y = - 0.1;
         tw.scenes.main.add(plane);
-                
-        var numberOfPoints = 21;
-        
-        // Devant
-        var geometryCurve1 = new THREE.Geometry();
-        for(var i = 0; i < numberOfPoints; ++i) {
-            geometryCurve1.vertices.push(new THREE.Vector3(-10 + i, 5 + Math.pow((i - numberOfPoints) / 10, 2), 10));
-        }
-
-        //Derrière
-        var geometryCurve2 = new THREE.Geometry();
-        for(var i = 0; i < numberOfPoints; ++i) {
-            geometryCurve2.vertices.push(new THREE.Vector3(-10 + i, 10 - Math.pow((i - numberOfPoints) / 10, 2), -10));
-        }
-        
-        // Gauche
-        var geometryCurve3 = new THREE.Geometry();
-        geometryCurve3.vertices.push(new THREE.Vector3(geometryCurve1.vertices[0].x, geometryCurve1.vertices[0].y, geometryCurve1.vertices[0].z));
-        for(var i = 1; i < numberOfPoints - 1; ++i) {
-            geometryCurve3.vertices.push(new THREE.Vector3(-10, 5 + Math.pow((i - numberOfPoints) / 10, 2), 10 - i));
-        }
-        geometryCurve3.vertices.push(new THREE.Vector3(geometryCurve2.vertices[0].x, geometryCurve2.vertices[0].y, geometryCurve2.vertices[0].z));
-        
-        // Droite
-        var geometryCurve4 = new THREE.Geometry();
-        geometryCurve4.vertices.push(new THREE.Vector3(geometryCurve1.vertices[numberOfPoints - 1].x, geometryCurve1.vertices[numberOfPoints - 1].y, geometryCurve1.vertices[numberOfPoints - 1].z));
-        for(var i = 1; i < numberOfPoints - 1; ++i) {
-            geometryCurve4.vertices.push(new THREE.Vector3(10, 10 - Math.pow((i - numberOfPoints) / 10, 2), 10 - i));
-        }
-        geometryCurve4.vertices.push(new THREE.Vector3(geometryCurve2.vertices[numberOfPoints - 1].x, geometryCurve2.vertices[numberOfPoints - 1].y, geometryCurve2.vertices[numberOfPoints - 1].z));
-
-        var materialFrontBack = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
-        var materialLeftRight = new THREE.MeshBasicMaterial( {color: 0x0000ff} );
-
-        var verticesCurve1 = ThomasScript.curveCornerCutting(geometryCurve1, false);
-        var verticesCurve2 = ThomasScript.curveCornerCutting(geometryCurve2, false);
-        var verticesCurve3 = ThomasScript.curveCornerCutting(geometryCurve3, false);
-        var verticesCurve4 = ThomasScript.curveCornerCutting(geometryCurve4, false);
-                
-        var firstGeometryCurve1 = geometryCurve1.vertices[0];
-        var lastGeometryCurve1 = geometryCurve1.vertices[geometryCurve1.vertices.length - 1];
-        
-        var firstGeometryCurve2 = geometryCurve2.vertices[0];
-        var lastGeometryCurve2 = geometryCurve2.vertices[geometryCurve2.vertices.length - 1];
-        
-        var firstGeometryCurve3 = geometryCurve3.vertices[0];
-        var lastGeometryCurve3 = geometryCurve3.vertices[geometryCurve3.vertices.length - 1];
-        
-        var firstGeometryCurve4 = geometryCurve4.vertices[0];
-        var lastGeometryCurve4 = geometryCurve4.vertices[geometryCurve4.vertices.length - 1];
-        
-        geometryCurve1 = new THREE.Geometry();
-        geometryCurve2 = new THREE.Geometry();
-        geometryCurve3 = new THREE.Geometry();
-        geometryCurve4 = new THREE.Geometry();
-        
-        geometryCurve1.vertices.push(firstGeometryCurve1);
-        for(var i = 0; i < verticesCurve1.length; ++i) {
-            geometryCurve1.vertices.push(verticesCurve1[i]);
-        }
-        geometryCurve1.vertices.push(lastGeometryCurve1);
-        
-        geometryCurve2.vertices.push(firstGeometryCurve2);
-        for(var i = 0; i < verticesCurve2.length; ++i) {
-            geometryCurve2.vertices.push(verticesCurve2[i]);
-        }
-        geometryCurve2.vertices.push(lastGeometryCurve2);
-                
-        geometryCurve3.vertices.push(firstGeometryCurve3);
-        for(var i = 0; i < verticesCurve3.length; ++i) {
-            geometryCurve3.vertices.push(verticesCurve3[i]);
-        }
-        geometryCurve3.vertices.push(lastGeometryCurve3);
-        
-        geometryCurve4.vertices.push(firstGeometryCurve4);
-        for(var i = 0; i < verticesCurve4.length; ++i) {
-            geometryCurve4.vertices.push(verticesCurve4[i]);
-        }
-        geometryCurve4.vertices.push(lastGeometryCurve4);
-        
-        tw.scenes.main.add(new THREE.Line(geometryCurve1, materialFrontBack));  
-        tw.scenes.main.add(new THREE.Line(geometryCurve2, materialFrontBack));
-        tw.scenes.main.add(new THREE.Line(geometryCurve3, materialLeftRight));
-        tw.scenes.main.add(new THREE.Line(geometryCurve4, materialLeftRight));
-        
-        // PLAN entre devant/derrière
-        var verticesPlaneFrontBack = this.computeSurfaceReglee(geometryCurve1.vertices, geometryCurve2.vertices);
-        
-        // PLAN entre gauche/droite
-        var verticesPlaneLeftRight = this.computeSurfaceReglee(geometryCurve3.vertices, geometryCurve4.vertices)
-
-        var geometryPoint = new THREE.SphereGeometry( 0.1, 0.1, 0.1 );
-        
-        // POINTS ROUGE (front/back)
-        this.verticesFrontBack = [];
-        for(var i = 0; i < verticesPlaneFrontBack.length; ++i) {
-            var point = new THREE.Mesh( geometryPoint, materialFrontBack );
-            point.visible = false;
-            point.position.x = verticesPlaneFrontBack[i].x;
-            point.position.y = verticesPlaneFrontBack[i].y;
-            point.position.z = verticesPlaneFrontBack[i].z;
-            tw.scenes.main.add( point );
-            this.verticesFrontBack.push(point);
-        }  
-        
-        // POINTS BLEU (left/right)
-        this.verticesLeftRight = [];
-        for(var i = 0; i < verticesPlaneLeftRight.length; ++i) {
-            var point = new THREE.Mesh( geometryPoint, materialLeftRight );
-            point.visible = false;
-            point.position.x = verticesPlaneLeftRight[i].x;
-            point.position.y = verticesPlaneLeftRight[i].y;
-            point.position.z = verticesPlaneLeftRight[i].z;
-            tw.scenes.main.add( point );
-            this.verticesLeftRight.push(point);
-        }
-                
-        var verticesBoth = this.computeFacetteDeCoons(geometryCurve1.vertices, geometryCurve2.vertices, verticesPlaneFrontBack, verticesPlaneLeftRight);
-        
-        var materialBoth = new THREE.MeshBasicMaterial( {color: 0xff0000, side: THREE.DoubleSide} );
-
-        this.myVerticesBoth = [];
-        for(var i = 0; i < verticesBoth.length; ++i) {
-            var point = new THREE.Mesh( geometryPoint, materialBoth );
-            point.visible = false;
-            point.position.x = verticesBoth[i].x;
-            point.position.y = verticesBoth[i].y;
-            point.position.z = verticesBoth[i].z;
-            tw.scenes.main.add( point );
-            this.myVerticesBoth.push(point);
-        }
-        
-        var geometryFacetteDeCoons = new THREE.Geometry();
-        geometryFacetteDeCoons.vertices = verticesBoth;
-        
-        var triangles = this.computeTriangles(verticesBoth, numberOfPoints * 2);
-        
-        // DEFINITION DU MATERIEL UTILISE PAR LES FACETTES
-        var materialFacette = new THREE.MeshPhongMaterial( { color: 0xff00ff, specular: 0x009900, shininess: 30, shading: THREE.FlatShading, side : THREE.DoubleSide} )
-        
-        for( var i = 0; i < triangles.length; i+=3 ){
-            geometryFacetteDeCoons.faces.push( new THREE.Face3( triangles[i], triangles[i+1], triangles[i+2] ));
-        }
-        
-        // AFFICHAGE DE LA FACETTE
-        var facetteDeCoons = new THREE.Mesh( geometryFacetteDeCoons, materialFacette );
-        this.facetteDeCoons = facetteDeCoons;
-        tw.scenes.main.add(facetteDeCoons);
-        
+           
         // REPERE
         this.drawRepere(tw);
+        
+        // COONS !
+        this.pointsCurvesFrontBack = [];
+        this.pointsCurvesLeftRight = [];
+        
+        this.pointsPlaneFrontBack = [];
+        this.pointsPlaneLeftRight = [];
+        this.pointsPlaneBoth = [];
+        
+        this.coonsPatches = [];
+        //
+        
+        var numberOfPoints = 21;
+        
+        var inputData = this.getDebugCurves(numberOfPoints);
+        var inputData2 = this.getDebugCurves2(numberOfPoints);
+        
+        var otherData = {
+            materialFrontBack : new THREE.MeshBasicMaterial( {color: 0x00ff00} ),
+            materialLeftRight : new THREE.MeshBasicMaterial( {color: 0x0000ff} ),
+            materialBoth : new THREE.MeshBasicMaterial( {color: 0xff0000, side: THREE.DoubleSide} ),
+            materialFacette : new THREE.MeshPhongMaterial( { color: 0xff00ff, specular: 0x009900, shininess: 30, shading: THREE.FlatShading, side : THREE.DoubleSide} ),
+
+            geometryPoint : new THREE.SphereGeometry(0.1, 0.1, 0.1)
+        };
+        
+        this.drawFacetteDeCoons(inputData, otherData);
+        this.drawFacetteDeCoons(inputData2, otherData);
     },
 
 	update : function ( tw , deltaTime )
@@ -175,25 +56,48 @@ var GuillaumeScript = {
 		'A' : function (me, tw)
 		{
             // Points front/back
-            for(var i = 0; i < me.verticesFrontBack.length; ++i) {
-                me.verticesFrontBack[i].visible = !me.verticesFrontBack[i].visible;
+            for(var j = 0; j < me.pointsPlaneFrontBack.length; ++j) {
+                for(var i = 0; i < me.pointsPlaneFrontBack[j].length; ++i) {
+                    me.pointsPlaneFrontBack[j][i].visible = !me.pointsPlaneFrontBack[j][i].visible;
+                }
+            } 
+            for(var i = 0; i < me.pointsCurvesFrontBack.length; ++i) {
+                me.pointsCurvesFrontBack[i].visible = !me.pointsCurvesFrontBack[i].visible;
             } 
         }, 
         'Z' : function(me, tw) {
             // Points left/right
-            for(var i = 0; i < me.verticesLeftRight.length; ++i) {
-                me.verticesLeftRight[i].visible = !me.verticesLeftRight[i].visible;
+            for(var j = 0; j < me.pointsPlaneLeftRight.length; ++j) {
+                for(var i = 0; i < me.pointsPlaneLeftRight[j].length; ++i) {
+                    me.pointsPlaneLeftRight[j][i].visible = !me.pointsPlaneLeftRight[j][i].visible;
+                } 
+            }
+            for(var i = 0; i < me.pointsCurvesLeftRight.length; ++i) {
+                me.pointsCurvesLeftRight[i].visible = !me.pointsCurvesLeftRight[i].visible;
             } 
         }, 
         'E' : function(me, tw) {
             // Points facette
-            for(var i = 0; i < me.myVerticesBoth.length; ++i) {
-                me.myVerticesBoth[i].visible = !me.myVerticesBoth[i].visible;
+            var visible = false;
+            for(var j = 0; j < me.pointsPlaneBoth.length; ++j) {
+                for(var i = 0; i < me.pointsPlaneBoth[j].length; ++i) {
+                    visible = !me.pointsPlaneBoth[j][i].visible;
+                    me.pointsPlaneBoth[j][i].visible = !me.pointsPlaneBoth[j][i].visible;
+                } 
+            }
+            
+            for(var i = 0; i < me.pointsCurvesFrontBack.length; ++i) {
+                me.pointsCurvesFrontBack[i].visible = visible;
             } 
+            for(var i = 0; i < me.pointsCurvesLeftRight.length; ++i) {
+                me.pointsCurvesLeftRight[i].visible = visible;
+            }
         },
         'R' : function(me, tw) {
             // Toggle affichage facettes
-            me.facetteDeCoons.visible = !me.facetteDeCoons.visible;
+            for(var i = 0; i < me.coonsPatches.length; ++i) {
+                me.coonsPatches[i].visible = !me.coonsPatches[i].visible;
+            }
         },
 	},
     
@@ -219,13 +123,13 @@ var GuillaumeScript = {
     },
     
     computeSurfaceReglee : function(verticesCurve1, verticesCurve2) {
-        var verticiesLength = verticesCurve1.length;
+        var verticesLength = verticesCurve1.length;
         var verticesSurfaceReglee = [];
         
-        for(var t = 0; t < verticiesLength; ++t) {
-            var tt = t / (verticiesLength - 1);
-            for(var s = 0; s < verticiesLength; ++s) {
-                var ss = s / (verticiesLength - 1);
+        for(var t = 0; t < verticesLength; ++t) {
+            var tt = t / (verticesLength - 1);
+            for(var s = 0; s < verticesLength; ++s) {
+                var ss = s / (verticesLength - 1);
                 var vertice = new THREE.Vector3((1 - tt) * verticesCurve1[s].x + tt * verticesCurve2[s].x,
                                                 (1 - tt) * verticesCurve1[s].y + tt * verticesCurve2[s].y, 
                                                 (1 - tt) * verticesCurve1[s].z + tt * verticesCurve2[s].z);
@@ -237,28 +141,159 @@ var GuillaumeScript = {
     },
     
     computeFacetteDeCoons : function(verticesCurve1, verticesCurve2, verticesPlaneFrontBack, verticesPlaneLeftRight) {
-        var verticiesLength = verticesCurve1.length;
+        var verticesLength = verticesCurve1.length;
         var verticesFacetteDeCoons = [];
         
-        for(var t = 0; t < verticiesLength; ++t) {
-            var tt = t / (verticiesLength - 1);
-            for(var s = 0; s < verticiesLength; ++s) {
-                var ss = s / (verticiesLength - 1);
+        for(var t = 0; t < verticesLength; ++t) {
+            var tt = t / (verticesLength - 1);
+            for(var s = 0; s < verticesLength; ++s) {
+                var ss = s / (verticesLength - 1);
                 
                 var bst = new THREE.Vector3(
-                    verticesCurve1[0].x * (1 - ss) * (1 - tt) + verticesCurve1[verticiesLength - 1].x * ss * (1 - tt) + verticesCurve2[0].x * (1 - ss) * tt + verticesCurve2[verticiesLength - 1].x * ss * tt, 
-                    verticesCurve1[0].y * (1 - ss) * (1 - tt) + verticesCurve1[verticiesLength - 1].y * ss * (1 - tt) + verticesCurve2[0].y * (1 - ss) * tt + verticesCurve2[verticiesLength - 1].y * ss * tt, 
-                    verticesCurve1[0].z * (1 - ss) * (1 - tt) + verticesCurve1[verticiesLength - 1].z * ss * (1 - tt) + verticesCurve2[0].z * (1 - ss) * tt + verticesCurve2[verticiesLength - 1].z * ss * tt);
+                    verticesCurve1[0].x * (1 - ss) * (1 - tt) + verticesCurve1[verticesLength - 1].x * ss * (1 - tt) + verticesCurve2[0].x * (1 - ss) * tt + verticesCurve2[verticesLength - 1].x * ss * tt, 
+                    verticesCurve1[0].y * (1 - ss) * (1 - tt) + verticesCurve1[verticesLength - 1].y * ss * (1 - tt) + verticesCurve2[0].y * (1 - ss) * tt + verticesCurve2[verticesLength - 1].y * ss * tt, 
+                    verticesCurve1[0].z * (1 - ss) * (1 - tt) + verticesCurve1[verticesLength - 1].z * ss * (1 - tt) + verticesCurve2[0].z * (1 - ss) * tt + verticesCurve2[verticesLength - 1].z * ss * tt);
                 
-                var vertice = new THREE.Vector3(verticesPlaneFrontBack[verticiesLength * t + s].x + verticesPlaneLeftRight[verticiesLength * s + t].x - bst.x, 
-                                                verticesPlaneFrontBack[verticiesLength * t + s].y + verticesPlaneLeftRight[verticiesLength * s + t].y - bst.y, 
-                                                verticesPlaneFrontBack[verticiesLength * t + s].z + verticesPlaneLeftRight[verticiesLength * s + t].z - bst.z);
+                var vertice = new THREE.Vector3(verticesPlaneFrontBack[verticesLength * t + s].x + verticesPlaneLeftRight[verticesLength * s + t].x - bst.x, 
+                                                verticesPlaneFrontBack[verticesLength * t + s].y + verticesPlaneLeftRight[verticesLength * s + t].y - bst.y, 
+                                                verticesPlaneFrontBack[verticesLength * t + s].z + verticesPlaneLeftRight[verticesLength * s + t].z - bst.z);
                 
                 verticesFacetteDeCoons.push(vertice);
             }
         }
         
         return verticesFacetteDeCoons;
+    },
+    
+    getDebugCurves : function(numberOfPoints) {
+        var curves = {
+            numberOfPoints : numberOfPoints,
+            verticesPolygonalChainFront : [],
+            verticesPolygonalChainBack : [],
+            verticesPolygonalChainLeft : [],
+            verticesPolygonalChainRight : []
+        };
+        
+        // Devant
+        for(var i = 0; i < numberOfPoints; ++i) {
+            curves.verticesPolygonalChainFront.push(new THREE.Vector3(-10 + i, 5 + Math.pow((i - numberOfPoints) / 10, 2), 10));
+        }
+
+        //Derrière
+        for(var i = 0; i < numberOfPoints; ++i) {
+            curves.verticesPolygonalChainBack.push(new THREE.Vector3(-10 + i, 10 - Math.pow((i - numberOfPoints) / 10, 2), -10));
+        }
+        
+        // Gauche
+        for(var i = 0; i < numberOfPoints; ++i) {
+            curves.verticesPolygonalChainLeft.push(new THREE.Vector3(-10, 5 + Math.pow((i - numberOfPoints) / 10, 2), 10 - i));
+        }
+        
+        // Droite
+        for(var i = 0; i < numberOfPoints; ++i) {
+           curves.verticesPolygonalChainRight.push(new THREE.Vector3(10, 10 - Math.pow((i - numberOfPoints) / 10, 2), 10 - i));
+        }
+        
+        return curves;
+    },
+    
+    getDebugCurves2 : function(numberOfPoints) {
+        var curves = {
+            numberOfPoints : numberOfPoints,
+            verticesPolygonalChainFront : [],
+            verticesPolygonalChainBack : [],
+            verticesPolygonalChainLeft : [],
+            verticesPolygonalChainRight : []
+        };
+        
+        // Devant
+        for(var i = 0; i < numberOfPoints; ++i) {
+            curves.verticesPolygonalChainFront.push(new THREE.Vector3(10 + i, 10 - Math.pow((i - numberOfPoints) / 10, 2), 10));
+        }
+
+        //Derrière
+        for(var i = 0; i < numberOfPoints; ++i) {
+            curves.verticesPolygonalChainBack.push(new THREE.Vector3(10 + i, 5 + Math.pow((i - numberOfPoints) / 10, 2), -10));
+        }
+        
+        // Gauche
+        for(var i = 0; i < numberOfPoints; ++i) {
+            curves.verticesPolygonalChainLeft.push(new THREE.Vector3(10,  10 - Math.pow((i - numberOfPoints) / 10, 2), 10 - i));
+        }
+        
+        // Droite
+        for(var i = 0; i < numberOfPoints; ++i) {
+           curves.verticesPolygonalChainRight.push(new THREE.Vector3(30, 5 + Math.pow((i - numberOfPoints) / 10, 2), 10 - i));
+        }
+        
+        return curves;
+    },
+    
+    computeTouteLaFacetteDeCoons : function(inputData) {
+        /*
+        data = {
+            numberOfPoints : int,
+            verticesPolygonalChainFront : [] THREE.Vector3,
+            verticesPolygonalChainBack : [] THREE.Vector3,
+            verticesPolygonalChainLeft : [] THREE.Vector3,
+            verticesPolygonalChainRight : [] THREE.Vector3
+        }
+        */
+
+        var facetteDeCoons = {
+            numberOfPoints : inputData.numberOfPoints,
+            
+            verticesCurveFront : [],
+            verticesCurveBack : [],
+            verticesCurveLeft : [],
+            verticesCurveRight : [],
+            
+            verticesPlaneFrontBack : [],
+            verticesPlaneLeftRight : [],
+            
+            verticesPlaneBoth : []
+        };
+        
+        var firstVerticePolygonalChainFront = inputData.verticesPolygonalChainFront[0];
+        var lastVerticePolygonalChainFront = inputData.verticesPolygonalChainFront[inputData.numberOfPoints - 1];
+        
+        var firstVerticePolygonalChainBack = inputData.verticesPolygonalChainBack[0];
+        var lastVerticePolygonalChainBack = inputData.verticesPolygonalChainBack[inputData.numberOfPoints - 1];
+        
+        var firstVerticePolygonalChainLeft = inputData.verticesPolygonalChainLeft[0];
+        var lastVerticePolygonalChainLeft = inputData.verticesPolygonalChainLeft[inputData.numberOfPoints - 1];
+        
+        var firstVerticePolygonalChainRight = inputData.verticesPolygonalChainRight[0];
+        var lastVerticePolygonalChainRight = inputData.verticesPolygonalChainRight[inputData.numberOfPoints - 1];
+        
+        // COURBES avant/arrière/gauche/droite
+        facetteDeCoons.verticesCurveFront = ThomasScript.curveCornerCuttingVertices(inputData.verticesPolygonalChainFront, false);
+        facetteDeCoons.verticesCurveBack = ThomasScript.curveCornerCuttingVertices(inputData.verticesPolygonalChainBack, false);
+        facetteDeCoons.verticesCurveLeft = ThomasScript.curveCornerCuttingVertices(inputData.verticesPolygonalChainLeft, false);
+        facetteDeCoons.verticesCurveRight = ThomasScript.curveCornerCuttingVertices(inputData.verticesPolygonalChainRight, false);
+        
+        // On rajoute les vertex de début/fin
+        facetteDeCoons.verticesCurveFront.unshift(firstVerticePolygonalChainFront);
+        facetteDeCoons.verticesCurveFront.push(lastVerticePolygonalChainFront);
+        
+        facetteDeCoons.verticesCurveBack.unshift(firstVerticePolygonalChainBack);
+        facetteDeCoons.verticesCurveBack.push(lastVerticePolygonalChainBack);
+        
+        facetteDeCoons.verticesCurveLeft.unshift(firstVerticePolygonalChainLeft);
+        facetteDeCoons.verticesCurveLeft.push(lastVerticePolygonalChainLeft);
+        
+        facetteDeCoons.verticesCurveRight.unshift(firstVerticePolygonalChainRight);
+        facetteDeCoons.verticesCurveRight.push(lastVerticePolygonalChainRight);
+        
+        // PLAN entre devant/derrière
+        facetteDeCoons.verticesPlaneFrontBack = this.computeSurfaceReglee(facetteDeCoons.verticesCurveFront, facetteDeCoons.verticesCurveBack);
+        
+        // PLAN entre gauche/droite
+        facetteDeCoons.verticesPlaneLeftRight = this.computeSurfaceReglee(facetteDeCoons.verticesCurveLeft, facetteDeCoons.verticesCurveRight);
+        
+        facetteDeCoons.verticesPlaneBoth = this.computeFacetteDeCoons(facetteDeCoons.verticesCurveFront, facetteDeCoons.verticesCurveBack, facetteDeCoons.verticesPlaneFrontBack, facetteDeCoons.verticesPlaneLeftRight);
+                
+        return facetteDeCoons;
     },
     
     computeTriangles : function(vertices, length) {
@@ -270,8 +305,8 @@ var GuillaumeScript = {
             triangles.push(i + length);
             
             triangles.push(i + 1);
-            triangles.push(i + length);
             triangles.push(i + length + 1);
+            triangles.push(i + length);
 
             if(i % length == length - 2) {
                 i++;
@@ -279,5 +314,92 @@ var GuillaumeScript = {
         }  
         
         return triangles;
+    },
+    
+    drawFacetteDeCoons : function(inputData, otherData) {
+        var facetteDeCoonsData = this.computeTouteLaFacetteDeCoons(inputData);
+        
+        var geometryCurveFront = new THREE.Geometry();
+        var geometryCurveBack = new THREE.Geometry();
+        var geometryCurveLeft = new THREE.Geometry();
+        var geometryCurveRight = new THREE.Geometry();
+        
+        var geometryFacetteDeCoons = new THREE.Geometry();
+        
+        geometryCurveFront.vertices = facetteDeCoonsData.verticesCurveFront;
+        geometryCurveBack.vertices = facetteDeCoonsData.verticesCurveBack;
+        geometryCurveLeft.vertices = facetteDeCoonsData.verticesCurveLeft;
+        geometryCurveRight.vertices = facetteDeCoonsData.verticesCurveRight;
+            
+        var curveFront = new THREE.Line(geometryCurveFront, otherData.materialFrontBack);
+        var curveBack = new THREE.Line(geometryCurveBack, otherData.materialFrontBack);
+        var curveLeft = new THREE.Line(geometryCurveLeft, otherData.materialFrontBack);
+        var curveRight = new THREE.Line(geometryCurveRight, otherData.materialFrontBack);
+        
+        curveFront.visible = false;
+        curveBack.visible = false;
+        curveLeft.visible = false;
+        curveRight.visible = false;
+        
+        this.pointsCurvesFrontBack.push(curveFront);
+        this.pointsCurvesFrontBack.push(curveBack);       
+        this.pointsCurvesLeftRight.push(curveLeft);
+        this.pointsCurvesLeftRight.push(curveRight);
+
+        this.tw.scenes.main.add(curveFront);  
+        this.tw.scenes.main.add(curveBack);  
+        this.tw.scenes.main.add(curveLeft);  
+        this.tw.scenes.main.add(curveRight);  
+ 
+        // POINTS VERT (front/back)
+        var pointsFrontBack = [];
+        for(var i = 0; i < facetteDeCoonsData.verticesPlaneFrontBack.length; ++i) {
+            var point = new THREE.Mesh(otherData.geometryPoint, otherData.materialFrontBack);
+            point.visible = false;
+            point.position.x = facetteDeCoonsData.verticesPlaneFrontBack[i].x;
+            point.position.y = facetteDeCoonsData.verticesPlaneFrontBack[i].y;
+            point.position.z = facetteDeCoonsData.verticesPlaneFrontBack[i].z;
+            this.tw.scenes.main.add(point);
+            pointsFrontBack.push(point);
+        }  
+        this.pointsPlaneFrontBack.push(pointsFrontBack);
+
+        // POINTS BLEU (left/right)
+        var pointsLeftRight = [];
+        for(var i = 0; i < facetteDeCoonsData.verticesPlaneLeftRight.length; ++i) {
+            var point = new THREE.Mesh(otherData.geometryPoint, otherData.materialLeftRight);
+            point.visible = false;
+            point.position.x = facetteDeCoonsData.verticesPlaneLeftRight[i].x;
+            point.position.y = facetteDeCoonsData.verticesPlaneLeftRight[i].y;
+            point.position.z = facetteDeCoonsData.verticesPlaneLeftRight[i].z;
+            this.tw.scenes.main.add(point);
+            pointsLeftRight.push(point);
+        }
+        this.pointsPlaneLeftRight.push(pointsLeftRight);
+            
+        // POINTS ROUGE (les 2)
+        var pointsBoth = [];
+        for(var i = 0; i < facetteDeCoonsData.verticesPlaneBoth.length; ++i) {
+            var point = new THREE.Mesh(otherData.geometryPoint, otherData.materialBoth);
+            point.visible = false;
+            point.position.x = facetteDeCoonsData.verticesPlaneBoth[i].x;
+            point.position.y = facetteDeCoonsData.verticesPlaneBoth[i].y;
+            point.position.z = facetteDeCoonsData.verticesPlaneBoth[i].z;
+            this.tw.scenes.main.add(point);
+            pointsBoth.push(point);
+        }
+        this.pointsPlaneBoth.push(pointsBoth);
+        
+        geometryFacetteDeCoons.vertices = facetteDeCoonsData.verticesPlaneBoth;
+        var triangles = this.computeTriangles(facetteDeCoonsData.verticesPlaneBoth, facetteDeCoonsData.numberOfPoints * 2);
+        
+        for(var i = 0; i < triangles.length; i+=3){
+            geometryFacetteDeCoons.faces.push(new THREE.Face3(triangles[i], triangles[i+1], triangles[i+2]));
+        }
+        
+        var facetteDeCoons = new THREE.Mesh(geometryFacetteDeCoons, otherData.materialFacette);
+        facetteDeCoons.visible = false;
+        this.coonsPatches.push(facetteDeCoons);
+        this.tw.scenes.main.add(facetteDeCoons);
     },
 }
