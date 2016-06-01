@@ -6,6 +6,7 @@ class Vertex extends THREE.Vector3
         super(x, y, z);
         
         this.id = ++Vertex.ID;
+        
         this.incidentEdges = [];
         
         this.vertexPoint = null;
