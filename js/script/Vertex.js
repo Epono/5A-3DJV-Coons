@@ -18,7 +18,7 @@ class Vertex extends THREE.Vector3
         
         return newVertex;
     }
-    
+
     // Setter
     setIncidentEdges(incidentEdges)
     {
@@ -73,7 +73,7 @@ class Vertex extends THREE.Vector3
             tmpVertex.add(tmpEdge.v2);
             tmpVertex.divideScalar(2);
             // Ajout de ce point dans la liste des mid-points
-            allMidPoints.push(tmpVertice);
+            allMidPoints.push(tmpVertex);
 
             // Ajout des face points pour l'edge incidente courante 
             // dans la liste des face points des faces gauche et droite 
@@ -85,11 +85,11 @@ class Vertex extends THREE.Vector3
         }
       
         // Variable qui serviront au calcul du vertex point
-        var q = allFacePoints[0].clone;
-        var r = allMidPoints[0].clone;
+        var q = allFacePoints[0].clone();
+        var r = allMidPoints[0].clone();
         var v = super.clone();
         var n = this.incidentEdges.length;
-             
+          
         // Moyenne de tous les faces points
         var arrayLength = allFacePoints.length;
         for(var i = 1; i < arrayLength; ++i)

@@ -53,7 +53,6 @@ class Edge
     // si il n'y a rien sur un des coté et si de l'autre coté le polygone n'existe pas deja
     setPolygone( polygone )
     {
-
         if (!this.rightPolygone && !this.leftPolygone)
         {
             this.rightPolygone = polygone;
@@ -62,7 +61,6 @@ class Edge
         {
            this.leftPolygone = polygone;
         }
-
     }
     
     // Affect le triangle en paramètre au left ou right polygone
@@ -85,7 +83,7 @@ class Edge
     }
     
     // Dit s'il y a un triangle gauche et droit
-    hasLeftAndRightPolygone()
+    hasLeftAndRightTriangle()
     {
         if((this.leftTriangle != null) && (this.rightTriangle != null))
             return true;

@@ -302,7 +302,7 @@ class CatmullClark
         this.setCatmullClarkLists();
         
         this.computeCatmullClarkPoints();
-        
+        /*
         this.linkFacePointsToEdgePoints();
         
         this.linkVertexPointsToEdgePoints();
@@ -310,5 +310,6 @@ class CatmullClark
         this.generateCatmullClarkPolygones(); 
 
         return new Mesh(this.catmullClarkPolygones);
+        */
     }
 }
