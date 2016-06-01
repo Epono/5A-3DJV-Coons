@@ -105,4 +105,9 @@ class Vertex extends THREE.Vector3
         this.vertexPoint.add(r.multiplyScalar(2/n));
         this.vertexPoint.add(v.multiplyScalar((n-3)/n));
     }
+
+    toKey()
+    {
+        return "" + this.x + this.y + this.z;
+    }
 }

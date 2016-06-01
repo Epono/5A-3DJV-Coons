@@ -26,6 +26,18 @@ $(document).ready(function()  {
 	{
 		var actions = {};
 
+		/*
+		if (customsScript[i].__params)
+		{
+			for (var k in customsScript[i].__params)
+			{
+				customsScript[i][k] = customsScript[i].__params[k];
+			}
+
+			delete customsScript[i].__params;
+		}
+		//*/
+
 		if (!customsScript[i].inputs)
 		{
 			continue;
