@@ -3,6 +3,8 @@ class Triangle
     // Constructor avec les 3 edges composant le triangle
 	constructor(e1, e2, e3)
     {
+        this.id = ++Triangle.ID;
+        
         this.e1 = e1;
         this.e2 = e2;
         this.e3 = e3;
@@ -57,3 +59,5 @@ class Triangle
         
     }  
 }
+
+Triangle.ID = 0;

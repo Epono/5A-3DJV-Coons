@@ -3,8 +3,10 @@ class Polygone
     // Constructeur
 	constructor()
 	{
-        this.edges = [];  
         this.id = ++Polygone.ID;
+        
+        this.edges = [];  
+        
         this.facePoint = null;
 	}
     

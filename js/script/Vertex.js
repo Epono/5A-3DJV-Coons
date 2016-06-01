@@ -12,6 +12,12 @@ class Vertex extends THREE.Vector3
         this.vertexPoint = null;
     }
     
+    clone()
+    {
+        var newVertex = new Vertex(this.x, this.y, this.z);
+        
+        return newVertex;
+    }
     
     // Setter
     setIncidentEdges(incidentEdges)
@@ -21,13 +27,13 @@ class Vertex extends THREE.Vector3
     
     
     // Ajouter une arrete à la liste des arretes incidentes
-    pushIncidentEdges(edge)
+    pushIncidentEdge(edge)
     {
         this.incidentEdges.push(edge);
     }
     
     // Enlève une arrete incidente passée en paramètres (s'il elle se trouve dans la liste)
-    removeIncidentEdges(edge)
+    removeIncidentEdge(edge)
     {
         // Récupération de l'index de l'élément à enlever
         var indexToRemove = this.incidentEdges.indexOf(edge);
