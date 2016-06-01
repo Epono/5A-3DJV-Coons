@@ -10,8 +10,6 @@ class CatmullClark
         this.catmullClarkVertice = [];
         this.catmullClarkEdges = [];
         this.catmullClarkPolygones = [];
-        
-        this.
     }
     
     
@@ -69,5 +67,7 @@ class CatmullClark
                 this.catmullClarkEdges.push(new Edge(tmpFacePoint, tmpEdgePoint));
             }           
         }
+        
+        
     }
 }
