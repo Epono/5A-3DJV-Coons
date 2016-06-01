@@ -36,9 +36,35 @@ class Mesh
 		this.pushPolygone(poly);
 	}
 
+	defineEdgesNeighbourhood()
+	{
+		for (var i = 0; i < this.polygones.length; ++i)
+		{
+			for (var e = 0; e < this.polygones[i].edges.length)
+			{
+				
+			}
+		}
+	}
+
 	pushPolygone(poly)
 	{
 		this.polygones.push(poly);
+	}
+
+	getEdges()
+	{
+		var res = [];
+
+		for (var i = 0; i < this.polygones.length; ++i)
+		{
+			for (var j = 0; j < this.polygones[i].edges.length; ++j)
+			{
+				res.push(this.polygones[i].edges[j]);
+			}	
+		}
+
+		return res;
 	}
 
 	/*<THREE.Mesh>*/ buildThreeMesh(mat = Mesh.getRandomColorMat() )
@@ -310,7 +336,7 @@ class Mesh
 	static getRandomColorMat()
 	{
 		var color = new THREE.Color(Math.random(), Math.random(), Math.random());
-		
+
 		return new THREE.MeshBasicMaterial( 
 			{
 				color: color,

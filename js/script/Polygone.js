@@ -44,7 +44,8 @@ class Polygone
         }
     }
     
-        
+
+
     // Calcul le facePoint du polygone (Catmull-Clark)
     computeFacePoint()
     {
@@ -55,19 +56,20 @@ class Polygone
         
         for(var i = 0; i < arrayLength; ++i)
         {
-            if(tmpVertice.indexOf(this.edges.v1) == -1)
-                tmpVertice = this.edges.v1;
+            if(tmpVertice.indexOf(this.edges[i].v1) == -1)
+                tmpVertice.push(this.edges[i].v1);
             
-            if(tmpVertice.indexOf(this.edges.v2) == -1)
-                tmpVertice = this.edges.v2;
+            if(tmpVertice.indexOf(this.edges[i].v2) == -1)
+                tmpVertice.push(this.edges[i].v2);
         }
         
         // On calcule la moyenne des différents vertices appartenant aux edges composant le polygone
         var arrayLength = tmpVertice.length;
+
         if(arrayLength > 0)
         {
             var vec3 = tmpVertice[0].clone();
-            
+
             this.facePoint = new Vertex(vec3.x, vec3.y, vec3.z);
             
             for(i = 1; i < arrayLength; ++i)
