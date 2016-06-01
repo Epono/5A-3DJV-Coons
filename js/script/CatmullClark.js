@@ -53,8 +53,8 @@ class CatmullClark
         this.catmullClarkEdges.push(edge);
         
         // Ajout de l'edge adjacente aux vertice de l'edge
-        edge.v1.adjacentEdges.(edge);
-        edge.v2.adjacentEdges.(edge);
+        edge.v1.adjacentEdges.push(edge);
+        edge.v2.adjacentEdges.push(edge);
     }
     
     pushCatmullClarkPolygone(polygone)
@@ -134,21 +134,20 @@ class CatmullClark
             
             if((tmpEdge.v1.id == v1.id || tmpEdge.v2.id == v1.id) 
                && (tmpEdge.v1.id == v2.id || tmpEdge.v2.id == v2.id))
+            {
                 return tmpEdge;
+            }
         }
         return null;
     }
     
     hasPolygone(edge1, edge2, edge3, edge4)
     {
-        var tmpPlygone = null:
-        var tmpEdges = null;
-        
-        var arrayLength = 0;
-        
-        var hasEdge = true;
-
-        var tmpEdge = null;
+        var tmpPlygone = null,
+            tmpEdges = null,
+            arrayLength = 0,
+            hasEdge = true,
+            tmpEdge = null;
         
         for(var i = 0; i < this.catmullClarkPolygones.length; ++i)
         {
@@ -211,7 +210,7 @@ class CatmullClark
 
                     if(edge1 != null && edge2 != null && edge3 != null && edge4 != null)
                     {
-                        if(this.hasPolygone(edge1, edge2, edge3, edge4)
+                        if( this.hasPolygone(edge1, edge2, edge3, edge4) )
                         {
                             newPolygone = new Polygone(edge1, edge2, edge3, edge4);
                             pushCatmullClarkPolygone(newPolygone);
@@ -254,6 +253,8 @@ class CatmullClark
         
         this.linkVertexPointsToEdgePoints();
         
-        this.generateCatmullClarkPolygones();  
+        this.generateCatmullClarkPolygones(); 
+
+        return new Mesh(this.catmullClarkPolygones);
     }
 }

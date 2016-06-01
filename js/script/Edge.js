@@ -49,9 +49,9 @@ class Edge
     
     setPolygone(polygone)
     {
-        if((this.leftPolygone == null) && (this.rightPolygone != polygones))
+        if((this.leftPolygone == null) && (this.rightPolygone != polygone))
                 this.leftPolygone = polygone;
-        else if((this.rightPolygone == null) && (this.leftPolygone != polygones))
+        else if((this.rightPolygone == null) && (this.leftPolygone != polygone))
             this.rightPolygone = polygone;
     }
     
@@ -102,6 +102,11 @@ class Edge
             
             this.edgePoint.divideScalar(4);
         }
+    }
+
+    equals(edge)
+    {
+        return this.v1.equals(edge.v1) && this.v2.equals(edge.v2);
     }
 }
 
