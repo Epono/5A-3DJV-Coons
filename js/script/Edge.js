@@ -47,6 +47,22 @@ class Edge
     }
     
     
+    setPolygone(polygone)
+    {
+        if((this.leftPolygone == null) && (this.rightPolygone != polygones))
+                this.leftPolygone = polygone;
+        else if((this.rightPolygone == null) && (this.leftPolygone != polygones))
+            this.rightPolygone = polygone;
+    }
+    
+    setTriangle(triangle)
+    {
+        if((this.leftTriangle == null) && (this.rightTriangle != triangle))
+                this.rightTriangle = triangle;
+        else if((this.rightTriangle == null) && (this.leftTriangle != triangle))
+            this.rightTriangle = triangle;
+    }
+    
     // Dit s'il y a un polyone gauche et droit
     hasLeftAndRightPolygone()
     {

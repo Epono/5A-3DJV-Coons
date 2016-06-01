@@ -17,9 +17,9 @@ class Polygone
     
     
     // Ajoute une edge à la liste des edges
-    pushEdges(edges)
+    pushEdge(edge)
     {
-        this.edges.push(edges);
+        this.edges.push(edge);
     }
     
     // Enlève un point à la liste des points (s'il le point passé en paramètre se trouve dans la liste)
