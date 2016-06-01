@@ -49,6 +49,8 @@ class CatmullClark
         var tmpFacePoint = null;
         var tmpEdgePoint = null;
         
+        var newEdge = null;
+        
         // Parcout de toutes les faces pour lier le face point aux edge point de chaque edge de la face
         for(var i = 0; i < this.polygones.length; ++i)
         {
@@ -61,13 +63,54 @@ class CatmullClark
             for(var j = 0; j < tmpEdges.length; ++j)
             {
                 tmpEdgePoint = tmpEdges[j].edgePoint;
+                newEdge = new Edge(tmpFacePoint, tmpEdgePoint);
                 
-                this.catmullClarkVertice.push(tmpEdgePoint);
+                this.catmullClarkVertice.push(tmpEdgePoint);         
+                this.catmullClarkEdges.push(newEdge);
                 
-                this.catmullClarkEdges.push(new Edge(tmpFacePoint, tmpEdgePoint));
+                tmpFacePoint.incidentEdges.push(newEdge);
+                tmpEdgePoint.incidentEdges.push(newEdge);
             }           
         }
         
+        var tmpVertex = null;
+        var tmpIncidentEdges = null
+        var tmpVertexPoint = null;
         
+        for(var i = 0; i < this.vertice.length; ++i)
+        {
+            tmpVertex = this.vertice[i];
+            tmpVertexPoint = tmpVertex.vertexPoint;  
+            tmpIncidentEdges = tmpVertex.incidentEdges;
+            
+            this.catmullClarkVertice.push(tmpVertexPoint);
+            
+            for(var j = 0; j < this.tmpIncidentEdges.length; ++j)
+            {
+                tmpEdge = this.tmpIncidentEdges[j];
+                tmpEdgePoint = tmpEdge.EdgePoint;
+                
+                newEdge = new Edge(tmpVertexPoint, tmpEdgePoint);
+                
+                this.catmullClarkEdges.push(newEdge);
+                
+                tmpVertexPoint.incidentEdges.push(newEdge);
+                tmpEdgePoint.incidentEdges.push(newEdge);
+            }
+            
+            for(var j = 0; j < this.tmpIncidentEdges.length; ++j)
+            {
+                tmpEdge = this.tmpIncidentEdges[j];
+                tmpLeftPolygone = tmpEdge.leftPolygone;
+                tmpFacePoint = tmpLeftPolygone.facePoint;
+                
+                for(var k = 0; j < this.tmpIncidentEdges.length; ++j)
+                {
+                    tmpOtherEdge
+                    
+                    if(tmpEdge != this.tmpIncidentEdges[j]) && tmpFace == 
+                }
+            }
+        }
     }
 }
