@@ -156,6 +156,9 @@ ThreeWrapper.prototype  = {
 	changeCamera : function(camera){
 		this.cameras.CURRENT = camera;
 	},
+    changeScene : function(scene){
+		this.scenes.CURRENT = scene;
+	},
 	// TO USE
 	changeFramerate : function(time){
 		var me = this;
