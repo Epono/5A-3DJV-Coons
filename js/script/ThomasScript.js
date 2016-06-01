@@ -237,7 +237,6 @@ var ThomasScript = {
 			first = true,
 			vec0 = new THREE.Vector3(0,0,0);
 
-
 		this.u = this.u ? this.u : this.bugMode ? 0 : ThomasScript.DEFAULT_U;
 		this.v = this.v ? this.v : this.bugMode ? 0 : ThomasScript.DEFAULT_V;
 
@@ -275,7 +274,47 @@ var ThomasScript = {
 
         return nextLineGeometry;
 	},
-	/*
+    
+    curveCornerCuttingVertices : function (vertices, close = false)	{ 
+		var nextLineGeometry = [], 
+            first = true, 
+            vec0 = new THREE.Vector3(0,0,0);
+
+        this.u = this.u || ThomasScript.DEFAULT_U;
+		this.v = this.v || ThomasScript.DEFAULT_V;
+    
+        for (var i = 0; i + 1< vertices.length; ++i) {
+    	
+			var p1 = vertices[i],
+    			p2 = vertices[i+1];
+
+    		var vecDir = p2.clone().sub(p1);
+
+    		var nextP1 = p1.clone().add(
+    				new THREE.Vector3(
+        				vecDir.x * this.u,
+        				vecDir.y * this.u,
+        				vecDir.z * this.u
+    				)
+    			),
+    			nextP2 = nextP1.clone().add(
+    				vecDir.clone().multiplyScalar(
+    					1 - (this.u + this.v)
+    				)
+    			);
+
+			nextLineGeometry.push(nextP1);
+			nextLineGeometry.push(nextP2);
+        }
+
+        if (close) {
+			nextLineGeometry.push(nextLineGeometry[0]);
+		}
+
+        return nextLineGeometry;
+	},
+
+    /*
 	* Kobbelt
 	*/
 	kobbelt : function()
