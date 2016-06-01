@@ -98,7 +98,148 @@ class CatmullClark
     
     linkVertexPointsToEdgePoints()
     {
+        var tmpVertex = null;
+        var tmpIncidentEdges = null
+        var tmpVertexPoint = null;
         
+        var tmpEdgePoint = null;
+        var newEdge = null;
+        
+
+        for(var i = 0; i < this.vertice.length; ++i)
+        {
+            tmpVertex = this.vertice[i];      
+            tmpVertexPoint = tmpVertex.vertexPoint;  
+            tmpIncidentEdges = tmpVertex.incidentEdges;
+            
+            this.catmullClarkVertice.push(tmpVertexPoint);
+            
+            // Création des edges du nouveau points
+            for(var j = 0; j < tmpIncidentEdges.length; ++j)
+            {
+                tmpEdgePoint = tmpIncidentEdges[j].EdgePoint;
+                
+                newEdge = new Edge(tmpVertexPoint, tmpEdgePoint);
+                this.catmullClarkEdges.push(newEdge);
+            }            
+        }
+    }
+    
+    findEdge(v1, v2)
+    {
+        var tmpEdge = null;
+        for(var i = 0; i < this.catmullClarkEdges.length; ++i)
+        {
+            tmpEdge = this.catmullClarkEdges[i];
+            if((tmpEdge.v1 == v1 || tmpEdge.v2 == v1) && (tmpEdge.v1 == v2 || tmpEdge.v2 == v2))
+                return tmpEdge;
+        }
+        return null;
+    }
+    
+    hasPolygone(edge1, edge2, edge3, edge4)
+    {
+        var tmpPlygone = null:
+        var tmpEdges = null;
+        
+        var tmpEdge = null;
+        
+        var hasEdge = true;
+        
+        var arrayLength = 0;
+        
+        for(var i = 0; i < this.catmullClarkPolygones.length; ++i)
+        {
+            tmpPolygone = this.catmullClarkPolygones[i];
+            tmpEdges = tmpPolygone.edges;
+            arrayLength = tmpEdges.length;
+            
+            if(arrayLength == 4)
+            {
+                hasEdge = true;
+                
+                for(var j = 0; j < tmpEdges.length; ++j)
+                {
+                    tmpEdge = tmpEdges[j];
+                    if(tmpEdge != edge1 || tmpEdge != edge2 || tmpEdge != edge3 || tmpEdge != edge4)
+                    {
+                        hasEdge = false;
+                    }
+                }
+                
+                if(hasAllEdges)
+                    return true;
+            }
+        }
+        return false;
+    }
+    
+    findEdgesToPushCatmullClarkPolygone(facePoint, polygoneEdges, polygoneEdge1, vertex)
+    {
+        var polygoneEdge2 = null;  
+        
+        var edgePoint1 = null;
+        var edgePoint2 = null;
+        
+        var edge1 = null; 
+        var edge2 = null; 
+        var edge3 = null; 
+        var edge4 = null; 
+        
+        var vertexPoint = vertex.vertexPoint;
+        
+        for(var i = 0; i < polygoneEdges.length; ++i)
+        {
+            // Edge 2
+            polygoneEdge2 = polygoneEdges[i];
+            
+            if(polygoneEdge1 != polygoneEdge2)
+            {
+                if(vertex == polygoneEdge2.v1 || vertex == polygoneEdge2.v2)
+                {   
+                    // Edge point 1 et 2
+                    edgePoint1 = polygoneEdge1.edgePoint;
+                    edgePoint2 = polygoneEdge2.edgePoint;
+
+                    edge1 = findEdge(facePoint, edgePoint1);
+                    edge2 = findEdge(edgePoint1, vertexPoint);
+                    edge3 = findEdge(vertexPoint, edgePoint2);
+                    edge4 = findEdge(edgePoint2, facePoint);
+
+                    if(edge1 != null && edge2 != null && edge3 != null && edge4 != null)
+                    {
+                        if(this.hasPolygone(edge1, edge2, edge3, edge4)
+                        {
+                            newPolygone = new Polygone(edge1, edge2, edge3, edge4);
+                            pushCatmullClarkPolygone(newPolygone);
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+    }
+    
+    generateCatmullClarkPolygones()
+    {
+        var tmpPolygone = null;
+        var tmpPolygoneEdges = null;
+        var tmpPolygoneFacePoint = null;
+        
+        for(var i = 0; i < this.polygones.length; ++i)
+        {
+            tmpPolygone = this.polygones[i];
+            tmpPolygoneEdges = tmpPolygone.edges;
+            tmpPolygoneFacePoint = tmpPolygone.facePoint;
+            
+            for(var j = 0; j < tmpPolygoneEdges.length; ++j)
+            {
+                tmpPolygoneEdge1 = tmpPolygoneEdges[j];
+                
+                this.findEdgesToPushCatmullClarkPolygones(tmpPolygoneFacePoint, tmpPolygoneEdges, tmpPolygoneEdge1, tmpPolygoneEdge1.v1);
+                this.findEdgesToPushCatmullClarkPolygones(tmpPolygoneFacePoint, tmpPolygoneEdges, tmpPolygoneEdge1, tmpPolygoneEdge1.v2);
+            }
+        }
     }
     
     // Lancer l'algo de subdivision Catmull-Clark
@@ -108,85 +249,8 @@ class CatmullClark
         
         this.linkFacePointsToEdgePoints();
         
-        var tmpVertex = null;
-        var tmpIncidentEdges = null
-        var tmpVertexPoint = null;
+        this.linkVertexPointsToEdgePoints();
         
-        for(var i = 0; i < this.vertice.length; ++i)
-        {
-            tmpVertex = this.vertice[i];
-            tmpVertexPoint = tmpVertex.vertexPoint;  
-            tmpIncidentEdges = tmpVertex.incidentEdges;
-            
-            this.catmullClarkVertice.push(tmpVertexPoint);
-            
-            // Création des edges du nouveau points
-            for(var j = 0; j < this.tmpIncidentEdges.length; ++j)
-            {
-                tmpEdge = this.tmpIncidentEdges[j];
-                tmpEdgePoint = tmpEdge.EdgePoint;
-                
-                newEdge = new Edge(tmpVertexPoint, tmpEdgePoint);
-                
-                this.catmullClarkEdges.push(newEdge);
-                
-                tmpVertexPoint.incidentEdges.push(newEdge);
-                tmpEdgePoint.incidentEdges.push(newEdge);
-            }            
-        }
-        
-        var tmpPolygone = null;
-        
-        var tmpEdges = null;
-        var tmpFacePoint = null;
-        
-        var tmpEdge1 = null;
-        var tmpEdge2 = null;
-        
-        var tmpEdgePoint1 = null;
-        var tmpEdgePoint2 = null;
-        
-        var tmpVertex = null;
-        var tmpVertexPoint = null;
-        var newPolygone = null;
-        
-        for(var i = 0; i < this.polygones.length; ++i)
-        {
-            tmpPolygone = this.polygones[i];
-            tmpEdges = tmpPolygone.edges;
-            tmpFacePoint = tmpPolygone.facePoint;
-            
-            for(var j = 0; j < tmpEdges.length; ++j)
-            {
-                tmpEdge1 = tmpEdges[j];
-                
-                tmpVertex = tmpEdge1.v1;
-                tmpVertexPoint = tmpVertex.vertexPoint;
-                
-                for(var k = 0; k < tmpEdges.length; ++k)
-                {
-                    tmpEdge2 = tmpEdges[k];
-                    if(tmpEdge1 != tmpEdge2)
-                    {
-                        if(tmpVertex == tmpEdge2.v1 || tmpVertex == tmpEdge2.v2)
-                        {
-                            
-                            tmpEdgePoint1 = tmpEdge1.edgePoint;
-                            tmpEdgePoint2 = tmpEdge2.edgePoint;
-                            
-                            tmpEdge1 = findEdge(tmpFacePoint, tmpEdgePoint1);
-                            tmpEdge2 = findEdge(tmpEdgePoint1, tmpVertexPoint);
-                            tmpEdge3 = findEdge(tmpVertexPoint, tmpEdgePoint2);
-                            tmpEdge4 = findEdge(tmpEdgePoint2, tmpFacePoint);
-                            
-                            newPolygone = new Polygone(tmpEdge1, tmpEdge2, tmpEdge3, tmpEdge4);
-                            
-                            newPolygone.pushEdge(newPolygone);
-                            // update left/rightface des edges du polygone
-                        }
-                    }
-                }   
-            }
-        }
+        this.generateCatmullClarkPolygones();  
     }
 }
