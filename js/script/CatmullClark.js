@@ -131,7 +131,9 @@ class CatmullClark
         for(var i = 0; i < this.catmullClarkEdges.length; ++i)
         {
             tmpEdge = this.catmullClarkEdges[i];
-            if((tmpEdge.v1 == v1 || tmpEdge.v2 == v1) && (tmpEdge.v1 == v2 || tmpEdge.v2 == v2))
+            
+            if((tmpEdge.v1.id == v1.id || tmpEdge.v2.id == v1.id) 
+               && (tmpEdge.v1.id == v2.id || tmpEdge.v2.id == v2.id))
                 return tmpEdge;
         }
         return null;
@@ -142,16 +144,17 @@ class CatmullClark
         var tmpPlygone = null:
         var tmpEdges = null;
         
-        var tmpEdge = null;
+        var arrayLength = 0;
         
         var hasEdge = true;
-        
-        var arrayLength = 0;
+
+        var tmpEdge = null;
         
         for(var i = 0; i < this.catmullClarkPolygones.length; ++i)
         {
             tmpPolygone = this.catmullClarkPolygones[i];
             tmpEdges = tmpPolygone.edges;
+            
             arrayLength = tmpEdges.length;
             
             if(arrayLength == 4)
@@ -161,7 +164,7 @@ class CatmullClark
                 for(var j = 0; j < tmpEdges.length; ++j)
                 {
                     tmpEdge = tmpEdges[j];
-                    if(tmpEdge != edge1 || tmpEdge != edge2 || tmpEdge != edge3 || tmpEdge != edge4)
+                    if(tmpEdge.id != edge1.id || tmpEdge.id != edge2.id || tmpEdge.id != edge3.id || tmpEdge.id != edge4.id)
                     {
                         hasEdge = false;
                     }
@@ -193,9 +196,9 @@ class CatmullClark
             // Edge 2
             polygoneEdge2 = polygoneEdges[i];
             
-            if(polygoneEdge1 != polygoneEdge2)
+            if(polygoneEdge1.id != polygoneEdge2.id)
             {
-                if(vertex == polygoneEdge2.v1 || vertex == polygoneEdge2.v2)
+                if(vertex.id == polygoneEdge2.v1.id || vertex.id == polygoneEdge2.v2.id)
                 {   
                     // Edge point 1 et 2
                     edgePoint1 = polygoneEdge1.edgePoint;
