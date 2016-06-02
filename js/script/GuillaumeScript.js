@@ -46,7 +46,61 @@ var GuillaumeScript = {
         
         //this.drawFacetteDeCoons(inputData, this.otherData);
         //this.drawFacetteDeCoons(inputData2, this.otherData);
-        //this.drawFacetteDeCoons(inputDataWing, this.otherData);        
+        //this.drawFacetteDeCoons(inputDataWing, this.otherData); 
+        
+        var numberOfPointsTerrain = 64;
+        var terrain = new this.TerrainGeneration({
+            width : numberOfPointsTerrain,
+            height : numberOfPointsTerrain,
+            segments : numberOfPointsTerrain,
+            smoothingFactor : 32,
+        });
+        
+        var verticesTerrain = [];
+        for(var x = - numberOfPointsTerrain / 2; x < numberOfPointsTerrain / 2; x++) {
+            for(var y = - numberOfPointsTerrain / 2; y < numberOfPointsTerrain / 2; y++) {
+                verticesTerrain.push(new THREE.Vector3(x, terrain[numberOfPointsTerrain / 2 + x][numberOfPointsTerrain / 2 + y], y));
+            }
+        }
+        
+        
+        var geometryPoint = new THREE.SphereGeometry(0.1, 0.1, 0.1);
+        var materialFrontBack = new THREE.MeshBasicMaterial( {color: 0x00ff00} );
+        /*
+        for(var i = 0; i < verticesTerrain.length; ++i) {
+            var point = new THREE.Mesh(geometryPoint, materialFrontBack);
+            point.position.x = verticesTerrain[i].x;
+            point.position.y = verticesTerrain[i].y;
+            point.position.z = verticesTerrain[i].z;
+            this.tw.scenes.main.add(point);
+        }
+        */
+        
+        var texture = THREE.ImageUtils.loadTexture('images/lucas_2.jpg', {}, function() {
+            // Image loadé
+        });
+        
+        var materialTerrain = new THREE.MeshPhongMaterial( { 
+            color: 0xff00ff, 
+            specular: 0x009900, 
+            shininess: 30, 
+            shading: THREE.FlatShading, 
+            side : THREE.DoubleSide, 
+            //map: texture
+        });
+        
+        var geometryTerrain = new THREE.Geometry();
+        geometryTerrain.vertices = verticesTerrain;
+        
+        var triangles = this.computeTriangles(verticesTerrain, numberOfPointsTerrain);
+                
+        for(var i = 0; i < triangles.length; i+=3){
+            geometryTerrain.faces.push(new THREE.Face3(triangles[i], triangles[i+1], triangles[i+2]));
+        }
+        
+        var meshTerrain = new THREE.Mesh(geometryTerrain, materialTerrain);
+        console.log(geometryTerrain);
+        tw.scenes.main.add(meshTerrain);
     },
 
 	update : function ( tw , deltaTime )
@@ -443,4 +497,63 @@ var GuillaumeScript = {
         this.coonsPatches.push(facetteDeCoons);
         this.tw.scenes.main.add(facetteDeCoons);
     },
+    
+    TerrainGeneration : function(terrainInputData) {
+        var width = terrainInputData.width;
+        var height = terrainInputData.height;
+        var segments = terrainInputData.segments;
+        var smoothingFactor = terrainInputData.smoothingFactor;
+
+        var terrain = new Array();
+
+        // Init
+        for(var i = 0; i <= segments; i++) {
+            terrain[i] = new Array();
+            for(var j = 0; j <= segments; j++) {
+                terrain[i][j] = 0;
+            }
+        }
+
+        var size = segments + 1;
+        for(var length = segments; length >= 2; length /= 2) {
+            var half = length / 2;
+            smoothingFactor /= 2;
+
+            // generate the new square values
+            for(var x = 0; x < segments; x += length) {
+                for(var y = 0; y < segments; y += length) {
+                    var average = terrain[x][y] + // top left
+                    terrain[x + length][y] + // top right
+                    terrain[x][y + length] + // lower left
+                    terrain[x + length][y + length]; // lower right
+                    average /= 4;
+                    average += 2 * smoothingFactor * Math.random() - smoothingFactor;
+
+                    terrain[x + half][y + half] = average;
+                }
+            }
+
+            // generate the diamond values
+            for(var x = 0; x < segments; x += half) {
+                for(var y = (x + half) % length; y < segments; y += length) {
+                    var average = terrain[(x - half + size) % size][y] + // middle left
+                            terrain[(x + half) % size][y]+ // middle right
+                            terrain[x][(y + half) % size]+ // middle top
+                            terrain[x][(y - half + size) % size]; // middle bottom
+                    average /= 4;
+                    average += 2 * smoothingFactor * Math.random() - smoothingFactor;
+
+                    terrain[x][y] = average;
+
+                    // values on the top and right edges
+                    if(x === 0)
+                        terrain[segments][y] = average;
+                    if(y === 0)
+                        terrain[x][segments] = average;
+                }
+            }
+        }
+        
+        return terrain;
+    }
 }
