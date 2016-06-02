@@ -100,7 +100,43 @@ var GuillaumeScript = {
         
         var meshTerrain = new THREE.Mesh(geometryTerrain, materialTerrain);
         console.log(geometryTerrain);
-        tw.scenes.main.add(meshTerrain);
+        //tw.scenes.main.add(meshTerrain);
+        
+        // Catmul clark
+        var verticeTerrainToVerticesKevin = {};
+        
+        var verticesKevin = [];
+        var edgesKevin = [];
+        var trianglesKevin = [];
+        
+        for(var i = 0; i < verticesTerrain.length; ++i) {
+            var vertex = new Vertex(verticesTerrain[i].x, verticesTerrain[i].y, verticesTerrain[i].z);
+            verticesKevin.push(vertex);
+            verticeTerrainToVerticesKevin[i] = vertex;
+        }
+        
+       for(var i = 0; i < triangles.length; i+=3) {
+           // TODO: pas de double d'edges !
+            var edge1 = new Edge(verticeTerrainToVerticesKevin[triangles[i]], verticeTerrainToVerticesKevin[triangles[i+1]]);
+            var edge2 = new Edge(verticeTerrainToVerticesKevin[triangles[i+1]], verticeTerrainToVerticesKevin[triangles[i+2]]);
+            var edge3 = new Edge(verticeTerrainToVerticesKevin[triangles[i+2]], verticeTerrainToVerticesKevin[triangles[i]]);
+           
+           edgesKevin.push(edge1);
+           edgesKevin.push(edge2);
+           edgesKevin.push(edge3);
+           
+           var triangle = new Triangle(edge1, edge2, edge3);
+                      
+           trianglesKevin.push(triangle);
+        }
+        
+        var catmullClark = new CatmullClark(verticesKevin, edgesKevin, trianglesKevin);
+        console.log(verticesKevin);
+        console.log(edgesKevin);
+        console.log(trianglesKevin);
+        
+        var mesh = catmullClark.launchCatmullClark();
+        console.log(mesh);
     },
 
 	update : function ( tw , deltaTime )
