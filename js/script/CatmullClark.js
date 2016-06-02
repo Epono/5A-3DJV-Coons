@@ -24,7 +24,7 @@ class CatmullClark
         this.edges = edges;
         this.catmullClarkEdges = edges;
     } 
-    setVertice(polygones)
+    setPolygones(polygones)
     {
         this.polygones = polygones;
         this.catmullClarkPolygones = polygones;    
