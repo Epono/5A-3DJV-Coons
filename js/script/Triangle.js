@@ -9,9 +9,7 @@ class Triangle
         this.e2 = e2;
         this.e3 = e3;
         
-        this.facePoint = null;
-        
-        
+        this.centerPoint = null;
     }
 
     
@@ -19,27 +17,30 @@ class Triangle
     setE1(edge)
     {
         this.e1 = edge;
-        this.computeFacePoint();
     }
     setE2(edge)
     {
         this.e2 = edge;
-        this.computeFacePoint();
     }
 
     setE3(edge)
     {
         this.e3 = edge;
-        this.computeFacePoint();
+    }
+    
+    setEdges(e1, e2, e3)
+    {
+        this.e1 = e1;
+        this.e2 = e2;
+        this.e3 = e3;
     }
     
     getEdges()
     {
-        return [this.e1,this.e2,this.e3];
+        return [this.e1, this.e2, this.e3];
     }
     
-    // Calcul le facePoint
-    computeCenterPoint()
+    getVertice()
     {
         // Récupération des 3 vertice composant le triangle
         var v1 = this.e1.v1;
@@ -48,20 +49,26 @@ class Triangle
         // Les deux premiers sommets se trouvent sur la première edge du triangle, 
         // dont pour avoir le troisième vertex
         // sur la deuxième edge du triangle, on va récupérer le vertex différent de v1 et v2
-
         if((v1 != this.e2.v1) && (v2 != this.e2.v1))
             v3 = this.e2.v1;
         else
             v3 = this.e2.v2;
         
+        return [v1, v2, v3];
+    }
+
+    // Calcul le facePoint
+    computeCenterPoint()
+    {
+        vertice = this.getVertice();
+        
         // Calcul du face point en faisant le moyenne avec les 3 vertices
         // (v1 + v2 + v3)/3
-        this.facePoint = v1.clone();
-        this.facePoint.add(v2);
-        this.facePoint.add(v3);
+        this.centerPoint = vertice[0].clone();
+        this.centerPoint.add(vertice[1]);
+        this.centerPoint.add(vertice[2]);
         
-        this.facePoint.divideScalar(3);
-        
+        this.centerPoint.divideScalar(3);  
     }  
 }
 

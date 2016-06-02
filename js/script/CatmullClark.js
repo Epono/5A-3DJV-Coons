@@ -145,7 +145,7 @@ class CatmullClark
             edges[i].setPolygone(polygone);
     }
     
-        // Calcul de tous les face/edge/vertex points
+    // Calcul de tous les face/edge/vertex points
     computeCatmullClarkPoints()
     {   
         // Calcul des tous les face points
