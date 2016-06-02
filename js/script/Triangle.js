@@ -38,16 +38,16 @@ class Triangle
     computeFacePoint()
     {
         // Récupération des 3 vertice composant le triangle
-        var v1 = this.e1.getV1();
-        var v2 = this.e1.getV2();
+        var v1 = this.e1.v1;
+        var v2 = this.e1.v2;
         var v3 = null;
         // Les deux premiers sommets se trouvent sur la première edge du triangle, 
         // dont pour avoir le troisième vertex
         // sur la deuxième edge du triangle, on va récupérer le vertex différent de v1 et v2
-        if((v1 != this.e2.getV1()) && (v2 != this.e2.getV1()))
-            v3 = this.e2.getV1();
+        if((v1 != this.e2.v1) && (v2 != this.e2.v1))
+            v3 = this.e2.v1;
         else
-            v3 = this.e2.getV2();
+            v3 = this.e2.v2;
         
         // Calcul du face point en faisant le moyenne avec les 3 vertices
         // (v1 + v2 + v3)/3
