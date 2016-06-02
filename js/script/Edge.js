@@ -53,11 +53,13 @@ class Edge
     // si il n'y a rien sur un des coté et si de l'autre coté le polygone n'existe pas deja
     setPolygone( polygone )
     {
-        if (!this.rightPolygone && !this.leftPolygone)
+        //if (!this.rightPolygone && !this.leftPolygone)
+        if ((this.rightPolygone == null) && (this.leftPolygone == null))
         {
             this.rightPolygone = polygone;
         }
-        else if (!this.leftPolygone && polygone.id != this.rightPolygone.id)
+        //else if (!this.leftPolygone && polygone.id != this.rightPolygone.id)
+        else if ((this.leftPolygone == null) && (polygone !== this.rightPolygone))
         {
            this.leftPolygone = polygone;
         }

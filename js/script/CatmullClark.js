@@ -62,7 +62,8 @@ class CatmullClark
     // Push un vertex dans la liste des nouveaux Vertex
     pushCatmullClarkVertex(vertex)
     {
-        this.catmullClarkVertice.push(vertex);
+        if(this.catmullClarkVertice.indexOf(vertex) < 0)
+            this.catmullClarkVertice.push(vertex);
     }
     
     // Push l'edge dans la liste des nouvelles edges 
@@ -70,10 +71,9 @@ class CatmullClark
     pushCatmullClarkEdge(edge)
     {
         this.catmullClarkEdges.push(edge);
-        
         // Ajout de l'edge adjacente aux vertice de l'edge
-        edge.v1.adjacentEdges.push(edge);
-        edge.v2.adjacentEdges.push(edge);
+        edge.v1.incidentEdges.push(edge);
+        edge.v2.incidentEdges.push(edge);
     }
     
     // Push le polygone dans la liste des nouveaux polygones 
@@ -83,7 +83,7 @@ class CatmullClark
         this.catmullClarkPolygones.push(polygone);
         
         // Ajout du polygone (gauche ou droit) aux edges composant le polygone
-        var edges = this.polygones.edges;
+        var edges = polygone.edges;
         for(var i = 0; i < edges.length; ++i)
             edges[i].setPolygone(polygone);
     }
@@ -106,18 +106,20 @@ class CatmullClark
             tmpEdges = this.polygones[i].edges;
             
             // Ajout du face point dans la liste des vertice
-            this.catmullClarkVertice.push(tmpFacePoint);
-            
+            this.pushCatmullClarkVertex(tmpFacePoint);
             // Parcout des edges du polygone pour ajouter les edgesPoints et les nouvelles edges
             for(var j = 0; j < tmpEdges.length; ++j)
             {
                 // Ajout de l'edge point dans la liste des vertice
                 tmpEdgePoint = tmpEdges[j].edgePoint;
-                this.catmullClarkVertice.push(tmpEdgePoint);  
-                
+                this.pushCatmullClarkVertex(tmpEdgePoint);  
+
                 // Ajout de la nouvelle edge (facePoint --------- EdgePoint)
-                newEdge = new Edge(tmpFacePoint, tmpEdgePoint);
-                this.catmullClarkEdges.push(newEdge);
+                if(this.findEdge(tmpFacePoint, tmpEdgePoint) == null)
+                {
+                    newEdge = new Edge(tmpFacePoint, tmpEdgePoint);
+                    this.pushCatmullClarkEdge(newEdge);
+                }
             }           
         }
     }
@@ -126,8 +128,8 @@ class CatmullClark
     linkVertexPointsToEdgePoints()
     {
         var tmpVertex = null;
-        var tmpIncidentEdges = null
         var tmpVertexPoint = null;
+        var tmpIncidentEdges = null
         
         var tmpEdgePoint = null;
         var newEdge = null;
@@ -135,22 +137,26 @@ class CatmullClark
         // Parcourt de tous les vertice
         for(var i = 0; i < this.vertice.length; ++i)
         {
-            tmpVertex = this.vertice[i];      
+            tmpVertex = this.vertice[i];  
+            
             tmpVertexPoint = tmpVertex.vertexPoint;  
             tmpIncidentEdges = tmpVertex.incidentEdges;
             
             // Ajout du vertex point dans la liste des vertice
-            this.catmullClarkVertice.push(tmpVertexPoint);
+            this.pushCatmullClarkVertex(tmpVertexPoint);
             
             // Création des edges du nouveau points
             for(var j = 0; j < tmpIncidentEdges.length; ++j)
             {
-                tmpEdgePoint = tmpIncidentEdges[j].EdgePoint;
+                tmpEdgePoint = tmpIncidentEdges[j].edgePoint;
                 
-                // Ajout de la nouvelle edge (vertexPoint --------- EdgePoint)
-                newEdge = new Edge(tmpVertexPoint, tmpEdgePoint);
-                this.catmullClarkEdges.push(newEdge);
-            }            
+                // Ajout de la nouvelle edge (vertexPoint --------- edgePoint)
+                if(this.findEdge(tmpVertexPoint, tmpEdgePoint) == null)
+                {
+                    newEdge = new Edge(tmpVertexPoint, tmpEdgePoint);
+                    this.pushCatmullClarkEdge(newEdge);
+                }
+            }
         }
     }
     
@@ -162,14 +168,15 @@ class CatmullClark
         for(var i = 0; i < this.catmullClarkEdges.length; ++i)
         {
             tmpEdge = this.catmullClarkEdges[i];
-            
             // Comparaison des id des vertices
-            if((tmpEdge.v1.id == v1.id || tmpEdge.v2.id == v1.id) 
-               && (tmpEdge.v1.id == v2.id || tmpEdge.v2.id == v2.id))
+            //if((tmpEdge.v1.id == v1.id || tmpEdge.v2.id == v1.id) && (tmpEdge.v1.id == v2.id || tmpEdge.v2.id == v2.id))
+            if((v1 === tmpEdge.v1 || v1 === tmpEdge.v2) && (v2 === tmpEdge.v1 || v2 === tmpEdge.v2))
             {
+                console.log("a");
                 return tmpEdge;
             }
         }
+        console.log("b");
         return null;
     }
     
@@ -197,7 +204,8 @@ class CatmullClark
                 for(var j = 0; j < tmpEdges.length; ++j)
                 {
                     tmpEdge = tmpEdges[j];
-                    if(tmpEdge.id != edge1.id || tmpEdge.id != edge2.id || tmpEdge.id != edge3.id || tmpEdge.id != edge4.id)
+                    //if(tmpEdge.id != edge1.id || tmpEdge.id != edge2.id || tmpEdge.id != edge3.id || tmpEdge.id != edge4.id)
+                    if((tmpEdge !== edge1) && (tmpEdge !== edge2) && (tmpEdge !== edge3) && (tmpEdge !== edge4))
                     {
                         hasAllEdges = false;
                         break;
@@ -216,7 +224,7 @@ class CatmullClark
     //      polygoneEdges    -->     Edges d'un polygone
     //      polygoneEdge1    -->     Une des edges de polygoneEdges
     //      vertex           -->     Un des deux vertex de polygoneEdge1 
-    findEdgesToPushCatmullClarkPolygone(facePoint, polygoneEdges, polygoneEdge1, vertex)
+    findEdgesToPushCatmullClarkPolygones(facePoint, polygoneEdges, polygoneEdge1, vertex)
     {
         var polygoneEdge2 = null;  
         
@@ -228,6 +236,8 @@ class CatmullClark
         var edge3 = null; 
         var edge4 = null; 
         
+        var newPolygone = null;
+        
         // Vertex point d'un des vertice appartenant au polygoneEdge1 
         var vertexPoint = vertex.vertexPoint;
         
@@ -238,30 +248,32 @@ class CatmullClark
             polygoneEdge2 = polygoneEdges[i];
             
             // Test pour voir s'il ne s'agit pas de la meme edge
-            if(polygoneEdge1.id != polygoneEdge2.id)
+            //if(polygoneEdge1.id != polygoneEdge2.id)
+            if(polygoneEdge1 !== polygoneEdge2)
             {
                 // Test pour voir si les edges ont bien 'vertex' en commun dans les vertice les composant
-                if(vertex.id == polygoneEdge2.v1.id || vertex.id == polygoneEdge2.v2.id)
+                //if(vertex.id == polygoneEdge2.v1.id || vertex.id == polygoneEdge2.v2.id)
+                if((vertex === polygoneEdge2.v1) || (vertex === polygoneEdge2.v2))
                 {   
                     // Edge point 1 et 2
                     edgePoint1 = polygoneEdge1.edgePoint;
                     edgePoint2 = polygoneEdge2.edgePoint;
 
                     // Le polygone est forcement dans cet ordre de point ()
-                    edge1 = findEdge(facePoint, edgePoint1);
-                    edge2 = findEdge(edgePoint1, vertexPoint);
-                    edge3 = findEdge(vertexPoint, edgePoint2);
-                    edge4 = findEdge(edgePoint2, facePoint);
+                    edge1 = this.findEdge(facePoint, edgePoint1);
+                    edge2 = this.findEdge(edgePoint1, vertexPoint);
+                    edge3 = this.findEdge(vertexPoint, edgePoint2);
+                    edge4 = this.findEdge(edgePoint2, facePoint);
 
                     // Test pour voir si on a bien récupérer toutes les edges
-                    if(edge1 != null && edge2 != null && edge3 != null && edge4 != null)
+                    if((edge1 != null) && (edge2 != null) && (edge3 != null) && (edge4 != null))
                     {
                         // Test pour voir si un polygone composé des 4 edges n'existe pas deja
                         if(! this.hasPolygone(edge1, edge2, edge3, edge4) )
                         {
                             // Ajout du nouveau polygone dans la liste des polygones
                             newPolygone = new Polygone(edge1, edge2, edge3, edge4);
-                            pushCatmullClarkPolygone(newPolygone);
+                            this.pushCatmullClarkPolygone(newPolygone);
                         }
                         break;
                     }
@@ -277,6 +289,8 @@ class CatmullClark
         var tmpPolygoneEdges = null;
         var tmpPolygoneFacePoint = null;
         
+        var tmpPolygoneEdge = null;
+        
         // Parcourt de tous les polygones
         for(var i = 0; i < this.polygones.length; ++i)
         {
@@ -287,11 +301,11 @@ class CatmullClark
             // Parcourt de toutes les edges du polygone
             for(var j = 0; j < tmpPolygoneEdges.length; ++j)
             {
-                tmpPolygoneEdge1 = tmpPolygoneEdges[j];
+                tmpPolygoneEdge = tmpPolygoneEdges[j];
                 
                 // Essaye de crée le polygone avec le vertex point du 1er et 2ème vertex du l'edge courante
-                this.findEdgesToPushCatmullClarkPolygones(tmpPolygoneFacePoint, tmpPolygoneEdges, tmpPolygoneEdge1, tmpPolygoneEdge1.v1);
-                this.findEdgesToPushCatmullClarkPolygones(tmpPolygoneFacePoint, tmpPolygoneEdges, tmpPolygoneEdge1, tmpPolygoneEdge1.v2);
+                this.findEdgesToPushCatmullClarkPolygones(tmpPolygoneFacePoint, tmpPolygoneEdges, tmpPolygoneEdge, tmpPolygoneEdge.v1);
+                this.findEdgesToPushCatmullClarkPolygones(tmpPolygoneFacePoint, tmpPolygoneEdges, tmpPolygoneEdge, tmpPolygoneEdge.v2);
             }
         }
     }
@@ -302,13 +316,13 @@ class CatmullClark
         this.setCatmullClarkLists();
         
         this.computeCatmullClarkPoints();
-        /*
+        
         this.linkFacePointsToEdgePoints();
         
         this.linkVertexPointsToEdgePoints();
         
-        this.generateCatmullClarkPolygones(); 
-
+        //this.generateCatmullClarkPolygones(); 
+        /*
         return new Mesh(this.catmullClarkPolygones);
         */
     }
