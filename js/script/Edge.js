@@ -70,10 +70,16 @@ class Edge
     // si il n'y a rien sur un des coté et si de l'autre coté le triangle n'existe pas deja
     setTriangle(triangle)
     {
-        if((this.leftTriangle == null) && (this.rightTriangle.id != triangle.id))
-                this.rightTriangle = triangle;
-        else if((this.rightTriangle == null) && (this.leftTriangle.id != triangle.id))
-            this.rightTriangle = triangle;
+        //if (!this.rightPolygone && !this.leftPolygone)
+        if ((this.rightTriangle == null) && (this.leftTriangle == null))
+        {
+            this.rightTriangle = polygone;
+        }
+        //else if (!this.leftPolygone && polygone.id != this.rightPolygone.id)
+        else if ((this.leftTriangle == null) && (polygone !== this.rightTriangle))
+        {
+           this.leftTriangle = polygone;
+        }
     }
     
     // Dit s'il y a un polyone gauche et droit
