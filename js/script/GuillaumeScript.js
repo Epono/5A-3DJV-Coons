@@ -130,11 +130,9 @@ var GuillaumeScript = {
            trianglesKevin.push(triangle);
         }
         
-        var catmullClark = new CatmullClark(verticesKevin, edgesKevin, trianglesKevin);
-        console.log(verticesKevin);
-        console.log(edgesKevin);
-        console.log(trianglesKevin);
+        // TODO: remplir les edges et les vertices, toussa
         
+        var catmullClark = new CatmullClark(verticesKevin, edgesKevin, trianglesKevin);
         var mesh = catmullClark.launchCatmullClark();
         console.log(mesh);
     },
