@@ -10,7 +10,6 @@ class Polygone
         this.facePoint = null;
 	}
     
-    
     // Setter
     setEdges(edges)
     {
