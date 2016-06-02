@@ -11,7 +11,7 @@ class Triangle
         
         this.facePoint = null;
         
-        this.computeFacePoint();
+        
     }
 
     
@@ -33,9 +33,13 @@ class Triangle
         this.computeFacePoint();
     }
     
+    getEdges()
+    {
+        return [this.e1,this.e2,this.e3];
+    }
     
     // Calcul le facePoint
-    computeFacePoint()
+    computeCenterPoint()
     {
         // Récupération des 3 vertice composant le triangle
         var v1 = this.e1.v1;
@@ -44,6 +48,7 @@ class Triangle
         // Les deux premiers sommets se trouvent sur la première edge du triangle, 
         // dont pour avoir le troisième vertex
         // sur la deuxième edge du triangle, on va récupérer le vertex différent de v1 et v2
+
         if((v1 != this.e2.v1) && (v2 != this.e2.v1))
             v3 = this.e2.v1;
         else
