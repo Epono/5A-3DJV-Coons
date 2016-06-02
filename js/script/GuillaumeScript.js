@@ -132,9 +132,9 @@ var GuillaumeScript = {
         
         // TODO: remplir les edges et les vertices, toussa
         
-        var catmullClark = new CatmullClark(verticesKevin, edgesKevin, trianglesKevin);
-        var mesh = catmullClark.launchCatmullClark();
-        console.log(mesh);
+        //var catmullClark = new CatmullClark(verticesKevin, edgesKevin, trianglesKevin);
+        //var mesh = catmullClark.launchCatmullClark();
+        //console.log(mesh);
     },
 
 	update : function ( tw , deltaTime )
