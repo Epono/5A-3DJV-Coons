@@ -11,7 +11,7 @@ class Triangle
         
         this.facePoint = null;
         
-        this.computeFacePoint();
+        
     }
 
     
@@ -33,6 +33,10 @@ class Triangle
         this.computeFacePoint();
     }
     
+    getEdges()
+    {
+        return [this.e1,this.e2,this.e3];
+    }
     
     // Calcul le facePoint
     computeCenterPoint()

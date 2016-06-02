@@ -73,12 +73,12 @@ class Edge
         //if (!this.rightPolygone && !this.leftPolygone)
         if ((this.rightTriangle == null) && (this.leftTriangle == null))
         {
-            this.rightTriangle = polygone;
+            this.rightTriangle = triangle;
         }
         //else if (!this.leftPolygone && polygone.id != this.rightPolygone.id)
-        else if ((this.leftTriangle == null) && (polygone !== this.rightTriangle))
+        else if ((this.leftTriangle == null) && (triangle !== this.rightTriangle))
         {
-           this.leftTriangle = polygone;
+           this.leftTriangle = triangle;
         }
     }
     
