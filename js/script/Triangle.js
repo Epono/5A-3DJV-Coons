@@ -73,7 +73,7 @@ class Triangle
     // Calcul le facePoint
     computeCenterPoint()
     {
-        vertice = this.getVertice();
+        var vertice = this.getVertice();
         
         // Calcul du face point en faisant le moyenne avec les 3 vertices
         // (v1 + v2 + v3)/3
