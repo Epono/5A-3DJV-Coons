@@ -44,7 +44,7 @@ class Vertex extends THREE.Vector3
         {
             var tmpEdges = [];
             
-            for(i = 0; i < this.incidentEdges.length; ++i)
+            for(var i = 0; i < this.incidentEdges.length; ++i)
             {
                 if(i != indexToRemove)
                     tmpEdges.push(this.incidentEdges[i]);

@@ -92,7 +92,10 @@ class CatmullClark
                     }
                     
                     if(foundAnEdge)
+                    {
                         ++edgesFound;
+                        foundAnEdge = false;
+                    }
                     else
                         break;
                 }
@@ -299,8 +302,7 @@ class CatmullClark
     
     // Lancer l'algo de subdivision Catmull-Clark
     launchCatmullClark()
-    {
-        
+    {     
         this.setListsBeforeLauchingAlgo();
         
         this.computeCatmullClarkPoints();
@@ -311,7 +313,6 @@ class CatmullClark
         
         this.generateCatmullClarkPolygones();        
         
-        return new Mesh(this.catmullClarkPolygones);
-        
+        return new Mesh(this.catmullClarkPolygones);       
     }
 }

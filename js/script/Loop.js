@@ -57,7 +57,7 @@ class Loop
         // parcourt de chaque triangle
         for(var i = 0; i < this.loopTriangles.length; ++i)
         {
-            var tmpEdges = this.loopTriangles[i].edges;
+            var tmpEdges = this.loopTriangles[i].getEdges;
             edgesFound = 0;
             foundAnEdge = false;
             
@@ -75,7 +75,10 @@ class Loop
                     }
                     
                     if(foundAnEdge)
+                    {
                         ++edgesFound;
+                        foundAnEdge = false;
+                    }
                     else
                         break;
                 }
@@ -100,21 +103,27 @@ class Loop
     // en settant les edges incidentes pour les vertice composant l'edge
     pushLoopEdge(edge)
     {
-        this.loopEdges.push(edge);
-        // Ajout de l'edge adjacente aux vertice de l'edge
-        edge.v1.incidentEdges.push(edge);
-        edge.v2.incidentEdges.push(edge);
+        if(this.hasEdge(edge.v1, edge.v2) == false)
+        {
+            this.loopEdges.push(edge);
+            // Ajout de l'edge adjacente aux vertice de l'edge
+            edge.v1.incidentEdges.push(edge);
+            edge.v2.incidentEdges.push(edge);
+        }
     }
     
     // Push le triangle dans la liste des nouveaux triangles 
     // en settant le triangle gauche ou droit des edges composant le triangle
     pushLoopTriangle(triangle)
     {
-        this.loopTriangles.push(triangle);
-        // Ajout du triangle (gauche ou droit) aux edges composant le triangle
-        triangle.e1.setTriangle(triangle);
-        triangle.e2.setTriangle(triangle);
-        triangle.e3.setTriangle(triangle);
+        if(this.hasTriangle(triangle.getEdges()) == false)
+        {
+            this.loopTriangles.push(triangle);
+            // Ajout du triangle (gauche ou droit) aux edges composant le triangle
+            triangle.e1.setTriangle(triangle);
+            triangle.e2.setTriangle(triangle);
+            triangle.e3.setTriangle(triangle);
+        }
     }
     
     
@@ -174,7 +183,7 @@ class Loop
             var e1e2 = new Edge(e1, e2);
             var e2e3 = new Edge(e2, e3);
             var e3e1 = new Edge(e3, e1);
-            
+
             this.pushLoopEdge(e1e2);
             this.pushLoopEdge(e2e3);
             this.pushLoopEdge(e3e1);

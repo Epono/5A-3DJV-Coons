@@ -30,6 +30,12 @@ class Edge
         this.v2 = v;
     }
     
+    setV1V2(v1, v2)
+    {
+        this.v1 = v1;
+        this.v2 = v2;
+    }
+    
     setLeftPolygone(polygone)
     {
         this.leftPolygone = polygone;

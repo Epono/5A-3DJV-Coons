@@ -16,9 +16,9 @@ class Kobbelt
     hasEdge(v1, v2)
     {
         // parcourt de chaque edges
-        for(var i = 0; i < this.loopEdges.length; ++i)
+        for(var i = 0; i < this.kobbeltEdges.length; ++i)
         {
-            var tmpEdge = this.loopEdges[i];
+            var tmpEdge = this.kobbeltEdges[i];
 
             // Comparaison des id des vertices
             if((v1.id == tmpEdge.v1.id && v2.id == tmpEdge.v2.id) || (v1.id == tmpEdge.v2.id && v2.id == tmpEdge.v1.id))
@@ -34,9 +34,9 @@ class Kobbelt
     findEdge(v1, v2)
     {
         // parcourt de chaque edges
-        for(var i = 0; i < this.loopEdges.length; ++i)
+        for(var i = 0; i < this.kobbeltEdges.length; ++i)
         {
-            var tmpEdge = this.loopEdges[i];
+            var tmpEdge = this.kobbeltEdges[i];
 
             // Comparaison des id des vertices
             if((v1.id == tmpEdge.v1.id && v2.id == tmpEdge.v2.id) || (v1.id == tmpEdge.v2.id && v2.id == tmpEdge.v1.id))
@@ -53,9 +53,9 @@ class Kobbelt
         var edgesFound = 0;
         var foundAnEdge = false;
         // parcourt de chaque triangle
-        for(var i = 0; i < this.loopTriangles.length; ++i)
+        for(var i = 0; i < this.kobbeltTriangles.length; ++i)
         {
-            var tmpEdges = this.loopTriangles[i].edges;
+            var tmpEdges = this.kobbeltTriangles[i].getEdges;
             edgesFound = 0;
             foundAnEdge = false;
             
@@ -73,7 +73,10 @@ class Kobbelt
                     }
                     
                     if(foundAnEdge)
+                    {
                         ++edgesFound;
+                        foundAnEdge = false;
+                    }
                     else
                         break;
                 }
@@ -97,21 +100,27 @@ class Kobbelt
     // en settant les edges incidentes pour les vertice composant l'edge
     pushKobbeltEdge(edge)
     {
-        this.kobbeltEdges.push(edge);
-        // Ajout de l'edge adjacente aux vertice de l'edge
-        edge.v1.incidentEdges.push(edge);
-        edge.v2.incidentEdges.push(edge);
+        if(this.hasEdge(edge.v1, edge.v2) == false)
+        {
+            this.kobbeltEdges.push(edge);
+            // Ajout de l'edge adjacente aux vertice de l'edge
+            edge.v1.incidentEdges.push(edge);
+            edge.v2.incidentEdges.push(edge);
+        }
     }
     
     // Push le triangle dans la liste des nouveaux triangles 
     // en settant le triangle gauche ou droit des edges composant le triangle
     pushKobbeltTriangle(triangle)
     {
-        this.kobbeltTriangles.push(triangle);
-        // Ajout du triangle (gauche ou droit) aux edges composant le triangle
-        triangle.e1.setTriangle(triangle);
-        triangle.e2.setTriangle(triangle);
-        triangle.e3.setTriangle(triangle);
+        if(this.hasTriangle(triangle.getEdges()) == false)
+        {
+            this.kobbeltTriangles.push(triangle);
+            // Ajout du triangle (gauche ou droit) aux edges composant le triangle
+            triangle.e1.setTriangle(triangle);
+            triangle.e2.setTriangle(triangle);
+            triangle.e3.setTriangle(triangle);
+        }
     }
     
     
@@ -152,14 +161,34 @@ class Kobbelt
             var tmpTriangle = this.triangles[i];         
             var tmpCenterPoint = tmpTriangle.centerPoint;
             
-            var tmpEdge = tmpTriangle.e1; 
-            this.pushKobbeltTriangle(new Triangle(new Edge(tmpCenterPoint, tmpEdge.v1), new Edge(tmpCenterPoint, tmpEdge.v2), tmpEdge));
+            var tmpEdge = tmpTriangle.e1;
+            var newEdge1 = new Edge(tmpCenterPoint, tmpEdge.v1);
+            var newEdge2 = new Edge(tmpCenterPoint, tmpEdge.v2);
+            
+            this.pushKobbeltEdge(tmpEdge);
+            this.pushKobbeltEdge(newEdge1);
+            this.pushKobbeltEdge(newEdge2);
+            this.pushKobbeltTriangle(new Triangle(newEdge1, newEdge2, tmpEdge));
+            
             
             tmpEdge = tmpTriangle.e2; 
-            this.pushKobbeltTriangle(new Triangle(new Edge(tmpCenterPoint, tmpEdge.v1), new Edge(tmpCenterPoint, tmpEdge.v2), tmpEdge));
+            newEdge1 = new Edge(tmpCenterPoint, tmpEdge.v1);
+            newEdge2 = new Edge(tmpCenterPoint, tmpEdge.v2);
+            
+            this.pushKobbeltEdge(tmpEdge);
+            this.pushKobbeltEdge(newEdge1);
+            this.pushKobbeltEdge(newEdge2);
+            this.pushKobbeltTriangle(new Triangle(newEdge1, newEdge2, tmpEdge));
+            
             
             tmpEdge = tmpTriangle.e3; 
-            this.pushKobbeltTriangle(new Triangle(new Edge(tmpCenterPoint, tmpEdge.v1), new Edge(tmpCenterPoint, tmpEdge.v2), tmpEdge));
+            newEdge1 = new Edge(tmpCenterPoint, tmpEdge.v1);
+            newEdge2 = new Edge(tmpCenterPoint, tmpEdge.v2);
+            
+            this.pushKobbeltEdge(tmpEdge);
+            this.pushKobbeltEdge(newEdge1);
+            this.pushKobbeltEdge(newEdge2);
+            this.pushKobbeltTriangle(new Triangle(newEdge1, newEdge2, tmpEdge));
         }
     }
     
@@ -197,34 +226,28 @@ class Kobbelt
 
                 var tmpV1 = tmpEdge.v1;
                 var tmpV2 = tmpEdge.v2;
+                
                 var tmpCentralPoint1 = tmpTriangle1.centerPoint;
                 var tmpCentralPoint2 = tmpTriangle2.centerPoint;
-
-                tmpTriangle1.setEdges(tmpCentralPoint1, tmpCentralPoint2, tmpV1);
-                tmpTriangle2.setEdges(tmpCentralPoint1, tmpCentralPoint2, tmpV2);
+                
+                var edgeToFlip = this.findEdge(tmpV1, tmpV2);
+                
+                if(edgeToFlip != null)
+                {
+                    edgeToFlip.v1.removeIncidentEdge(edgeToFlip);
+                    edgeToFlip.v2.removeIncidentEdge(edgeToFlip);
+                    
+                    edgeToFlip.setV1V2(tmpCentralPoint1, tmpCentralPoint2);
+                    
+                    edgeToFlip.v1.pushIncidentEdge(edgeToFlip);
+                    edgeToFlip.v2.pushIncidentEdge(edgeToFlip);
+                }
+                else
+                {console.log("nope");}
             }
         }
     }
-    /*
-    setIncidentEdges()
-    {
-        for(var i = 0; i < this.kobbeltVertice.length; ++i)
-        {
-            this.kobbeltVertice[i].incidentEdges = [];
-        }
-        
-        for(var i = 0; i < this.kobbeltTriangles.length; ++i)
-        {
-            var tmpTriangle = this.kobbeltTriangles[i];
-            
-            var tmpE1 = tmpTriangle.e1;
-            tmpE1.v1.pushIncidentEdge(tmpE1);
-            tmpE1.v2.pushIncidentEdge(tmpE1);
-            var tmpE2 = tmpTriangle.e2;
-            var tmpE3 = tmpTriangle.e3;
-        }
-    }
-    */
+
     launchKobbelt()
     {
         this.setListsBeforeLauchingAlgo()
