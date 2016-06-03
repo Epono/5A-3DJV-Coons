@@ -2,7 +2,7 @@ var KevinScript = {
 
 	init : function( tw )
 	{
-
+        this.cptApush = 0;
         var v0 = new Vertex(0.0, 0.0, 0.0);
         var v1 = new Vertex(1.0, 0.0, 0.0);
         var v2 = new Vertex(1.0, 1.0, 0.0);
@@ -93,33 +93,57 @@ var KevinScript = {
 
 	inputs : {
 		'a' : function(me, tw){
-        var cc = new CatmullClark(me.vertice, me.edges, me.polygones);
+        
+        var cc;
+        var monOb; 
+            
+        var materialObject = new THREE.MeshPhongMaterial( { color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading, side: THREE.DoubleSide} );
 
-        var newMesh = cc.launchCatmullClark();
-
-        var cc2 = new CatmullClark(newMesh.getVertice(), newMesh.getEdges(), newMesh.polygones);
+        if(!this.newMesh)
+        {
+             cc = new CatmullClark(me.vertice, me.edges, me.polygones);
+             this.newMesh = cc.launchCatmullClark();
+             monOb = this.newMesh.buildThreeMesh(materialObject);
+             this.cptApush = 1;
+        }
+        else
+        {
+             cc = new CatmullClark(this.newMesh.getVertice(),this.newMesh.getEdges(), this.newMesh.polygones); 
+             //this.newMesh.visible = false;
+             this.newMesh = cc.launchCatmullClark();
+             monOb = this.newMesh.buildThreeMesh(materialObject);
+             monOb.position.x = this.cptApush;
+             this.cptApush ++;
+            
+             
+        }
+            
+        
+            
+        /*var cc2 = new CatmullClark(newMesh.getVertice(), newMesh.getEdges(), newMesh.polygones);
 
         var newMesh2 = cc2.launchCatmullClark();
 
         var cc3 = new CatmullClark(newMesh2.getVertice(), newMesh2.getEdges(), newMesh2.polygones);
 
         var newMesh3 = cc3.launchCatmullClark();
-        console.log(newMesh);
+        console.log(newMesh);*/
         
-        var geometryPlane = new THREE.PlaneGeometry( 20, 20, 32 );
+       /* var geometryPlane = new THREE.PlaneGeometry( 20, 20, 32 );
         var materialPlane = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, side: THREE.DoubleSide} );
         var plane = new THREE.Mesh( geometryPlane, materialPlane );
         plane.rotation.x = Math.PI / 2;
         plane.position.y = - 0.1;
         tw.scenes.main.add( plane );
         // Super
-        //tw.scenes.main.add(new Mesh(polygones).buildThreeMesh());
-        console.log("HOW SHOULD IT BE WRITTEN")
-        console.log(newMesh);
+        //tw.scenes.main.add(new Mesh(polygones).buildThreeMesh());*/
+       
             
-        var materialObject = new THREE.MeshPhongMaterial( { color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading, side: THREE.DoubleSide} );
-        tw.scenes.main.add(newMesh.buildThreeMesh(materialObject));
-            
+        
+        
+        console.log(monOb);
+            tw.scenes.main.add(monOb);
+        
             
 		}
 	},

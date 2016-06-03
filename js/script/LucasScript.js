@@ -503,8 +503,6 @@ console.log("APRES MOD");
 console.log(meshLoop);*/
 //CONSTRUCTION DE POLYGONES            
 
-            
-
 
 var kobbelt = new Kobbelt(vertice, edges, triangles);
 var meshLoop = kobbelt.launchKobbelt();            

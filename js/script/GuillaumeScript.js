@@ -81,12 +81,15 @@ var GuillaumeScript = {
             // Image loadé
         });
         
+        var texture = new THREE.TextureLoader().load( "images/Tex.jpg" );
+        
         var materialTerrain = new THREE.MeshPhongMaterial( { 
             color: 0xff00ff, 
             specular: 0x009900, 
             shininess: 30, 
             shading: THREE.FlatShading, 
-            side : THREE.DoubleSide, 
+            side : THREE.DoubleSide,
+            
             //map: texture
         });
         
@@ -104,7 +107,7 @@ var GuillaumeScript = {
         //tw.scenes.main.add(meshTerrain);
         
         // Catmul clark
-        var verticeTerrainToVerticesKevin = {};
+       /* var verticeTerrainToVerticesKevin = {};
         
         var verticesKevin = [];
         var edgesKevin = [];
@@ -168,7 +171,7 @@ var GuillaumeScript = {
         
         var mesh = loop.launchLoop();
         //console.log(loop);
-        console.log(mesh);
+        console.log(mesh);*/
     },
 
 	update : function ( tw , deltaTime )
