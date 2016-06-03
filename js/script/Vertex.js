@@ -153,6 +153,7 @@ class Vertex extends THREE.Vector3
             this.y = this.vertexPoint.y;
             this.z = this.vertexPoint.z;
             
+            this.vertexPoint = null;
         }
         else
             this.vertexPoint = null;
