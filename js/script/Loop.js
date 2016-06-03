@@ -220,5 +220,7 @@ class Loop
             
             this.pushLoopTriangle(new Triangle(e1v3, v3e2, e1e2));
         }
+        
+        return new Mesh(this.loopTriangles);
     }
 }

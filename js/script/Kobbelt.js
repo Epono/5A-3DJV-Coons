@@ -242,8 +242,6 @@ class Kobbelt
                     edgeToFlip.v1.pushIncidentEdge(edgeToFlip);
                     edgeToFlip.v2.pushIncidentEdge(edgeToFlip);
                 }
-                else
-                {console.log("nope");}
             }
         }
     }
@@ -257,5 +255,7 @@ class Kobbelt
         this.linkTriangleCenterToTriangleVertice();
         
         this.flipOriginalEdges();
+        
+        return new Kobbelt(this.kobbeltTriangles);
     }
 }
