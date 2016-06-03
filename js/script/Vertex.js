@@ -137,7 +137,7 @@ class Vertex extends THREE.Vector3
         if(n > 0)
         {
             var alpha = (1/9)*(4-(2*Math.cos((2*Math.PI)/n)))
-
+            
             var vertexSum = neighborsVertice[0];
             for(var i = 1; i < neighborsVertice.length; ++i)
             {
@@ -149,9 +149,10 @@ class Vertex extends THREE.Vector3
             this.vertexPoint.multiplyScalar(1-alpha);
             this.vertexPoint.add(vertexSum);
             
-            //this.x = this.vertexPoint.x;
-            //this.y = this.vertexPoint.y;
-            //this.z = this.vertexPoint.z;
+            this.x = this.vertexPoint.x;
+            this.y = this.vertexPoint.y;
+            this.z = this.vertexPoint.z;
+            
         }
         else
             this.vertexPoint = null;
