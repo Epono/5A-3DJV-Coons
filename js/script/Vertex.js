@@ -116,9 +116,10 @@ class Vertex extends THREE.Vector3
 
     toKey()
     {
-        return ("" + this.x + this.y + this.z).replace('[.]', '');
+        return ("" + this.x.toFixed(Vertex.DECIMALS) + this.y.toFixed(Vertex.DECIMALS) + this.z.toFixed(Vertex.DECIMALS));
     }
 }
 
 
 Vertex.ID = 0;
+Vertex.DECIMALS = 9;

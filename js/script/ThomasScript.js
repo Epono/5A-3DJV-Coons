@@ -123,9 +123,16 @@ var ThomasScript = {
 			cubeMesh.polygones
 		);
 
-		var newPoly = catmullClark.launchCatmullClark();
+		
+		//var newPoly = catmullClark.launchCatmullClark();
 
-	    tw.scenes.main.add(newPoly.buildThreeMesh());
+		var generateCube = Mesh.getCubeMesh(5);
+		
+		console.log(generateCube);
+	    tw.scenes.main.add(generateCube.buildThreeMesh());
+		
+
+
 
 	    /*
 	    var geometry = new THREE.Geometry();

@@ -2,12 +2,22 @@ class Mesh
 {
 	constructor(polygones)
 	{
-        this.polygones = polygones || [];  
+        this.polygones = polygones || []; 
+        this.edges = polygones && polygones.edges ? polygones.edges : []; 
+        this.edgesMap = {
+        	// key (Edge.toKey()) : value (Edge)
+        };
+
+        for (var e = 0; e < this.edges.length; ++e)
+        {
+        	this.edgesMap[this.edges.toKey()] = this.edges[e];
+        }
+
 	}
 
 	pushPolygoneAsVertices(vertices)
 	{
-		var poly = new Polygone();
+		var incPoly = new Polygone();
 
 		for (var i = 0; i < vertices.length; ++i)
 		{
@@ -30,13 +40,34 @@ class Mesh
 				);
 			}
 
-			poly.pushEdge(nextEdge);
+			//*
+			var exitingEdge = this.edgesMap[nextEdge.toKey()];
+
+			if ( exitingEdge )
+			{
+				incPoly.pushEdge(exitingEdge);
+
+				exitingEdge.setPolygone(incPoly);
+			}
+			else
+			{
+				this.edgesMap[nextEdge.toKey()] = nextEdge;
+				this.edges.push(nextEdge);
+
+				incPoly.pushEdge(nextEdge);
+
+				nextEdge.setPolygone(incPoly);
+			}
+			//*/
+
+			//incPoly.pushEdge(nextEdge);
 		}
 
-		this.pushPolygone(poly);
-		this.defineEdgesNeighbourhood();
+		this.pushPolygone(incPoly);
+		//this.defineEdgesNeighbourhood();
 	}
 
+	// C DE LA MERDE
 	defineEdgesNeighbourhood()
 	{
 		var edgesInfos = this.getPolygonesEdgesInfos();
@@ -109,7 +140,23 @@ class Mesh
 		return res;
 	}
 
-	/*<THREE.Mesh>*/ buildThreeMesh(mat = Mesh.getRandomColorMat() )
+	getVertice()
+	{
+		var res = [];
+
+		for (var i = 0; i < this.polygones.length; ++i)
+		{
+			var vertice = this.polygones[i].getUniqueVertices();
+			for (var j = 0; j < vertice.length; ++j)
+			{
+				res.push(vertice[j]);
+			}
+		}
+
+		return res;
+	}
+
+	/*<THREE.Mesh>*/ buildThreeMesh(mat = Mesh.DEFAULT_MAT )
 	{
 		var verticesMap = {
 			// key : vertex.toKey() , value : index in 'vertices' list 
@@ -289,7 +336,6 @@ class Mesh
 					vectors : []
 				};
 
-
 				/* Anti clockwize face ordrering */
 
 				// Point 1 : ref point
@@ -382,10 +428,84 @@ class Mesh
 		return new THREE.MeshBasicMaterial( 
 			{
 				color: color,
-				side : THREE.BackSide,
-				//side : THREE.DoubleSide
+				//side : THREE.BackSide,
+				side : THREE.DoubleSide
 			} 
 		);
+	}
+
+	static getCubeMesh(cubeSize)
+	{
+		var customCubeVertices = [
+      		new Vertex( -1 * cubeSize, 1 * cubeSize, 1 * cubeSize ),
+			new Vertex(  1 * cubeSize, 1 * cubeSize, 1 * cubeSize ),
+			new Vertex(  1 * cubeSize, 1 * cubeSize,-1 * cubeSize ),
+			new Vertex( -1 * cubeSize, 1 * cubeSize,-1 * cubeSize ),
+
+			new Vertex( -1 * cubeSize, -1 * cubeSize, 1 * cubeSize ),
+			new Vertex(  1 * cubeSize, -1 * cubeSize, 1 * cubeSize ),
+			new Vertex(  1 * cubeSize, -1 * cubeSize,-1 * cubeSize ),
+			new Vertex( -1 * cubeSize, -1 * cubeSize,-1 * cubeSize )
+      	];
+
+	    
+	    var cubeMesh = new Mesh();
+
+		cubeMesh.pushPolygoneAsVertices(
+			[
+				customCubeVertices[0],
+				customCubeVertices[1],
+				customCubeVertices[2],
+				customCubeVertices[3]
+			]
+		);
+
+	    cubeMesh.pushPolygoneAsVertices(
+			[
+				customCubeVertices[1],
+				customCubeVertices[5],
+				customCubeVertices[6],
+				customCubeVertices[2]
+			]
+		);
+
+	    cubeMesh.pushPolygoneAsVertices(
+			[
+				customCubeVertices[0],
+				customCubeVertices[4],
+				customCubeVertices[5],
+				customCubeVertices[1]
+			]
+		);
+
+		cubeMesh.pushPolygoneAsVertices(
+			[
+				customCubeVertices[4],
+				customCubeVertices[0],
+				customCubeVertices[3],
+				customCubeVertices[7]
+			]
+		);
+
+		cubeMesh.pushPolygoneAsVertices(
+			[
+				customCubeVertices[5],
+				customCubeVertices[4],
+				customCubeVertices[7],
+				customCubeVertices[6]
+			]
+		);
+
+		cubeMesh.pushPolygoneAsVertices(
+			[
+				customCubeVertices[3],
+				customCubeVertices[2],
+				customCubeVertices[6],
+				customCubeVertices[7]
+			]
+		);
+
+		return cubeMesh;
 	}
 
 }
@@ -393,7 +513,173 @@ class Mesh
 Mesh.DEFAULT_MAT = new THREE.MeshBasicMaterial( 
 	{
 		color: 0xFF0000,
-		side : THREE.BackSide,
-		//side : THREE.DoubleSide
+		//wireframe : true,
+		//side : THREE.BackSide,
+		side : THREE.DoubleSide
 	} 
 );
+
+
+/* build three mesh BACKUP
+
+buildThreeMesh(mat = Mesh.DEFAULT_MAT )
+	{
+		var verticesMap = {
+			// key : vertex.toKey() , value : index in 'vertices' list 
+			},
+			vertices = [],
+			facesParam = [
+			// { indexes : [] , vectors : [] }
+			];
+
+
+		for (var p = 0; p < this.polygones.length; ++p)
+		{
+			if (this.polygones[p].edges.length < 3)
+			{
+				console.error("Cannot run 'buildThreeMesh'. Polygone has " + this.polygones[p].edges.length + " edges. 3 a least expected");
+				return;
+			}
+
+			var currVectices = this.polygones[p].getUniqueVertices();
+			
+
+			var refInfo = {
+				index : -1,
+				vector : null
+			};
+
+			if (verticesMap[currVectices[0].toKey()])
+			{
+				refInfo.index = verticesMap[currVectices[0].toKey()];
+				refInfo.vector = vertices[refInfo.index];
+			}
+			else
+			{
+				vertices.push(currVectices[0]);
+
+				verticesMap[currVectices[0].toKey()] = vertices.length -1;
+				
+				refInfo.index = vertices.length -1;
+				refInfo.vector = currVectices[0];
+			}
+
+			for (var i = 1; i + 1< currVectices.length; ++i)
+			{
+				var currFaceParam = {
+					indexes : [],
+					vectors : []
+				};
+
+
+				// Anti clockwize face ordrering
+
+				// Point 1 : ref point
+				currFaceParam.indexes.push(refInfo.index);
+				currFaceParam.vectors.push(refInfo.vector);
+
+				// Point 2 :
+				if (verticesMap[currVectices[i+1].toKey()])
+				{
+
+					currFaceParam.indexes.push(
+						
+						verticesMap[currVectices[i+1].toKey()]
+						
+					);
+
+					currFaceParam.vectors.push(currVectices[i+1]);
+				}
+				else
+				{
+					vertices.push(currVectices[i+1]);
+
+					verticesMap[currVectices[i+1].toKey()] = vertices.length - 1;
+
+					currFaceParam.indexes.push(
+						vertices.length - 1
+					);
+
+					currFaceParam.vectors.push(currVectices[i+1]);
+				}
+
+				// Point 3 :
+				if (verticesMap[currVectices[i].toKey()])
+				{
+
+					currFaceParam.indexes.push(
+						
+						verticesMap[currVectices[i].toKey()]
+						
+					);
+
+					currFaceParam.vectors.push(currVectices[i]);
+				}
+				else
+				{
+					vertices.push(currVectices[i]);
+
+					verticesMap[currVectices[i].toKey()] = vertices.length - 1;
+
+					currFaceParam.indexes.push(
+						vertices.length - 1
+					);
+
+					currFaceParam.vectors.push(currVectices[i]);
+				}
+
+				facesParam.push(currFaceParam);
+			
+			}// end of FOR curr vertices
+
+		} // end of FOR polygones
+
+		var geometry = new THREE.Geometry(),
+			threeFaces = [];
+
+		for (var i = 0; i < facesParam.length; ++i)
+		{
+			threeFaces.push(
+				new THREE.Face3(
+					facesParam[i].indexes[0], 
+					facesParam[i].indexes[1],
+					facesParam[i].indexes[2]
+				)
+			);
+		}
+
+		geometry.vertices = vertices;
+		geometry.faces = threeFaces;
+
+		return new THREE.Mesh( 
+			geometry, 
+			mat
+		);
+	}
+*/
+
+
+
+/*
+
+float Utils::determinant2D(const Point& v1, const Point& v2)
+{
+	return ( (v1.getX() * v2.getY()) - (v2.getX() * v1.getY()) );
+}
+
+float Utils::getAngle2D(const Point& v1, const Point& v2)
+{
+	return acos((dotProduct2D(v1, v2)) / (norm2D(v1) * norm2D(v2)));
+}
+
+float Utils::getOrientedAngle2D(const Point& v1, const Point& v2)
+{
+	float angle = getAngle2D(v1, v2);
+
+	if (determinant2D(v1, v2) > 0)
+		return angle;
+	else
+		return (static_cast<float>((2 * M_PI)) - angle);
+}
+
+*/
