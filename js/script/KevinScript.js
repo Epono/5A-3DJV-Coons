@@ -118,7 +118,7 @@ var KevinScript = {
         console.log(newMesh);
             
         var materialObject = new THREE.MeshPhongMaterial( { color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading, side: THREE.DoubleSide} );
-        tw.scenes.main.add(newMesh.buildThreeMesh(materialObject));
+        tw.scenes.main.add(newMesh3.buildThreeMesh(materialObject));
             
             
 		}
