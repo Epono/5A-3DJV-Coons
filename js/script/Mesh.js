@@ -440,7 +440,7 @@ class Mesh
 		geometry.vertices = vertices;
 		geometry.faces = threeFaces;
 
-		return new THREE.Mesh( 
+		return new THREE.Mesh(
 			geometry, 
 			mat
 		);
