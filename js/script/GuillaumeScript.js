@@ -163,11 +163,11 @@ var GuillaumeScript = {
         
         this.setAllBidule(trianglesKevin);
         
-        var kobbelt = new Kobbelt(verticesKevin, edgesKevin, trianglesKevin);
-        //console.log(kobbelt);
+        var loop = new Loop(verticesKevin, edgesKevin, trianglesKevin);
+        //console.log(loop);
         
-        var mesh = kobbelt.launchKobbelt();
-        //console.log(kobbelt);
+        var mesh = loop.launchLoop();
+        //console.log(loop);
         console.log(mesh);
     },
 

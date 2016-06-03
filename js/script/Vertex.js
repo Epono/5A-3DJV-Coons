@@ -159,13 +159,14 @@ class Vertex extends THREE.Vector3
     {
         var neighborsVertice = this.getNeighborsVertice();
         var n = neighborsVertice.length;
+        
         if(n >= 3)
         {
             var alpha = 3;
 
             if(n > 3)
                 alpha = (1/n) * ( (5/8) - Math.pow( ((3/8) + ((1/4) * Math.cos((2*Math.PI)/n))), 2 ) );
-
+            
             var vertexSum = neighborsVertice[0];
             for(var i = 1; i < neighborsVertice.length; ++i)
             {
@@ -178,6 +179,8 @@ class Vertex extends THREE.Vector3
             
             this.vertexPoint.add(vertexSum);
         }
+        else
+            this.vertexPoint = null;
     }
     
     toKey()

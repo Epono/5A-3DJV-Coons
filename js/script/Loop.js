@@ -103,7 +103,7 @@ class Loop
     // en settant les edges incidentes pour les vertice composant l'edge
     pushLoopEdge(edge)
     {
-        if(this.hasEdge(edge.v1, edge.v2) == false)
+        if(this.hasEdge(edge.v1, edge.v2) == false)// && (edge.v1 != null && edge.v2 != null))
         {
             this.loopEdges.push(edge);
             // Ajout de l'edge adjacente aux vertice de l'edge
@@ -153,18 +153,16 @@ class Loop
         for(var i = 0; i < this.edges.length; ++i)
         {
             this.edges[i].computeEdgePointLoop();
-            this.pushLoopVertex(this.edges[i].edgePoint);
+            if(this.edges[i].edgePoint != null)
+            {
+                this.pushLoopVertex(this.edges[i].edgePoint);
+            }
         }
         
     }
     
-
-    launchLoop()
+    machinTruc()
     {
-        this.setListsBeforeLauchingAlgo()
-        
-        this.computeLoopPoints();   
-        
         for(var i = 0; i < this.triangles.length; ++i)
         {
             var tmpTriangle = this.triangles[i];
@@ -220,6 +218,15 @@ class Loop
             
             this.pushLoopTriangle(new Triangle(e1v3, v3e2, e1e2));
         }
+    }
+
+    launchLoop()
+    {
+        this.setListsBeforeLauchingAlgo()
+        
+        this.computeLoopPoints();   
+
+        this.machinTruc();
         
         return Mesh.withTriangle(this.loopTriangles);
     }
