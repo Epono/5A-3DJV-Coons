@@ -230,17 +230,22 @@ class Kobbelt
                 var tmpCentralPoint1 = tmpTriangle1.centerPoint;
                 var tmpCentralPoint2 = tmpTriangle2.centerPoint;
                 
-                var edgeToFlip = this.findEdge(tmpV1, tmpV2);
-                
-                if(edgeToFlip != null)
+                if(tmpCentralPoint1 != null && tmpCentralPoint2!= null)
                 {
-                    edgeToFlip.v1.removeIncidentEdge(edgeToFlip);
-                    edgeToFlip.v2.removeIncidentEdge(edgeToFlip);
-                    
-                    edgeToFlip.setV1V2(tmpCentralPoint1, tmpCentralPoint2);
-                    
-                    edgeToFlip.v1.pushIncidentEdge(edgeToFlip);
-                    edgeToFlip.v2.pushIncidentEdge(edgeToFlip);
+                    //console.log(tmpCentralPoint1, " - ", tmpCentralPoint2);
+
+                    var edgeToFlip = this.findEdge(tmpV1, tmpV2);
+
+                    if(edgeToFlip != null)
+                    {
+                        edgeToFlip.v1.removeIncidentEdge(edgeToFlip);
+                        edgeToFlip.v2.removeIncidentEdge(edgeToFlip);
+
+                        edgeToFlip.setV1V2(tmpCentralPoint1, tmpCentralPoint2);
+
+                        edgeToFlip.v1.pushIncidentEdge(edgeToFlip);
+                        edgeToFlip.v2.pushIncidentEdge(edgeToFlip);
+                    }
                 }
             }
         }
@@ -255,7 +260,7 @@ class Kobbelt
         this.linkTriangleCenterToTriangleVertice();
         
         this.flipOriginalEdges();
-        
-        return new Kobbelt(this.kobbeltTriangles);
+
+        return new Mesh(this.kobbeltTriangles);
     }
 }
