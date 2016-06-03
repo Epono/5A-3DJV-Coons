@@ -4,7 +4,7 @@ $(document).ready(function()  {
 		LucasScript,
 		//ThomasScript,
 		KevinScript,
-		GuillaumeScript
+		//GuillaumeScript
 	];
 
 	//*
