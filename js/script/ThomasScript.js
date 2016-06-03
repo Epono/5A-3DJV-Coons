@@ -47,7 +47,7 @@ var ThomasScript = {
         });
       	
       	/* Kobbelt */
-      	var cubeSize = 3,
+      	var cubeSize = 1,
       		customCubeVertices = [
 	      		new Vertex( -1 * cubeSize, 1 * cubeSize, 1 * cubeSize ),
 				new Vertex(  1 * cubeSize, 1 * cubeSize, 1 * cubeSize ),
@@ -72,6 +72,10 @@ var ThomasScript = {
 			]
 		);
 
+		tw.scenes.main.add(cubeMesh.buildThreeMesh());
+
+
+		/**/
 	    cubeMesh.pushPolygoneAsVertices(
 			[
 				customCubeVertices[1],
@@ -116,6 +120,8 @@ var ThomasScript = {
 				customCubeVertices[7]
 			]
 		);
+		
+		//cubeMesh.sortPolygoneVertice(cubeMesh.polygones[0]);
 
 		var catmullClark = new CatmullClark(
 			customCubeVertices, 
@@ -128,7 +134,6 @@ var ThomasScript = {
 
 		var generateCube = Mesh.getCubeMesh(5);
 		
-		console.log(generateCube);
 	    tw.scenes.main.add(generateCube.buildThreeMesh());
 		
 
@@ -291,8 +296,8 @@ var ThomasScript = {
 			first = true,
 			vec0 = new THREE.Vector3(0,0,0);
 
-		this.u = this.u ? this.u : this.bugMode ? 0 : ThomasScript.DEFAULT_U;
-		this.v = this.v ? this.v : this.bugMode ? 0 : ThomasScript.DEFAULT_V;
+		this.u = this.u ? this.u : ThomasScript.bugMode ? 0 : ThomasScript.DEFAULT_U;
+		this.v = this.v ? this.v : ThomasScript.bugMode ? 0 : ThomasScript.DEFAULT_V;
 
         for (var i = 0; i + 1< geometry.vertices.length; ++i)
         {
@@ -382,3 +387,4 @@ var ThomasScript = {
 	
 }
 
+ThomasScript.bugMode = false;

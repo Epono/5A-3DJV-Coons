@@ -200,8 +200,10 @@ class Mesh
 				return;
 			}
 
-			var currVectices = this.polygones[p].getUniqueVertices();
+			var currVectices = this.sortPolygoneVertice(this.polygones[p]);//this.polygones[p].getUniqueVertices();
 			
+			console.log("Default : ", this.polygones[p].getUniqueVertices());
+			console.log("Sorted : ", currVectices);
 
 			var refInfo = {
 				index : -1,
@@ -238,31 +240,6 @@ class Mesh
 				currFaceParam.vectors.push(refInfo.vector);
 
 				// Point 2 :
-				if (verticesMap[currVectices[i+1].toKey()])
-				{
-
-					currFaceParam.indexes.push(
-						
-						verticesMap[currVectices[i+1].toKey()]
-						
-					);
-
-					currFaceParam.vectors.push(currVectices[i+1]);
-				}
-				else
-				{
-					vertices.push(currVectices[i+1]);
-
-					verticesMap[currVectices[i+1].toKey()] = vertices.length - 1;
-
-					currFaceParam.indexes.push(
-						vertices.length - 1
-					);
-
-					currFaceParam.vectors.push(currVectices[i+1]);
-				}
-
-				// Point 3 :
 				if (verticesMap[currVectices[i].toKey()])
 				{
 
@@ -285,6 +262,31 @@ class Mesh
 					);
 
 					currFaceParam.vectors.push(currVectices[i]);
+				}
+
+				// Point 3 :
+				if (verticesMap[currVectices[i+1].toKey()])
+				{
+
+					currFaceParam.indexes.push(
+						
+						verticesMap[currVectices[i+1].toKey()]
+						
+					);
+
+					currFaceParam.vectors.push(currVectices[i+1]);
+				}
+				else
+				{
+					vertices.push(currVectices[i+1]);
+
+					verticesMap[currVectices[i+1].toKey()] = vertices.length - 1;
+
+					currFaceParam.indexes.push(
+						vertices.length - 1
+					);
+
+					currFaceParam.vectors.push(currVectices[i+1]);
 				}
 
 				facesParam.push(currFaceParam);
@@ -316,145 +318,220 @@ class Mesh
 		);
 	}
 
-	/*<THREE.Mesh>*/ buildThreeMesh2(mat = Mesh.DEFAULT_MAT)
+	/*<List<Vertex>>*/ sortPolygoneVertice (polygone)
 	{
-		var verticesMap = {
-			// key : vertex.toKey() , value : index in 'vertices' list 
-			},
-			vertices = [],
-			facesParam = [
-			// { indexes : [] , vectors : [] }
-			];
 
+		polygone.computeFacePoint()
 
-		for (var p = 0; p < this.polygones.length; ++p)
+		var vertice = polygone.getUniqueVertices(),
+			E = 0.1,
+			vI = new Vertex(1, 0, 0),
+			vJ = new Vertex(0, 1, 0),
+			vK = new Vertex(0, 0, 1),
+			sortedVectors = [],
+			centerVertex = polygone.facePoint,
+			vN = vertice[0].clone().sub(centerVertex),
+			v1 = vertice[0].clone().sub(centerVertex),
+			v2 = vertice[1].clone().sub(centerVertex);
+
+		vN.cross( v2 );
+
+		var normN = Math.sqrt(
+			Math.pow(vN.x, 2) + 
+			Math.pow(vN.y, 2) + 
+			Math.pow(vN.z, 2)
+		);
+	
+		
+
+		var crossVk = vN.clone().cross(vK),
+			resVk = Math.sqrt(
+				Math.pow(crossVk.x, 2) + 
+				Math.pow(crossVk.y, 2) + 
+				Math.pow(crossVk.z, 2)
+			) / normN;
+
+		var crossVi = vN.clone().cross(vI),
+			resVi = Math.sqrt(
+				Math.pow(crossVi.x, 2) + 
+				Math.pow(crossVi.y, 2) + 
+				Math.pow(crossVi.z, 2)
+			) / normN;
+
+		var crossVj = vN.clone().cross(vJ),
+			resVj = Math.sqrt(
+				Math.pow(crossVj.x, 2) + 
+				Math.pow(crossVj.y, 2) + 
+				Math.pow(crossVj.z, 2)
+			) / normN;
+
+/*
+		console.log("v1 : ", v1, "; v2 : ", v2, "; vN : ", vN);
+		console.log("resVk : ", resVk, "; resVi : ", resVi, "; resVj : ", resVj, "; center : ", centerVertex);
+*/
+
+		// LOL
+
+		var vectice2Dinfos = [
+			/*{ vec2 : <Vector2> , point : <Vertex>, angle : <}*/
+		];
+
+		var refPoint = new THREE.Vector2(1, 0);
+
+		for (var i = 0; i < vertice.length; ++i)
 		{
-			if (this.polygones[p].edges.length < 3)
+			var incVec2;
+			
+			// Plan K x - y
+			if (resVk < resVj && resVk < resVi)
 			{
-				console.error("Cannot run 'buildThreeMesh'. Polygone has " + this.polygones[p].edges.length + " edges. 3 a least expected");
-				return;
+				incVec2 = new THREE.Vector2(vertice[i].x, vertice[i].y);
 			}
-
-			var currVectices = this.polygones[p].getUniqueVertices();
-
-			this.polygones[p].computeFacePoint();
-
-			var centerOfVertices = this.polygones[p].facePoint;
-
-			
-			var refInfo = {
-				index : -1,
-				vector : null
-			};
-
-			vertices.push(centerOfVertices);
-
-			// TODO : Continue HERE !
-
-			verticesMap[centerOfVertices.toKey()]
-			
-
-			for (var i = 1; i + 1< currVectices.length; ++i)
+			// Plan J x - z
+			else if (resVj < resVk && resVj < resVi)
 			{
-				var currFaceParam = {
-					indexes : [],
-					vectors : []
+				incVec2 = new THREE.Vector2(vertice[i].x, vertice[i].z);
+			}
+			// Plan I y - z
+			else
+			{
+				incVec2 = new THREE.Vector2(vertice[i].y, vertice[i].z);
+			}
+			
+			var	nextInfos = {
+					vec2 : incVec2,
+					point : vertice[i],
+					angle : this.getOrientedAngle2D( refPoint, incVec2 )
 				};
-
-				/* Anti clockwize face ordrering */
-
-				// Point 1 : ref point
-				currFaceParam.indexes.push(refInfo.index);
-				currFaceParam.vectors.push(refInfo.vector);
-
-				// Point 2 :
-				if (verticesMap[currVectices[i+1].toKey()])
+			
+			vectice2Dinfos.push(nextInfos);
+			/*		
+			if (vectice2Dinfos.length == 0)
+			{
+				v
+				angles.push(nextInfos.angle);
+			}
+			else
+			{
+				var f = false;
+				for (var j = 0; j < vectice2Dinfos.length; ++j)
 				{
+					if (nextInfos.angle < vectice2Dinfos[j].angle)
+					{
 
-					currFaceParam.indexes.push(
-						
-						verticesMap[currVectices[i+1].toKey()]
-						
-					);
-
-					currFaceParam.vectors.push(currVectices[i+1]);
+						vectice2Dinfos.splice(i, 0, nextInfos);
+						angles.splice(i, 0, nextInfos.angle);
+						f = true;
+						break;
+					}
 				}
-				else
+				if (!f)
 				{
-					vertices.push(currVectices[i+1]);
-
-					verticesMap[currVectices[i+1].toKey()] = vertices.length - 1;
-
-					currFaceParam.indexes.push(
-						vertices.length - 1
-					);
-
-					currFaceParam.vectors.push(currVectices[i+1]);
+					vectice2Dinfos.push(nextInfos);
+					angles.push(nextInfos.angle);
 				}
+			}
+			*/
 
-				// Point 3 :
-				if (verticesMap[currVectices[i].toKey()])
-				{
-
-					currFaceParam.indexes.push(
-						
-						verticesMap[currVectices[i].toKey()]
-						
-					);
-
-					currFaceParam.vectors.push(currVectices[i]);
-				}
-				else
-				{
-					vertices.push(currVectices[i]);
-
-					verticesMap[currVectices[i].toKey()] = vertices.length - 1;
-
-					currFaceParam.indexes.push(
-						vertices.length - 1
-					);
-
-					currFaceParam.vectors.push(currVectices[i]);
-				}
-
-				facesParam.push(currFaceParam);
-				
-			}/* end of FOR curr vertices*/
-
-		} /* end of FOR polygones */
-
-		var geometry = new THREE.Geometry(),
-			threeFaces = [];
-
-		for (var i = 0; i < facesParam.length; ++i)
-		{
-			threeFaces.push(
-				new THREE.Face3(
-					facesParam[i].indexes[0], 
-					facesParam[i].indexes[1],
-					facesParam[i].indexes[2]
-				)
-			);
+			
 		}
 
-		geometry.vertices = vertices;
-		geometry.faces = threeFaces;
+		var angles = [],
+			res = [];
 
-		return new THREE.Mesh(
-			geometry, 
-			mat
-		);
-	}
+		for (var i = 0; i < vectice2Dinfos.length; ++i)
+		{
+			for (var j = 0; j < vectice2Dinfos.length; ++j)
+			{
+				if (i == j)
+				{
+					continue;
+				}
 
-	/*<List<Vertex>> sortPolygoneVertice (polygone)
-	{
+				if (vectice2Dinfos[i].angle < vectice2Dinfos[j].angle)
+				{
+					var tmp = vectice2Dinfos[i];
+					vectice2Dinfos[i] = vectice2Dinfos[j];
+					vectice2Dinfos[j] = tmp;
+				}
+			}
+		}
 
-		var centerVertex = polygone.computeFacePoint().facePoint,
-			v1 = polygone.vertices[0],
-			norm = centerVertex.cross(v1);
+		for (var i = 0; i < vectice2Dinfos.length; ++i)
+		{
+			res.push(vectice2Dinfos[i].point);
+			angles.push(vectice2Dinfos[i].angle);
+		}
+		console.log(angles);
+		return res;
+		
+		/*
+		// Plan K x - z
+		if (resVk < resVj && resVk < resVi)
+		{
 
+		}
+		// Plan J x - y
+		else if (resVj < resVk && resVj < resVi)
+		{
+			var vectice2Dinfos = [
 
+			]
 
+			var refPoint = new THREE.Vector2(1, 0);
+
+			for (var i = 0; i < vertice.length; ++i)
+			{
+				var incVec2 =  new THREE.Vector2(vertice[i].x, vertice[i].z),
+					nextInfos = {
+						vec2 : incVec2,
+						point : vertice[i],
+						angle : this.getOrientedAngle2D( refPoint, incVec2 )
+					};
+								
+				if (vectice2Dinfos.length == 0)
+				{
+					vectice2Dinfos.push(nextInfos);
+				}
+				else
+				{
+					var f = false;
+					for (var j = 0; j < vectice2Dinfos.length; ++j)
+					{
+						if (nextInfos.angle < vectice2Dinfos[j].angle)
+						{
+
+							vectice2Dinfos.splice(i, 0, nextInfos);
+							f = true;
+							break;
+						}
+					}
+					if (!f)
+					{
+						vectice2Dinfos.push(nextInfos);
+					}
+				}
+
+				
+			}
+
+			var res = [];
+
+			for (var i = 0; i < vectice2Dinfos.length; ++i)
+			{
+				res.push(vectice2Dinfos[i].point);
+			}
+
+			return res;
+		}
+		// Plan I y - z
+		else
+		{
+
+		}
+		*/
+
+		/*
 		float Utils::determinant2D(const Point& v1, const Point& v2)
 		{
 
@@ -475,9 +552,31 @@ class Mesh
 			else
 				return (static_cast<float>((2 * M_PI)) - angle);
 		}
+		*/
 
 	}
-	*/
+
+	getOrientedAngle2D ( vec1, vec2)
+	{
+		
+		var angle = this.getAngle2D(vec1, vec2);
+
+		if ((vec1.x * vec2.y) - (vec2.x * vec1.y) > 0)
+			return angle;
+		else
+			return (2 * Math.PI) - angle;
+	}
+
+	getAngle2D (vec1, vec2)
+	{
+		return Math.acos(
+			(vec1.dot(vec2)) / (
+				Math.sqrt(Math.pow(vec1.x, 2) + Math.pow(vec1.y, 2)  ) *
+				Math.sqrt(Math.pow(vec2.x, 2) + Math.pow(vec2.y, 2)  )
+			)
+		);
+	}
+	
 
 	static getRandomColorMat()
 	{
