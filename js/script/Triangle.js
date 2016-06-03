@@ -83,6 +83,9 @@ class Triangle
         
         this.centerPoint.divideScalar(3);  
     }  
+    
+    
+    
 }
 
 Triangle.ID = 0;

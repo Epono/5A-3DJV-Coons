@@ -151,6 +151,8 @@ class Edge
                 this.edgePoint.add(edge);
             }
         }
+        else
+            this.edgePoint = null;
     }
 
     equals(edge)

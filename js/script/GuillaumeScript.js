@@ -48,8 +48,8 @@ var GuillaumeScript = {
         //this.drawFacetteDeCoons(inputData2, this.otherData);
         //this.drawFacetteDeCoons(inputDataWing, this.otherData); 
         
-        var numberOfPointsTerrain = 16;
-        var heightTerrain = 16;
+        var numberOfPointsTerrain = 64;
+        var heightTerrain = 64;
         var terrain = new this.TerrainGeneration({
             width : numberOfPointsTerrain,
             height : heightTerrain,
@@ -81,12 +81,15 @@ var GuillaumeScript = {
             // Image loadé
         });
         
+        var texture = new THREE.TextureLoader().load( "images/Tex.jpg" );
+        
         var materialTerrain = new THREE.MeshPhongMaterial( { 
             color: 0xff00ff, 
             specular: 0x009900, 
             shininess: 30, 
             shading: THREE.FlatShading, 
-            side : THREE.DoubleSide, 
+            side : THREE.DoubleSide,
+            
             //map: texture
         });
         
@@ -104,7 +107,7 @@ var GuillaumeScript = {
         //tw.scenes.main.add(meshTerrain);
         
         // Catmul clark
-        var verticeTerrainToVerticesKevin = {};
+       /* var verticeTerrainToVerticesKevin = {};
         
         var verticesKevin = [];
         var edgesKevin = [];
@@ -163,12 +166,12 @@ var GuillaumeScript = {
         
         this.setAllBidule(trianglesKevin);
         
-        var kobbelt = new Kobbelt(verticesKevin, edgesKevin, trianglesKevin);
-        //console.log(kobbelt);
+        var loop = new Loop(verticesKevin, edgesKevin, trianglesKevin);
+        //console.log(loop);
         
-        var mesh = kobbelt.launchKobbelt();
-        //console.log(kobbelt);
-        console.log(mesh);
+        var mesh = loop.launchLoop();
+        //console.log(loop);
+        console.log(mesh);*/
     },
 
 	update : function ( tw , deltaTime )
