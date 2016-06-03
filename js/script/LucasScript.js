@@ -491,30 +491,26 @@ var t11 = new Triangle(e4, e8, e17);
 var triangles = [t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11];
 
 me.triangleTOTO(triangles);
-var meshLoop = loop.launchLoop();
 
-/*console.log("AVANT MOD");
+/*var loop = new Loop(vertice, edges, triangles);
+var meshLoop = loop.launchLoop();*/
+        
+
             
-/*console.log("MES TRIANGLES");
-console.log(triangles);*/
-            
-var loop = new Loop(vertice, edges, triangles);
-console.log(meshLoop);
-var STpolygones = me.trianglesToPolygones(meshLoop.polygones);
-            
+/*var STpolygones = me.trianglesToPolygones(meshLoop.polygones);
 meshLoop.polygones = STpolygones;
 console.log("APRES MOD");            
 console.log(meshLoop);*/
 //CONSTRUCTION DE POLYGONES            
 
             
- var materialObject = new THREE.MeshPhongMaterial( { color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading, side: THREE.DoubleSide} );
-    tw.scenes.main.add(meshLoop.buildThreeMesh(materialObject));
-/*
+
+
 var kobbelt = new Kobbelt(vertice, edges, triangles);
-kobbelt.launchKobbelt(); */           
+var meshLoop = kobbelt.launchKobbelt();            
             
-     
+ var materialObject = new THREE.MeshPhongMaterial( { color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading, side: THREE.SingleSide} );
+    tw.scenes.main.add(meshLoop.buildThreeMesh(materialObject));    
             
         },
         

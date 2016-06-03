@@ -261,6 +261,6 @@ class Kobbelt
         
         this.flipOriginalEdges();
 
-        return new Mesh(this.kobbeltTriangles);
+        return  Mesh.withTriangle(this.kobbeltTriangles);
     }
 }
