@@ -59,7 +59,7 @@ class Triangle
 
     getTriangleLastVertex(edge)
     {
-        vertice = this.getVertice();
+        var vertice = this.getVertice();
         
         for(var i = 0; i < vertice.length; ++i)
         {
