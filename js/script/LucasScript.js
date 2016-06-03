@@ -529,6 +529,7 @@ var LucasScript = {
 
 
         var kobbelt = new Kobbelt(vertice, edges, triangles);
+        
         var meshLoop = kobbelt.launchKobbelt(); 
 
 

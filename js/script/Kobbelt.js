@@ -142,16 +142,14 @@ class Kobbelt
         for(var i = 0; i < this.triangles.length; ++i)
         {
             this.triangles[i].computeCenterPoint();
-            if(this.triangles[i].centerPoint != null)
-                this.pushKobbeltVertex(this.triangles[i].centerPoint);
+            this.pushKobbeltVertex(this.triangles[i].centerPoint);
         }
 
         // Calcul des tous les vertice points
         for(var i = 0; i < this.vertice.length; ++i)
         {
             this.vertice[i].computePerturbedPoint();
-            if(this.vertice[i].vertexPoint != null)
-                this.pushKobbeltVertex(this.vertice[i]);
+            this.pushKobbeltVertex(this.vertice[i]);
         }
     }
     
@@ -193,24 +191,13 @@ class Kobbelt
             this.pushKobbeltEdge(newEdge2);
             this.pushKobbeltTriangle(new Triangle(newEdge1, newEdge2, tmpEdge));
         }
+        
+        console.log(this.kobbeltVertice);
+        console.log(this.kobbeltEdges);
+        console.log(this.kobbeltTriangles);
+        
     }
     
-    hasEdgeInEdges(v1, v2, edges)
-    {
-        // parcourt de chaque edges
-        for(var i = 0; i < this.edges.length; ++i)
-        {
-            var tmpEdge = this.edges[i];
-
-            // Comparaison des id des vertices
-            if((v1.id == tmpEdge.v1.id && v2.id == tmpEdge.v2.id) || (v1.id == tmpEdge.v2.id && v2.id == tmpEdge.v1.id))
-            //if((v1 === tmpEdge.v1 || v1 === tmpEdge.v2) && (v2 === tmpEdge.v1 || v2 === tmpEdge.v2))
-            {
-                return true;
-            }
-        }
-        return false;
-    }
     
     flipOriginalEdges()
     {
@@ -255,7 +242,7 @@ class Kobbelt
         
         this.linkTriangleCenterToTriangleVertice();
         
-        //this.flipOriginalEdges();
+        this.flipOriginalEdges();
 
         return  Mesh.withTriangle(this.kobbeltTriangles);
     }
