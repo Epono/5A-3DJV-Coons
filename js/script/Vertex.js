@@ -138,7 +138,7 @@ class Vertex extends THREE.Vector3
         {
             var alpha = (1/9)*(4-(2*Math.cos((2*Math.PI)/n)))
             
-            var vertexSum = neighborsVertice[0];
+            var vertexSum = neighborsVertice[0].clone();
             for(var i = 1; i < neighborsVertice.length; ++i)
             {
                 vertexSum.add(neighborsVertice[i]);

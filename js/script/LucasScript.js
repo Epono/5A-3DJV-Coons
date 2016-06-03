@@ -522,16 +522,15 @@ var LucasScript = {
         //CONSTRUCTION DE POLYGONES            
 
 
-        /*          
+                  
         var loop = new Loop(vertice, edges, triangles);
         var meshLoop = loop.launchLoop();       
-        */
-
-
-        var kobbelt = new Kobbelt(vertice, edges, triangles);
         
-        var meshLoop = kobbelt.launchKobbelt(); 
 
+/*
+        var kobbelt = new Kobbelt(vertice, edges, triangles);
+        var meshLoop = kobbelt.launchKobbelt(); 
+*/
 
         var materialObject = new THREE.MeshPhongMaterial( { color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading, side: THREE.DoubleSide} );
         tw.scenes.main.add(meshLoop.buildThreeMesh(materialObject));    
