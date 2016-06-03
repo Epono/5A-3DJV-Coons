@@ -542,8 +542,8 @@ var LucasScript = {
         this.tabForCoons = [];
 
 
-<<<<<<< HEAD
-=======
+
+
         me.lineFront.visible = false;
         me.lineLeft.visible = false;
         me.lineBack.visible = false;
@@ -552,7 +552,7 @@ var LucasScript = {
         for(var i = 0 ; i < me.tabFrontLinePoint.length ; i++)
         {
         this.tabForCoons.push(me.tabFrontLinePoint[i]);
->>>>>>> 8c7f0988b7b5711d12137ce743bafd356d36d450
+
 
         }
 
