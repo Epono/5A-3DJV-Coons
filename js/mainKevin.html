@@ -288,8 +288,8 @@
 
          //FACE LEFT
          var e13 = new Edge(v4, v0);
-        //var e11 = new Edge(v4, v7);
          var e14 = new Edge(v0, v7);
+        //var e11 = new Edge(v4, v7);
         
         //var e2 = new Edge(v3, v0);
          var e15 = new Edge(v3, v7);
@@ -328,7 +328,11 @@
 
         //BACK FACE
         var t4 = new Triangle(e9, e10, e7);
-        var t5 = new Triangle(e11, e12, 
+        var t5 = new Triangle(e11, e12, e10);
+        
+        //LEFT FACE
+        var t6 = new Triangle(e13, e14, e11);
+        var t7 = new Triangle(e2, e15, e14);
         
         //DOWN FACE
         var t8 = new Triangle(e9, e16, e13);
@@ -344,12 +348,12 @@
         setAllBidule(triangles);
 
         
-        var loop = new Loop(vertice, edges, triangles);
-        loop.launchLoop();
+        //var loop = new Loop(vertice, edges, triangles);
+        //loop.launchLoop();
         
-        /*
+        
         var kobbelt = new Kobbelt(vertice, edges, triangles);
         kobbelt.launchKobbelt();
-        */
+        
 	</script>
 </html>
