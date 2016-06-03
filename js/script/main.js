@@ -1,9 +1,9 @@
 $(document).ready(function()  {
 	
 	var customsScript = [
-		//LucasScript,
-		ThomasScript,
-		//KevinScript,
+		LucasScript,
+		//ThomasScript,
+		KevinScript,
 		//GuillaumeScript
 	];
 

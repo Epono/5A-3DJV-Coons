@@ -13,7 +13,7 @@ var KevinScript = {
         var v6 = new Vertex(1.0, 1.0, 1.0);
         var v7 = new Vertex(0.0, 1.0, 1.0);
         
-        var vertice = [v0, v1, v2, v3, v4, v5, v6, v7];
+        this.vertice = [v0, v1, v2, v3, v4, v5, v6, v7];
 
         var e0 = new Edge(v0, v1);
         var e1 = new Edge(v1, v2);
@@ -30,7 +30,7 @@ var KevinScript = {
         var e10 = new Edge(v2, v6);
         var e11 = new Edge(v3, v7);
         
-        var edges = [e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11];
+        this.edges = [e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11];
         
         
         var p0 = new Polygone();
@@ -51,11 +51,16 @@ var KevinScript = {
         var p5 = new Polygone();
         p5.setEdges([e2, e10, e6, e11]);
         
-        var polygones = [p0, p1, p2, p3, p4, p5];
+        this.polygones = [p0, p1, p2, p3, p4, p5];
         
-        this.setAllBudule(polygones);
+        this.setAllBudule(this.polygones);
         
-        var cc = new CatmullClark(vertice, edges, polygones);
+        
+        //CREATION DU CUBE
+        //tw.scenes.main.add(newMesh.buildThreeMesh());
+        
+        
+        /*var cc = new CatmullClark(vertice, edges, polygones);
 
         var newMesh = cc.launchCatmullClark();
 
@@ -67,8 +72,8 @@ var KevinScript = {
 
         var newMesh3 = cc3.launchCatmullClark();
         
-        console.log(newMesh3);
-
+        console.log(newMesh3);*/
+/*
         // Plane
         var geometryPlane = new THREE.PlaneGeometry( 20, 20, 32 );
         var materialPlane = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, side: THREE.DoubleSide} );
@@ -78,7 +83,7 @@ var KevinScript = {
         tw.scenes.main.add( plane );
         // Super
         //tw.scenes.main.add(new Mesh(polygones).buildThreeMesh());
-        tw.scenes.main.add(newMesh3.buildThreeMesh());
+        tw.scenes.main.add(newMesh3.buildThreeMesh());*/
 	},
 
 	update : function ( tw , deltaTime )
@@ -88,7 +93,34 @@ var KevinScript = {
 
 	inputs : {
 		'a' : function(me, tw){
-			
+        var cc = new CatmullClark(me.vertice, me.edges, me.polygones);
+
+        var newMesh = cc.launchCatmullClark();
+
+        var cc2 = new CatmullClark(newMesh.getVertice(), newMesh.getEdges(), newMesh.polygones);
+
+        var newMesh2 = cc2.launchCatmullClark();
+
+        var cc3 = new CatmullClark(newMesh2.getVertice(), newMesh2.getEdges(), newMesh2.polygones);
+
+        var newMesh3 = cc3.launchCatmullClark();
+        console.log(newMesh);
+        
+        var geometryPlane = new THREE.PlaneGeometry( 20, 20, 32 );
+        var materialPlane = new THREE.MeshBasicMaterial( {color: 0xFFFFFF, side: THREE.DoubleSide} );
+        var plane = new THREE.Mesh( geometryPlane, materialPlane );
+        plane.rotation.x = Math.PI / 2;
+        plane.position.y = - 0.1;
+        tw.scenes.main.add( plane );
+        // Super
+        //tw.scenes.main.add(new Mesh(polygones).buildThreeMesh());
+        console.log("HOW SHOULD IT BE WRITTEN")
+        console.log(newMesh);
+            
+        var materialObject = new THREE.MeshPhongMaterial( { color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading, side: THREE.DoubleSide} );
+        tw.scenes.main.add(newMesh.buildThreeMesh(materialObject));
+            
+            
 		}
 	},
 
@@ -115,5 +147,30 @@ var KevinScript = {
 					edge.v2.pushIncidentEdge(edge);
 			}
 		}
-	}
+	},
+    
+     setAllTriangles : function(triangles)
+		{
+			var triangle = null;
+			var edges = null;
+			var edge = null;
+			for(var i = 0; i < triangles.length; ++i)
+			{
+				triangle = triangles[i]
+				edges = triangle.getEdges();
+
+				for(var j = 0; j < edges.length; ++j)
+				{
+					edge = edges[j];
+					
+					edge.setTriangle(triangle);
+					
+					if(edge.v1.incidentEdges.indexOf(edge) < 0)
+						edge.v1.pushIncidentEdge(edge);
+					
+					if(edge.v2.incidentEdges.indexOf(edge) < 0)
+						edge.v2.pushIncidentEdge(edge);
+				}
+			}
+		},
 }

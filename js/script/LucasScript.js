@@ -101,30 +101,44 @@ var LucasScript = {
 
     },
     
-     triangleTOTO : function(triangles)
-		{
-			var triangle = null;
-			var edges = null;
-			var edge = null;
-			for(var i = 0; i < triangles.length; ++i)
-			{
-				triangle = triangles[i]
-				edges = triangle.getEdges();
+     triangleTOTO: function (triangles) {
+    var triangle = null;
+    var edges = null;
+    var edge = null;
+    for (var i = 0; i < triangles.length; ++i) {
+        triangle = triangles[i]
+        edges = triangle.getEdges();
 
-				for(var j = 0; j < edges.length; ++j)
-				{
-					edge = edges[j];
-					
-					edge.setTriangle(triangle);
-					
-					if(edge.v1.incidentEdges.indexOf(edge) < 0)
-						edge.v1.pushIncidentEdge(edge);
-					
-					if(edge.v2.incidentEdges.indexOf(edge) < 0)
-						edge.v2.pushIncidentEdge(edge);
-				}
-			}
-		},
+        for (var j = 0; j < edges.length; ++j) {
+            edge = edges[j];
+
+            edge.setTriangle(triangle);
+
+            if (edge.v1.incidentEdges.indexOf(edge) < 0)
+                edge.v1.pushIncidentEdge(edge);
+
+            if (edge.v2.incidentEdges.indexOf(edge) < 0)
+                edge.v2.pushIncidentEdge(edge);
+            }
+        }
+    },
+    
+    trianglesToPolygones : function(triangles)
+    {
+        var onePolygone = new Polygone();
+        var polygones = [];
+        for(var i =  0 ; i < triangles.length ; i++)
+        {
+            //onePolygone.setEdges(triangles[i].e1,triangles[i].e2,triangles[i].e3);
+            onePolygone.pushEdge(triangles[i].e1);
+            onePolygone.pushEdge(triangles[i].e2);
+            onePolygone.pushEdge(triangles[i].e3);
+            polygones.push(onePolygone);
+        }
+        
+        return polygones;
+    },
+    
 
     
     onMouseDown : function(event, ctx) 
@@ -477,119 +491,37 @@ var t11 = new Triangle(e4, e8, e17);
 var triangles = [t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11];
 
 me.triangleTOTO(triangles);
-            
-console.log("MES TRIANGLES");
-console.log(triangles);
-//FORMULE POUR CALCULER NEW EDGE POINT (vertice) 
+var meshLoop = loop.launchLoop();
 
-            var newEdgePointTab = [];
-            var newVertexForEachTab = [];
-            for(var i = 0 ; i< triangles.length ; i++)
-                {
-                    //IL FAUT LE FAIRE 3 FOIS CAR IL Y A TROIS EDGE PAR TRIANGLES
-                    var actualV1 = triangles[i].e1.v1;
-                    var actualV2 = triangles[i].e1.v2;
-                   // var Vleft = ;
-                    //var Vright = ;
-                    
-                            
-                    
-                    
-                }
+/*console.log("AVANT MOD");
             
+/*console.log("MES TRIANGLES");
+console.log(triangles);*/
             
+var loop = new Loop(vertice, edges, triangles);
+console.log(meshLoop);
+var STpolygones = me.trianglesToPolygones(meshLoop.polygones);
             
+meshLoop.polygones = STpolygones;
+console.log("APRES MOD");            
+console.log(meshLoop);*/
+//CONSTRUCTION DE POLYGONES            
+
             
+ var materialObject = new THREE.MeshPhongMaterial( { color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading, side: THREE.DoubleSide} );
+    tw.scenes.main.add(meshLoop.buildThreeMesh(materialObject));
+/*
+var kobbelt = new Kobbelt(vertice, edges, triangles);
+kobbelt.launchKobbelt(); */           
             
-            
-           /*
-           ALGO READY TO USE
-           
-           var eRight = actualV1.clone();
-            eRight.add(actualV2);
-            eRight.multiplyScalar(3/8);
-            
-            var eLeft = actualVleft.clone();
-            eLeft.add(actualVright);
-            eLeft.multiplyScalar(1/8);
-            
-            var e = eLeft.clone();
-            e.add(eRight);*/
-            
-            for(var i = 0 ; i < vertice.length ; i++)
-                {
-                    
-                }
-            
-        /*ZONE DE CREATION DE KEVIN*/    
-            
-            
-            
-            //TODO utilisation des fonctions de guillaume
-            
-            /*LOOP ALGORITHM*/
-            
-            //Creation d'un carré
-            //var geometry = new THREE.PlaneGeometry( 10, 10, 1, 1 );
-            /*var geometry = new THREE.BoxGeometry(10,10,10);
-            var material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.SingleSide} );
-            var plane = new THREE.Mesh( geometry, material );
-            plane.position.x = 0;
-            plane.position.y = 10;
-            plane.position.z = 0;
-            tw.scenes.CURRENT.add( plane );
-            
-            console.log(geometry);
-            var EdgeTab = []; 
-            var EdgeIdTabToDelete = [];
-            console.log("NOMBRE FACE " +  geometry.faces.length );
-            
-            for(var f = 0 ; f < geometry.faces.length ; f++ ){
-                    var faceA = new Edge(geometry.vertices[geometry.faces[f].a],geometry.vertices[geometry.faces[f].b]);
-                    var faceB = new Edge(geometry.vertices[geometry.faces[f].b],geometry.vertices[geometry.faces[f].c]);
-                    var faceC = new Edge(geometry.vertices[geometry.faces[f].c],geometry.vertices[geometry.faces[f].a]);
-                    
-                    EdgeTab.push(faceA);
-                    EdgeTab.push(faceB);
-                    EdgeTab.push(faceC);
-                
-                
-            }
-            console.log("EDGE TAB HERE!");
-            console.log(EdgeTab.length);
-            
-            
-                for(var i = 0; i< EdgeTab.length ; i++){
-                    var EdgeRef = EdgeTab[i];
-                    console.log(EdgeRef);
-                    for(var j = 0 ; j < EdgeTab.length ; j++){           
-                        if(EdgeTab[j].equals(EdgeRef) && i != j){
-                            //console.log("ON DOIT SUPPRIMER TA MERE"); EdgeTab[j].id != EdgeRef.id
-                            EdgeIdTabToDelete.push(j);
-                       }
-                    }
-                }
-            console.log ("EDGE TO DELETE :" + EdgeIdTabToDelete.length);
-            //Cleanning tab 
-            for(var i = EdgeIdTabToDelete.length-1 ; i>0 ;i--)
-                {
-                    delete EdgeTab[i];
-                }
-            
-            console.log("ICI ON VA AFFICHER LES EDGES");
-            console.log(EdgeTab.length);
-            //LANCEMENT DE L'ALGO
-                //CREATION DE 3 EDGE PAR TRIANGLE*/
-            
-              
-                
+     
             
         },
         
         'f' : function (me, tw)
         {
             this.tabForCoons = [];
-           /* var totalPointToAdd = me.tabFrontLinePoint.length + me.tabLeftLinePoint.length + me.tabBackLinePoint.length + me.tabRightLinePoint.length;*/
+           
             
             me.lineFront.visible = false;
             me.lineLeft.visible = false;
@@ -645,4 +577,7 @@ console.log(triangles);
             tw.scenes.main.add( line ); 
         }
     }
+    
+    
+    
 }

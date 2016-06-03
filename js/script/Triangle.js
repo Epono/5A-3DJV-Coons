@@ -83,6 +83,20 @@ class Triangle
         
         this.centerPoint.divideScalar(3);  
     }  
+    
+    trianglesToPolygones(triangles)
+    {
+        var onePolygone = new Polygone();
+        var polygones = [];
+        for(var i =  0 ; i < triangles.length ; i++)
+        {
+            onePolygone.setEdges(triangles[i].e1,triangles[i].e2,triangles[i].e3)
+            polygones.push(onePolygone);
+        }
+        
+        return polygones;
+    }
+    
 }
 
 Triangle.ID = 0;
