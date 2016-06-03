@@ -101,21 +101,21 @@ var LucasScript = {
 
     },
     
-     toto : function(polygones)
+     triangleTOTO : function(triangles)
 		{
-			var polygone = null;
+			var triangle = null;
 			var edges = null;
 			var edge = null;
-			for(var i = 0; i < polygones.length; ++i)
+			for(var i = 0; i < triangles.length; ++i)
 			{
-				polygone = polygones[i]
-				edges = polygone.edges;
+				triangle = triangles[i]
+				edges = triangle.getEdges();
 
 				for(var j = 0; j < edges.length; ++j)
 				{
 					edge = edges[j];
 					
-					edge.setPolygone(polygone);
+					edge.setTriangle(triangle);
 					
 					if(edge.v1.incidentEdges.indexOf(edge) < 0)
 						edge.v1.pushIncidentEdge(edge);
@@ -387,17 +387,17 @@ var LucasScript = {
             
            
 		
-        var v0 = new Vertex(0.0, 0.0, 0.0);
-        var v1 = new Vertex(1.0, 0.0, 0.0);
-        var v2 = new Vertex(1.0, 1.0, 0.0);
-        var v3 = new Vertex(0.0, 1.0, 0.0);
-        
-        var v4 = new Vertex(0.0, 0.0, 1.0);
-        var v5 = new Vertex(1.0, 0.0, 1.0);
-        var v6 = new Vertex(1.0, 1.0, 1.0);
-        var v7 = new Vertex(0.0, 1.0, 1.0);
-        
-        var vertice = [v0, v1, v2, v3, v4, v5, v6, v7];
+   var v0 = new Vertex(0.0, 0.0, 0.0);
+   var v1 = new Vertex(1.0, 0.0, 0.0);
+   var v2 = new Vertex(1.0, 1.0, 0.0);
+   var v3 = new Vertex(0.0, 1.0, 0.0);
+
+   var v4 = new Vertex(0.0, 0.0, 1.0);
+   var v5 = new Vertex(1.0, 0.0, 1.0);
+   var v6 = new Vertex(1.0, 1.0, 1.0);
+   var v7 = new Vertex(0.0, 1.0, 1.0);
+
+   var vertice = [v0, v1, v2, v3, v4, v5, v6, v7];
         
         //FACE FRONT
  var e0 = new Edge(v0, v1);
@@ -467,9 +467,52 @@ var t11 = new Triangle(e4, e8, e17);
 
 
 var triangles = [t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11];
-        
-        //me.toto(polygones);
-        //console.log(polygones);
+
+me.triangleTOTO(triangles);
+            
+console.log("MES TRIANGLES");
+console.log(triangles);
+//FORMULE POUR CALCULER NEW EDGE POINT (vertice) 
+
+            var newEdgePointTab = [];
+            var newVertexForEachTab = [];
+            for(var i = 0 ; i< triangles.length ; i++)
+                {
+                    //IL FAUT LE FAIRE 3 FOIS CAR IL Y A TROIS EDGE PAR TRIANGLES
+                    var actualV1 = triangles[i].e1.v1;
+                    var actualV2 = triangles[i].e1.v2;
+                   // var Vleft = ;
+                    //var Vright = ;
+                    
+                            
+                    
+                    
+                }
+            
+            
+            
+            
+            
+            
+           /*
+           ALGO READY TO USE
+           
+           var eRight = actualV1.clone();
+            eRight.add(actualV2);
+            eRight.multiplyScalar(3/8);
+            
+            var eLeft = actualVleft.clone();
+            eLeft.add(actualVright);
+            eLeft.multiplyScalar(1/8);
+            
+            var e = eLeft.clone();
+            e.add(eRight);*/
+            
+            for(var i = 0 ; i < vertice.length ; i++)
+                {
+                    
+                }
+            
         /*ZONE DE CREATION DE KEVIN*/    
             
             
@@ -480,7 +523,7 @@ var triangles = [t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11];
             
             //Creation d'un carré
             //var geometry = new THREE.PlaneGeometry( 10, 10, 1, 1 );
-            var geometry = new THREE.BoxGeometry(10,10,10);
+            /*var geometry = new THREE.BoxGeometry(10,10,10);
             var material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.SingleSide} );
             var plane = new THREE.Mesh( geometry, material );
             plane.position.x = 0;
@@ -528,7 +571,7 @@ var triangles = [t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11];
             console.log("ICI ON VA AFFICHER LES EDGES");
             console.log(EdgeTab.length);
             //LANCEMENT DE L'ALGO
-                //CREATION DE 3 EDGE PAR TRIANGLE
+                //CREATION DE 3 EDGE PAR TRIANGLE*/
             
               
                 
