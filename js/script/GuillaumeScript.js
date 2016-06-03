@@ -149,6 +149,7 @@ var GuillaumeScript = {
         
         this.setAllBidule(trianglesKevin);
         var kobbelt = new Kobbelt(verticesKevin, edgesKevin, trianglesKevin);
+        console.log(kobbelt);
         var mesh = kobbelt.launchKobbelt();
         console.log(mesh);
     },
