@@ -15,6 +15,31 @@ class Mesh
 
 	}
 
+	static withTriangle(triangles)
+	{
+
+		var polygones = [];
+
+		for (var i = 0; i < triangles.length; ++i)
+		{
+			var nextPoly = new Polygone();
+
+			nextPoly.pushEdge(
+				triangles[i].e1
+			);
+			nextPoly.pushEdge(
+				triangles[i].e2
+			);
+			nextPoly.pushEdge(
+				triangles[i].e3
+			);
+			
+			polygones.push(nextPoly);
+		}
+
+		return new Mesh(polygones);
+	}
+
 	pushPolygoneAsVertices(vertices)
 	{
 		var incPoly = new Polygone();
@@ -415,11 +440,44 @@ class Mesh
 		geometry.vertices = vertices;
 		geometry.faces = threeFaces;
 
-		return new THREE.Mesh( 
+		return new THREE.Mesh(
 			geometry, 
 			mat
 		);
 	}
+
+	/*<List<Vertex>> sortPolygoneVertice (polygone)
+	{
+
+		var centerVertex = polygone.computeFacePoint().facePoint,
+			v1 = polygone.vertices[0],
+			norm = centerVertex.cross(v1);
+
+
+
+		float Utils::determinant2D(const Point& v1, const Point& v2)
+		{
+
+			return ( (v1.getX() * v2.getY()) - (v2.getX() * v1.getY()) );
+		}
+
+		float Utils::getAngle2D(const Point& v1, const Point& v2)
+		{
+			return acos((dotProduct2D(v1, v2)) / (norm2D(v1) * norm2D(v2)));
+		}
+
+		float Utils::getOrientedAngle2D(const Point& v1, const Point& v2)
+		{
+			float angle = getAngle2D(v1, v2);
+
+			if (determinant2D(v1, v2) > 0)
+				return angle;
+			else
+				return (static_cast<float>((2 * M_PI)) - angle);
+		}
+
+	}
+	*/
 
 	static getRandomColorMat()
 	{
