@@ -100,6 +100,31 @@ var LucasScript = {
 
 
     },
+    
+     toto : function(polygones)
+		{
+			var polygone = null;
+			var edges = null;
+			var edge = null;
+			for(var i = 0; i < polygones.length; ++i)
+			{
+				polygone = polygones[i]
+				edges = polygone.edges;
+
+				for(var j = 0; j < edges.length; ++j)
+				{
+					edge = edges[j];
+					
+					edge.setPolygone(polygone);
+					
+					if(edge.v1.incidentEdges.indexOf(edge) < 0)
+						edge.v1.pushIncidentEdge(edge);
+					
+					if(edge.v2.incidentEdges.indexOf(edge) < 0)
+						edge.v2.pushIncidentEdge(edge);
+				}
+			}
+		},
 
     
     onMouseDown : function(event, ctx) 
@@ -143,10 +168,11 @@ var LucasScript = {
                         geometry.vertices.push(ctx.tabBackLinePoint[j]);  
                     }
                    
-
-                    var line = new THREE.Line( geometry, material );
-                    //line.visible = false;
-                    ctx.tw.scenes.main.add( line );
+                    if(this.lineBack) {
+                        this.lineBack.visible = false;
+                    }
+                    this.lineBack = new THREE.Line( geometry, material );
+                    ctx.tw.scenes.main.add( this.lineBack );
                     if(ctx.tabBackLinePoint.length == ctx.numberOfPoints) {
                         ctx.inputs['6'](ctx, ctx.tw);
                     }
@@ -183,10 +209,12 @@ var LucasScript = {
                     {
                         geometry.vertices.push(ctx.tabLeftLinePoint[j]);  
                     }
-                   
-
-                    var line = new THREE.Line( geometry, material );
-                    ctx.tw.scenes.main.add( line ); 
+                                   
+                    if(this.lineLeft) {
+                        this.lineLeft.visible = false;
+                    }
+                    this.lineLeft = new THREE.Line( geometry, material );
+                    ctx.tw.scenes.main.add( this.lineLeft );
                     if(ctx.tabLeftLinePoint.length == ctx.numberOfPoints) {
                         ctx.inputs['8'](ctx, ctx.tw);
                     }
@@ -224,9 +252,12 @@ var LucasScript = {
                         geometry.vertices.push(ctx.tabFrontLinePoint[j]);  
                     }
                    /*geometry.vertices[ctx.tabFrontLinePoint.length-1] = new THREE.Vector3(-10,geometry.vertices[ctx.tabFrontLinePoint.length-1].y,-10.0);*/
-
-                    var line = new THREE.Line( geometry, material );
-                    ctx.tw.scenes.main.add( line );
+                    
+                    if(this.lineFront) {
+                        this.lineFront.visible = false;
+                    }
+                    this.lineFront = new THREE.Line( geometry, material );
+                    ctx.tw.scenes.main.add( this.lineFront );
                     if(ctx.tabFrontLinePoint.length == ctx.numberOfPoints) {
                         ctx.inputs['4'](ctx, ctx.tw);
                     }
@@ -263,10 +294,12 @@ var LucasScript = {
                     {
                         geometry.vertices.push(ctx.tabRightLinePoint[j]);  
                     }
-                   
-
-                    var line = new THREE.Line( geometry, material );
-                    ctx.tw.scenes.main.add( line ); 
+                    
+                    if(this.lineRight) {
+                        this.lineRight.visible = false;
+                    }
+                    this.lineRight = new THREE.Line( geometry, material );
+                    ctx.tw.scenes.main.add( this.lineRight );
                     if(ctx.tabRightLinePoint.length == ctx.numberOfPoints) {
                         ctx.inputs['c'](ctx, ctx.tw);
                     }
@@ -358,10 +391,155 @@ var LucasScript = {
         'y' : function (me, tw)
         {
             //Creation aile d'avion
+            console.log("ICI AUSSI LES INPUTS MARCHENT");
+            
+           
+		
+        var v0 = new Vertex(0.0, 0.0, 0.0);
+        var v1 = new Vertex(1.0, 0.0, 0.0);
+        var v2 = new Vertex(1.0, 1.0, 0.0);
+        var v3 = new Vertex(0.0, 1.0, 0.0);
+        
+        var v4 = new Vertex(0.0, 0.0, 1.0);
+        var v5 = new Vertex(1.0, 0.0, 1.0);
+        var v6 = new Vertex(1.0, 1.0, 1.0);
+        var v7 = new Vertex(0.0, 1.0, 1.0);
+        
+        var vertice = [v0, v1, v2, v3, v4, v5, v6, v7];
+        
+        //FACE FRONT
+ var e0 = new Edge(v0, v1);
+ var e1 = new Edge(v1, v3);
+ var e2 = new Edge(v3, v0);
+
+ var e3 = new Edge(v1, v2);
+ var e4 = new Edge(v2, v3);
+
+
+
+
+ //FACE RIGHT
+
+ var e5 = new Edge(v1, v5);
+ var e6 = new Edge(v5, v6);
+ var e7 = new Edge(v6, v1);
+
+ var e8 = new Edge(v6, v2);
+
+
+ //FACE BACK  
+ var e9 = new Edge(v5, v4);
+ var e10 = new Edge(v4, v7);
+ var e11 = new Edge(v7, v5);
+
+
+
+ var e12 = new Edge(v7, v6);
+
+ //FACE LEFT
+
+ var e13 = new Edge(v4, v0);
+ var e14 = new Edge(v0, v7);
+ var e15 = new Edge(v7, v3);
+
+
+ //FACE DOWN
+ var e16 = new Edge(v0, v5);
+ //FACE UP
+ var e17 = new Edge(v3, v6);
+            
+            
+var edges = [e0, e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, e16, e17];
+
+//FRONT FACE
+var t0 = new Triangle(e0, e1, e2);
+
+var t1 = new Triangle(e3, e4, e1);
+
+//RIGTH FACE
+var t2 = new Triangle(e5, e6, e7);
+var t3 = new Triangle(e8, e3, e7);
+
+//BACK FACE
+var t4 = new Triangle(e9, e10, e11);
+var t5 = new Triangle(e12, e6, e11);
+//LEFT FACE
+var t6 = new Triangle(e13, e14, e10);
+var t7 = new Triangle(e15, e14, e2);
+//DOWN FACE
+var t8 = new Triangle(e0, e5, e16);
+var t9 = new Triangle(e9, e13, e16);
+//UP FACE
+var t10 = new Triangle(e12, e15, e17);
+var t11 = new Triangle(e4, e8, e17);
+
+
+var triangles = [t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11];
+        
+        //me.toto(polygones);
+        //console.log(polygones);
+        /*ZONE DE CREATION DE KEVIN*/    
+            
+            
             
             //TODO utilisation des fonctions de guillaume
             
+            /*LOOP ALGORITHM*/
             
+            //Creation d'un carré
+            //var geometry = new THREE.PlaneGeometry( 10, 10, 1, 1 );
+            var geometry = new THREE.BoxGeometry(10,10,10);
+            var material = new THREE.MeshBasicMaterial( {color: 0xffff00, side: THREE.SingleSide} );
+            var plane = new THREE.Mesh( geometry, material );
+            plane.position.x = 0;
+            plane.position.y = 10;
+            plane.position.z = 0;
+            tw.scenes.CURRENT.add( plane );
+            
+            console.log(geometry);
+            var EdgeTab = []; 
+            var EdgeIdTabToDelete = [];
+            console.log("NOMBRE FACE " +  geometry.faces.length );
+            
+            for(var f = 0 ; f < geometry.faces.length ; f++ ){
+                    var faceA = new Edge(geometry.vertices[geometry.faces[f].a],geometry.vertices[geometry.faces[f].b]);
+                    var faceB = new Edge(geometry.vertices[geometry.faces[f].b],geometry.vertices[geometry.faces[f].c]);
+                    var faceC = new Edge(geometry.vertices[geometry.faces[f].c],geometry.vertices[geometry.faces[f].a]);
+                    
+                    EdgeTab.push(faceA);
+                    EdgeTab.push(faceB);
+                    EdgeTab.push(faceC);
+                
+                
+            }
+            console.log("EDGE TAB HERE!");
+            console.log(EdgeTab.length);
+            
+            
+                for(var i = 0; i< EdgeTab.length ; i++){
+                    var EdgeRef = EdgeTab[i];
+                    console.log(EdgeRef);
+                    for(var j = 0 ; j < EdgeTab.length ; j++){           
+                        if(EdgeTab[j].equals(EdgeRef) && i != j){
+                            //console.log("ON DOIT SUPPRIMER TA MERE"); EdgeTab[j].id != EdgeRef.id
+                            EdgeIdTabToDelete.push(j);
+                       }
+                    }
+                }
+            console.log ("EDGE TO DELETE :" + EdgeIdTabToDelete.length);
+            //Cleanning tab 
+            for(var i = EdgeIdTabToDelete.length-1 ; i>0 ;i--)
+                {
+                    delete EdgeTab[i];
+                }
+            
+            console.log("ICI ON VA AFFICHER LES EDGES");
+            console.log(EdgeTab.length);
+            //LANCEMENT DE L'ALGO
+                //CREATION DE 3 EDGE PAR TRIANGLE
+            
+              
+                
             
         },
         
@@ -370,6 +548,11 @@ var LucasScript = {
             this.tabForCoons = [];
            /* var totalPointToAdd = me.tabFrontLinePoint.length + me.tabLeftLinePoint.length + me.tabBackLinePoint.length + me.tabRightLinePoint.length;*/
             
+            me.lineFront.visible = false;
+            me.lineLeft.visible = false;
+            me.lineBack.visible = false;
+            me.lineRight.visible = false;
+
             for(var i = 0 ; i < me.tabFrontLinePoint.length ; i++)
             {
                 this.tabForCoons.push(me.tabFrontLinePoint[i]);

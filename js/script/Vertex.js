@@ -44,7 +44,7 @@ class Vertex extends THREE.Vector3
         {
             var tmpEdges = [];
             
-            for(i = 0; i < this.incidentEdges.length; ++i)
+            for(var i = 0; i < this.incidentEdges.length; ++i)
             {
                 if(i != indexToRemove)
                     tmpEdges.push(this.incidentEdges[i]);
@@ -113,7 +113,73 @@ class Vertex extends THREE.Vector3
         this.vertexPoint.add(r.multiplyScalar(2/n));
         this.vertexPoint.add(v.multiplyScalar((n-3)/n));
     }
+    
+    getNeighborsVertice()
+    {
+        var neighborsVertice = [];
+        
+        for(var i = 0; i < this.incidentEdges.length; ++i)
+        {
+            var tmpEdge = this.incidentEdges[i];
+            if(tmpEdge.v1.id != this.id)
+                neighborsVertice.push(tmpEdge.v1);
+            else
+                neighborsVertice.push(tmpEdge.v2);
+        }
+        
+        return neighborsVertice;
+    }
+    
+    computePerturbedPoint()
+    {
+        var neighborsVertice = this.getNeighborsVertice();
+        var n = neighborsVertice.length;
+        if(n > 0)
+        {
+            var alpha = (1/9)*(4-(2*Math.cos((2*Math.PI)/n)))
 
+            var vertexSum = neighborsVertice[0];
+            for(var i = 1; i < neighborsVertice.length; ++i)
+            {
+                vertexSum.add(neighborsVertice[i]);
+            }
+            vertexSum.multiplyScalar(alpha/n);
+            
+            this.vertexPoint = this.clone();
+            this.vertexPoint.multiplyScalar(1-alpha);
+            this.vertexPoint.add(vertexSum);
+            
+            this.x = this.vertexPoint.x;
+            this.y = this.vertexPoint.y;
+            this.z = this.vertexPoint.z;
+        }
+    }
+
+    computeVertexPointLoop()
+    {
+        var neighborsVertice = this.getNeighborsVertice();
+        var n = neighborsVertice.length;
+        if(n >= 3)
+        {
+            var alpha = 3;
+
+            if(n > 3)
+                alpha = (1/n) * ( (5/8) - Math.pow( ((3/8) + ((1/4) * Math.cos((2*Math.PI)/n))), 2 ) );
+
+            var vertexSum = neighborsVertice[0];
+            for(var i = 1; i < neighborsVertice.length; ++i)
+            {
+                vertexSum.add(neighborsVertice[i]);
+            }
+            vertexSum.multiplyScalar(alpha);
+
+            this.vertexPoint = this.clone();
+            this.vertexPoint.multiplyScalar(1 - (n*alpha));
+            
+            this.vertexPoint.add(vertexSum);
+        }
+    }
+    
     toKey()
     {
         return ("" + this.x.toFixed(Vertex.DECIMALS) + this.y.toFixed(Vertex.DECIMALS) + this.z.toFixed(Vertex.DECIMALS));

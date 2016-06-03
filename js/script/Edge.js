@@ -30,6 +30,12 @@ class Edge
         this.v2 = v;
     }
     
+    setV1V2(v1, v2)
+    {
+        this.v1 = v1;
+        this.v2 = v2;
+    }
+    
     setLeftPolygone(polygone)
     {
         this.leftPolygone = polygone;
@@ -70,10 +76,16 @@ class Edge
     // si il n'y a rien sur un des coté et si de l'autre coté le triangle n'existe pas deja
     setTriangle(triangle)
     {
-        if((this.leftTriangle == null) && (this.rightTriangle.id != triangle.id))
-                this.rightTriangle = triangle;
-        else if((this.rightTriangle == null) && (this.leftTriangle.id != triangle.id))
+        //if (!this.rightPolygone && !this.leftPolygone)
+        if ((this.rightTriangle == null) && (this.leftTriangle == null))
+        {
             this.rightTriangle = triangle;
+        }
+        //else if (!this.leftPolygone && polygone.id != this.rightPolygone.id)
+        else if ((this.leftTriangle == null) && (triangle !== this.rightTriangle))
+        {
+           this.leftTriangle = triangle;
+        }
     }
     
     // Dit s'il y a un polyone gauche et droit
@@ -104,7 +116,7 @@ class Edge
     computeEdgePoint()
     {
         // Vérification s'il y a bien un polygone à gauche et à droite de l'edge
-        if(this.hasLeftAndRightPolygone() && this.hasTwoVertice)
+        if(this.hasLeftAndRightPolygone() && this.hasTwoVertice())
         {
             // Calcul de l'edge point en faisant la moyenne entre
             // les deux vertice de l'edge et les deux face points des faces gauche et droite
@@ -115,6 +127,29 @@ class Edge
             this.edgePoint.add(this.rightPolygone.facePoint);
             
             this.edgePoint.divideScalar(4);
+        }
+    }
+    
+    computeEdgePointLoop()
+    {
+        // Vérification s'il y a bien un polygone à gauche et à droite de l'edge
+        if(this.hasLeftAndRightTriangle() && this.hasTwoVertice())
+        {
+            var edgeLeftTriangle = this.leftTriangle.getTriangleLastVertex(this);
+            var edgeRightTriangle = this.rightTriangle.getTriangleLastVertex(this);
+            
+            if(edgeLeftTriangle != null && edgeRightTriangle != null)
+            {
+                var edge = edgeLeftTriangle.clone();
+                edge.add(edgeRightTriangle);
+                edge.multiplyScalar(1/8);
+
+                this.edgePoint = this.v1.clone();
+                this.edgePoint.add(this.v2);
+                this.edgePoint.multiplyScalar(3/8);
+
+                this.edgePoint.add(edge);
+            }
         }
     }
 

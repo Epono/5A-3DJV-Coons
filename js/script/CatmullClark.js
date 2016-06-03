@@ -24,7 +24,7 @@ class CatmullClark
         this.edges = edges;
         this.catmullClarkEdges = edges;
     } 
-    setVertice(polygones)
+    setPolygones(polygones)
     {
         this.polygones = polygones;
         this.catmullClarkPolygones = polygones;    
@@ -92,7 +92,10 @@ class CatmullClark
                     }
                     
                     if(foundAnEdge)
+                    {
                         ++edgesFound;
+                        foundAnEdge = false;
+                    }
                     else
                         break;
                 }
@@ -145,7 +148,7 @@ class CatmullClark
             edges[i].setPolygone(polygone);
     }
     
-        // Calcul de tous les face/edge/vertex points
+    // Calcul de tous les face/edge/vertex points
     computeCatmullClarkPoints()
     {   
         // Calcul des tous les face points
@@ -220,40 +223,7 @@ class CatmullClark
             }
         }
     }
-    /*
-    // Vérifie si il existe un polygone ayant 4 edges et étant composé des 4 edges passées en paramètres
-    hasPolygone(edge1, edge2, edge3, edge4)
-    {
-        // Parcout de tous les polygones
-        for(var i = 0; i < this.catmullClarkPolygones.length; ++i)
-        {
-            var tmpPolygone = this.catmullClarkPolygones[i];
-            var tmpEdges = tmpPolygone.edges;
-            
-            var arrayLength = tmpEdges.length;
-            // Vérification si on a bien un polygone ayant 4 edges
-            if(arrayLength == 4)
-            {
-                var hasAllEdges = true;
-                
-                for(var j = 0; j < tmpEdges.length; ++j)
-                {
-                    var tmpEdge = tmpEdges[j];
-                    if(tmpEdge.id != edge1.id && tmpEdge.id != edge2.id && tmpEdge.id != edge3.id && tmpEdge.id != edge4.id)
-                    //if((tmpEdge !== edge1) && (tmpEdge !== edge2) && (tmpEdge !== edge3) && (tmpEdge !== edge4))
-                    {
-                        hasAllEdges = false;
-                        break;
-                    }
-                }
-                
-                if(hasAllEdges)
-                    return true;
-            }
-        }
-        return false;
-    }
-    */
+
     // Ajout les polygones dans la liste des polygones pour selon un polygone
     //      facePoint        -->     Face point d'un polygone
     //      polygoneEdges    -->     Edges d'un polygone
@@ -292,17 +262,14 @@ class CatmullClark
                     if((edge1 != null) && (edge2 != null) && (edge3 != null) && (edge4 != null))
                     {
                         // Test pour voir si un polygone composé des 4 edges n'existe pas deja
-                        //if(this.hasPolygone([edge1, edge2, edge3, edge4]) == false)
-                        //{
+                        if(this.hasPolygone([edge1, edge2, edge3, edge4]) == false)
+                        {
                             // Ajout du nouveau polygone dans la liste des polygones
                             var newPolygone = new Polygone();
                             newPolygone.setEdges([edge1, edge2, edge3, edge4]);
                             this.pushCatmullClarkPolygone(newPolygone);
-                            
-                            console.log("a");
-                        //}
-                        //break;
-
+                        }
+                        break;
                     }
                 }
             }
@@ -319,9 +286,7 @@ class CatmullClark
             var tmpPolygone = this.polygones[i];
             var tmpPolygoneEdges = tmpPolygone.edges;
             var tmpPolygoneFacePoint = tmpPolygone.facePoint;
-            
-            //console.log(tmpPolygone);
-            
+  
             // Parcourt de toutes les edges du polygone
             for(var j = 0; j < tmpPolygoneEdges.length; ++j)
             {
@@ -337,8 +302,7 @@ class CatmullClark
     
     // Lancer l'algo de subdivision Catmull-Clark
     launchCatmullClark()
-    {
-        
+    {     
         this.setListsBeforeLauchingAlgo();
         
         this.computeCatmullClarkPoints();
@@ -349,7 +313,6 @@ class CatmullClark
         
         this.generateCatmullClarkPolygones();        
         
-        return new Mesh(this.catmullClarkPolygones);
-        
+        return new Mesh(this.catmullClarkPolygones);       
     }
 }
