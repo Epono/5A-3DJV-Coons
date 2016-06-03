@@ -132,12 +132,8 @@ var ThomasScript = {
 		
 		//var newPoly = catmullClark.launchCatmullClark();
 
-		var generateCube = Mesh.getCubeMesh(5);
-		
+		var generateCube = Mesh.getCubeMesh(5);		
 	   // tw.scenes.main.add(generateCube.buildThreeMesh());
-		
-
-
 
 	    /*
 	    var geometry = new THREE.Geometry();
@@ -209,6 +205,11 @@ var ThomasScript = {
 	inputs : {
 
 		's' : function(me, tw)
+		{
+			var next = me.curveCornerCutting(me.line.geometry, true);
+			me.setLine(next);
+		},
+		'c' : function(me, tw)
 		{
 			var next = me.curveCornerCutting(me.line.geometry, true);
 			me.setLine(next);
