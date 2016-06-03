@@ -12,21 +12,77 @@ class Kobbelt
         this.kobbeltTriangles = triangles;
     }
     
-    // Setter
-    setVertice(vertice)
+    // Recherche dans la liste des edges si un edge contenant les points passés en paramètres existe
+    hasEdge(v1, v2)
     {
-        this.vertice = vertice;
-        this.kobbeltVertice = vertice;
-    } 
-    setEdges(edges)
+        // parcourt de chaque edges
+        for(var i = 0; i < this.loopEdges.length; ++i)
+        {
+            var tmpEdge = this.loopEdges[i];
+
+            // Comparaison des id des vertices
+            if((v1.id == tmpEdge.v1.id && v2.id == tmpEdge.v2.id) || (v1.id == tmpEdge.v2.id && v2.id == tmpEdge.v1.id))
+            //if((v1 === tmpEdge.v1 || v1 === tmpEdge.v2) && (v2 === tmpEdge.v1 || v2 === tmpEdge.v2))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    
+
+    findEdge(v1, v2)
     {
-        this.edges = edges;
-        this.kobbeltEdges = edges;
-    } 
-    setTriangles(triangles)
+        // parcourt de chaque edges
+        for(var i = 0; i < this.loopEdges.length; ++i)
+        {
+            var tmpEdge = this.loopEdges[i];
+
+            // Comparaison des id des vertices
+            if((v1.id == tmpEdge.v1.id && v2.id == tmpEdge.v2.id) || (v1.id == tmpEdge.v2.id && v2.id == tmpEdge.v1.id))
+            //if((v1 === tmpEdge.v1 || v1 === tmpEdge.v2) && (v2 === tmpEdge.v1 || v2 === tmpEdge.v2))
+            {
+                return tmpEdge;
+            }
+        }
+        return null;
+    }
+    
+    hasTriangle(edges)
     {
-        this.triangles = triangles;
-        this.kobbeltTriangles = triangles;    
+        var edgesFound = 0;
+        var foundAnEdge = false;
+        // parcourt de chaque triangle
+        for(var i = 0; i < this.loopTriangles.length; ++i)
+        {
+            var tmpEdges = this.loopTriangles[i].edges;
+            edgesFound = 0;
+            foundAnEdge = false;
+            
+            if(edges.length == tmpEdges.length)
+            {
+                for(var j = 0; j < edges.length; ++j)
+                {
+                    for(var k = 0; k < tmpEdges.length; ++k)
+                    {
+                        if(edges[j].id == tmpEdges[k].id)
+                        {
+                            foundAnEdge = true;
+                            break;
+                        }
+                    }
+                    
+                    if(foundAnEdge)
+                        ++edgesFound;
+                    else
+                        break;
+                }
+                
+                if(edgesFound == edges.length)
+                    return true;
+            }
+        }
+        return false;
     }
 
     

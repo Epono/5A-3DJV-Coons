@@ -82,6 +82,7 @@
 		
 		<script src="script/CatmullClark.js"></script>
         <script src="script/Kobbelt.js"></script>
+        <script src="script/Loop.js"></script>
 
 
 		<style type="text/css">
@@ -130,6 +131,7 @@
 	</body>
 
 	<script type="text/javascript">
+        /*
 		function setAllBudule(polygones)
 		{
 			var polygone = null;
@@ -154,7 +156,7 @@
 				}
 			}
 		}
-		/*
+		
         var v0 = new Vertex(0.0, 0.0, 0.0);
         var v1 = new Vertex(1.0, 0.0, 0.0);
         var v2 = new Vertex(1.0, 1.0, 0.0);
@@ -320,9 +322,13 @@
         var triangles = [t0, t1, t2, t3, t4, t5, t6, t7, t8, t9, t10, t11];
         
         setAllBidule(triangles);
-        
+        /*
         var kobbelt = new Kobbelt(vertice, edges, triangles);
         kobbelt.launchKobbelt();
+        */
+        
+        var loop = new Loop(vertice, edges, triangles);
+        loop.launchLoop();
         
 	</script>
 </html>

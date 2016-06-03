@@ -155,6 +155,31 @@ class Vertex extends THREE.Vector3
         }
     }
 
+    computeVertexPointLoop()
+    {
+        var neighborsVertice = this.getNeighborsVertice();
+        var n = neighborsVertice.length;
+        if(n >= 3)
+        {
+            var alpha = 3;
+
+            if(n > 3)
+                alpha = (1/n) * ( (5/8) - Math.pow( ((3/8) + ((1/4) * Math.cos((2*Math.PI)/n))), 2 ) );
+
+            var vertexSum = neighborsVertice[0];
+            for(var i = 1; i < neighborsVertice.length; ++i)
+            {
+                vertexSum.add(neighborsVertice[i]);
+            }
+            vertexSum.multiplyScalar(alpha);
+
+            this.vertexPoint = this.clone();
+            this.vertexPoint.multiplyScalar(1 - (n*alpha));
+            
+            this.vertexPoint.add(vertexSum);
+        }
+    }
+    
     toKey()
     {
         return ("" + this.x + this.y + this.z).replace('[.]', '');

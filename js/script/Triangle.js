@@ -57,6 +57,19 @@ class Triangle
         return [v1, v2, v3];
     }
 
+    getTriangleLastVertex(edge)
+    {
+        vertice = this.getVertice();
+        
+        for(var i = 0; i < vertice.length; ++i)
+        {
+            if(vertice[i] != edge.v1 && vertice[i] != edge.v2)
+                return vertice[i];
+        }
+        
+        return null;
+    }
+    
     // Calcul le facePoint
     computeCenterPoint()
     {
