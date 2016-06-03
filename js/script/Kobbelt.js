@@ -133,8 +133,7 @@ class Kobbelt
         
         this.kobbeltVertice = [];
         this.kobbeltEdges = [];
-        this.kobbeltTriangles = [];
-        
+        this.kobbeltTriangles = [];  
     }
     
     computeKobbeltPoints()
@@ -171,6 +170,7 @@ class Kobbelt
             this.pushKobbeltTriangle(new Triangle(newEdge1, newEdge2, tmpEdge));
             
             
+            
             tmpEdge = tmpTriangle.e2; 
             newEdge1 = new Edge(tmpCenterPoint, tmpEdge.v1);
             newEdge2 = new Edge(tmpCenterPoint, tmpEdge.v2);
@@ -179,6 +179,7 @@ class Kobbelt
             this.pushKobbeltEdge(newEdge1);
             this.pushKobbeltEdge(newEdge2);
             this.pushKobbeltTriangle(new Triangle(newEdge1, newEdge2, tmpEdge));
+            
             
             
             tmpEdge = tmpTriangle.e3; 
@@ -255,12 +256,13 @@ class Kobbelt
     {
         this.setListsBeforeLauchingAlgo()
         
-        this.computeKobbeltPoints();   
+        //this.computeKobbeltPoints();   
         
-        this.linkTriangleCenterToTriangleVertice();
+        //this.linkTriangleCenterToTriangleVertice();
         
-        this.flipOriginalEdges();
+        //this.flipOriginalEdges();
 
-        return  Mesh.withTriangle(this.kobbeltTriangles);
+        //return  Mesh.withTriangle(this.kobbeltTriangles);
+        return Mesh.withTriangle(this.triangles)
     }
 }
