@@ -109,7 +109,7 @@ var KevinScript = {
             }
             else
             {
-                if(this.cptApush < 5) {
+                if(this.cptApush < 6) {
                     cc = new CatmullClark(this.newMesh.getVertice(),this.newMesh.getEdges(), this.newMesh.polygones); 
                     //this.newMesh.visible = false;
                     this.newMesh = cc.launchCatmullClark();
