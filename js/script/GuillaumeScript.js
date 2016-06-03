@@ -48,8 +48,8 @@ var GuillaumeScript = {
         //this.drawFacetteDeCoons(inputData2, this.otherData);
         //this.drawFacetteDeCoons(inputDataWing, this.otherData); 
         
-        var numberOfPointsTerrain = 16;
-        var heightTerrain = 16;
+        var numberOfPointsTerrain = 64;
+        var heightTerrain = 64;
         var terrain = new this.TerrainGeneration({
             width : numberOfPointsTerrain,
             height : heightTerrain,
