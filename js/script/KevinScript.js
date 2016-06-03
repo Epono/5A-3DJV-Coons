@@ -93,33 +93,33 @@ var KevinScript = {
 
 	inputs : {
 		'a' : function(me, tw){
-        
-        var cc;
-        var monOb; 
-            
-        var materialObject = new THREE.MeshPhongMaterial( { color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading, side: THREE.DoubleSide} );
+            var cc;
+            var monOb; 
 
-        if(!this.newMesh)
-        {
-             cc = new CatmullClark(me.vertice, me.edges, me.polygones);
-             this.newMesh = cc.launchCatmullClark();
-             monOb = this.newMesh.buildThreeMesh(materialObject);
-             this.cptApush = 1;
-        }
-        else
-        {
-             cc = new CatmullClark(this.newMesh.getVertice(),this.newMesh.getEdges(), this.newMesh.polygones); 
-             //this.newMesh.visible = false;
-             this.newMesh = cc.launchCatmullClark();
-             monOb = this.newMesh.buildThreeMesh(materialObject);
-             monOb.position.x = this.cptApush;
-             this.cptApush ++;
-      
-        }
+            var materialObject = new THREE.MeshPhongMaterial( { color: 0xdddddd, specular: 0x009900, shininess: 30, shading: THREE.FlatShading, side: THREE.DoubleSide} );
 
-        console.log(monOb);
-        tw.scenes.main.add(monOb);
-             
+            if(!this.newMesh)
+            {
+                cc = new CatmullClark(me.vertice, me.edges, me.polygones);
+                this.newMesh = cc.launchCatmullClark();
+                monOb = this.newMesh.buildThreeMesh(materialObject);
+                monOb.position.z = 2;
+                this.cptApush = 1;
+                tw.scenes.main.add(monOb);
+            }
+            else
+            {
+                if(this.cptApush < 5) {
+                    cc = new CatmullClark(this.newMesh.getVertice(),this.newMesh.getEdges(), this.newMesh.polygones); 
+                    //this.newMesh.visible = false;
+                    this.newMesh = cc.launchCatmullClark();
+                    monOb = this.newMesh.buildThreeMesh(materialObject);
+                    monOb.position.z = 2;
+                    monOb.position.x = this.cptApush;
+                    this.cptApush++;
+                    tw.scenes.main.add(monOb);
+                }
+            }    
 		}
 	},
 
