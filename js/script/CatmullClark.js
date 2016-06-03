@@ -12,6 +12,10 @@ class CatmullClark
         this.catmullClarkPolygones = polygones;
     }
     
+    static byMesh(mesh)
+    {
+        return new CatmullClark(mesh.getVertice(), mesh.getEdges(), mesh.polygones);
+    }
     
     // Setter
     setVertice(vertice)
