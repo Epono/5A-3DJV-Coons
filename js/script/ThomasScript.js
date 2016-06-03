@@ -72,7 +72,7 @@ var ThomasScript = {
 			]
 		);
 
-		tw.scenes.main.add(cubeMesh.buildThreeMesh());
+		//tw.scenes.main.add(cubeMesh.buildThreeMesh());
 
 
 		/**/
@@ -134,7 +134,7 @@ var ThomasScript = {
 
 		var generateCube = Mesh.getCubeMesh(5);
 		
-	    tw.scenes.main.add(generateCube.buildThreeMesh());
+	   // tw.scenes.main.add(generateCube.buildThreeMesh());
 		
 
 

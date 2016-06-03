@@ -202,8 +202,8 @@ class Mesh
 
 			var currVectices = this.sortPolygoneVertice(this.polygones[p]);//this.polygones[p].getUniqueVertices();
 			
-			console.log("Default : ", this.polygones[p].getUniqueVertices());
-			console.log("Sorted : ", currVectices);
+			//console.log("Default : ", this.polygones[p].getUniqueVertices());
+			//console.log("Sorted : ", currVectices);
 
 			var refInfo = {
 				index : -1,
@@ -462,7 +462,7 @@ class Mesh
 			res.push(vectice2Dinfos[i].point);
 			angles.push(vectice2Dinfos[i].angle);
 		}
-		console.log(angles);
+		//console.log(angles);
 		return res;
 		
 		/*
