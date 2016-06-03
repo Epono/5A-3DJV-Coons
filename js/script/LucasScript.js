@@ -168,10 +168,11 @@ var LucasScript = {
                         geometry.vertices.push(ctx.tabBackLinePoint[j]);  
                     }
                    
-
-                    var line = new THREE.Line( geometry, material );
-                    //line.visible = false;
-                    ctx.tw.scenes.main.add( line );
+                    if(this.lineBack) {
+                        this.lineBack.visible = false;
+                    }
+                    this.lineBack = new THREE.Line( geometry, material );
+                    ctx.tw.scenes.main.add( this.lineBack );
                     if(ctx.tabBackLinePoint.length == ctx.numberOfPoints) {
                         ctx.inputs['6'](ctx, ctx.tw);
                     }
@@ -208,10 +209,12 @@ var LucasScript = {
                     {
                         geometry.vertices.push(ctx.tabLeftLinePoint[j]);  
                     }
-                   
-
-                    var line = new THREE.Line( geometry, material );
-                    ctx.tw.scenes.main.add( line ); 
+                                   
+                    if(this.lineLeft) {
+                        this.lineLeft.visible = false;
+                    }
+                    this.lineLeft = new THREE.Line( geometry, material );
+                    ctx.tw.scenes.main.add( this.lineLeft );
                     if(ctx.tabLeftLinePoint.length == ctx.numberOfPoints) {
                         ctx.inputs['8'](ctx, ctx.tw);
                     }
@@ -249,9 +252,12 @@ var LucasScript = {
                         geometry.vertices.push(ctx.tabFrontLinePoint[j]);  
                     }
                    /*geometry.vertices[ctx.tabFrontLinePoint.length-1] = new THREE.Vector3(-10,geometry.vertices[ctx.tabFrontLinePoint.length-1].y,-10.0);*/
-
-                    var line = new THREE.Line( geometry, material );
-                    ctx.tw.scenes.main.add( line );
+                    
+                    if(this.lineFront) {
+                        this.lineFront.visible = false;
+                    }
+                    this.lineFront = new THREE.Line( geometry, material );
+                    ctx.tw.scenes.main.add( this.lineFront );
                     if(ctx.tabFrontLinePoint.length == ctx.numberOfPoints) {
                         ctx.inputs['4'](ctx, ctx.tw);
                     }
@@ -288,10 +294,12 @@ var LucasScript = {
                     {
                         geometry.vertices.push(ctx.tabRightLinePoint[j]);  
                     }
-                   
-
-                    var line = new THREE.Line( geometry, material );
-                    ctx.tw.scenes.main.add( line ); 
+                    
+                    if(this.lineRight) {
+                        this.lineRight.visible = false;
+                    }
+                    this.lineRight = new THREE.Line( geometry, material );
+                    ctx.tw.scenes.main.add( this.lineRight );
                     if(ctx.tabRightLinePoint.length == ctx.numberOfPoints) {
                         ctx.inputs['c'](ctx, ctx.tw);
                     }
@@ -583,6 +591,11 @@ console.log(triangles);
             this.tabForCoons = [];
            /* var totalPointToAdd = me.tabFrontLinePoint.length + me.tabLeftLinePoint.length + me.tabBackLinePoint.length + me.tabRightLinePoint.length;*/
             
+            me.lineFront.visible = false;
+            me.lineLeft.visible = false;
+            me.lineBack.visible = false;
+            me.lineRight.visible = false;
+
             for(var i = 0 ; i < me.tabFrontLinePoint.length ; i++)
             {
                 this.tabForCoons.push(me.tabFrontLinePoint[i]);

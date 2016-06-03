@@ -24,7 +24,7 @@ class CatmullClark
         this.edges = edges;
         this.catmullClarkEdges = edges;
     } 
-    setVertice(polygones)
+    setPolygones(polygones)
     {
         this.polygones = polygones;
         this.catmullClarkPolygones = polygones;    
@@ -92,7 +92,10 @@ class CatmullClark
                     }
                     
                     if(foundAnEdge)
+                    {
                         ++edgesFound;
+                        foundAnEdge = false;
+                    }
                     else
                         break;
                 }
@@ -145,7 +148,7 @@ class CatmullClark
             edges[i].setPolygone(polygone);
     }
     
-        // Calcul de tous les face/edge/vertex points
+    // Calcul de tous les face/edge/vertex points
     computeCatmullClarkPoints()
     {   
         // Calcul des tous les face points
@@ -299,8 +302,7 @@ class CatmullClark
     
     // Lancer l'algo de subdivision Catmull-Clark
     launchCatmullClark()
-    {
-        
+    {     
         this.setListsBeforeLauchingAlgo();
         
         this.computeCatmullClarkPoints();
@@ -311,7 +313,6 @@ class CatmullClark
         
         this.generateCatmullClarkPolygones();        
         
-        return new Mesh(this.catmullClarkPolygones);
-        
+        return new Mesh(this.catmullClarkPolygones);       
     }
 }
