@@ -100,7 +100,7 @@ var GuillaumeScript = {
         }
         
         var meshTerrain = new THREE.Mesh(geometryTerrain, materialTerrain);
-        console.log(geometryTerrain);
+        //console.log(geometryTerrain);
         //tw.scenes.main.add(meshTerrain);
         
         // Catmul clark
@@ -111,7 +111,7 @@ var GuillaumeScript = {
         var trianglesKevin = [];
         
         for(var i = 0; i < verticesTerrain.length; ++i) {
-            var vertex = new Vertex(verticesTerrain[i].x, verticesTerrain[i].y, verticesTerrain[i].z);
+            var vertex = new Vertex(verticesTerrain[i].x, verticesTerrain[i].y, verticesTerrain[i].z);     
             verticesKevin.push(vertex);
             verticeTerrainToVerticesKevin[i] = vertex;
         }
@@ -120,37 +120,54 @@ var GuillaumeScript = {
             var vertice0 = verticeTerrainToVerticesKevin[triangles[i]];
             var vertice1 = verticeTerrainToVerticesKevin[triangles[i+1]];
             var vertice2 = verticeTerrainToVerticesKevin[triangles[i+2]];    
-           
-            var edgesTriangleTemp = [];
-              
-            var edge1 = this.findEdge(vertice0, vertice1, edgesKevin);
-            if(!edge1) {
-                var edge1 = new Edge(vertice0, vertice1);
-            }
-            edgesTriangleTemp.push(edge1);
-           
-            var edge2 = this.findEdge(vertice1, vertice2, edgesKevin);
-            if(!edge2   ) {
-                var edge2 = new Edge(vertice1, vertice2);
-            }
-            edgesTriangleTemp.push(edge2);
-           
-            var edge3 = this.findEdge(vertice2, vertice0, edgesKevin);
-            if(!edge3) {
-                var edge3 = new Edge(vertice2, vertice0);
-            }
-            edgesTriangleTemp.push(edge3);
-           
-            if(!this.hasTriangle(edgesTriangleTemp, trianglesKevin)) {
-                var triangle = new Triangle(edge1, edge2, edge3);
-                trianglesKevin.push(triangle);
-            }
+            
+           if(vertice0 != null && vertice1 != null && vertice1 != null) 
+           {
+                var edgesTriangleTemp = [];
+
+                var edge1 = this.findEdge(vertice0, vertice1, edgesKevin);
+                if(edge1 == null) 
+                {
+                    edge1 = new Edge(vertice0, vertice1);
+                    edgesKevin.push(edge1);
+                }
+
+                var edge2 = this.findEdge(vertice1, vertice2, edgesKevin);
+                if(edge2 == null) 
+                {
+                    edge2 = new Edge(vertice1, vertice2);
+                    edgesKevin.push(edge2);
+                }
+
+                var edge3 = this.findEdge(vertice2, vertice0, edgesKevin);
+                if(edge3 == null) 
+                {
+                    edge3 = new Edge(vertice2, vertice0);
+                    edgesKevin.push(edge3);
+                }
+
+               if(edge1 != null && edge2 != null && edge3 != null)
+               {
+                    edgesTriangleTemp.push(edge1);
+                    edgesTriangleTemp.push(edge2);
+                    edgesTriangleTemp.push(edge3);
+
+                    if(!this.hasTriangle(edgesTriangleTemp, trianglesKevin)) 
+                    {
+                        var triangle = new Triangle(edge1, edge2, edge3);
+                        trianglesKevin.push(triangle);
+                    }
+               }
+           }
         }
         
         this.setAllBidule(trianglesKevin);
+        
         var kobbelt = new Kobbelt(verticesKevin, edgesKevin, trianglesKevin);
-        console.log(kobbelt);
+        //console.log(kobbelt);
+        
         var mesh = kobbelt.launchKobbelt();
+        //console.log(kobbelt);
         console.log(mesh);
     },
 
