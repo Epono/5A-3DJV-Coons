@@ -76,7 +76,7 @@ var KevinScript = {
         plane.rotation.x = Math.PI / 2;
         plane.position.y = - 0.1;
         tw.scenes.main.add( plane );
-        
+        // Super
         //tw.scenes.main.add(new Mesh(polygones).buildThreeMesh());
         tw.scenes.main.add(newMesh3.buildThreeMesh());
 	},
