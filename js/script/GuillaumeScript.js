@@ -48,10 +48,11 @@ var GuillaumeScript = {
         //this.drawFacetteDeCoons(inputData2, this.otherData);
         //this.drawFacetteDeCoons(inputDataWing, this.otherData); 
         
-        var numberOfPointsTerrain = 64;
+        var numberOfPointsTerrain = 16;
+        var heightTerrain = 16;
         var terrain = new this.TerrainGeneration({
             width : numberOfPointsTerrain,
-            height : numberOfPointsTerrain,
+            height : heightTerrain,
             segments : numberOfPointsTerrain,
             smoothingFactor : 32,
         });
@@ -116,25 +117,40 @@ var GuillaumeScript = {
         }
         
        for(var i = 0; i < triangles.length; i+=3) {
-           // TODO: pas de double d'edges !
-            var edge1 = new Edge(verticeTerrainToVerticesKevin[triangles[i]], verticeTerrainToVerticesKevin[triangles[i+1]]);
-            var edge2 = new Edge(verticeTerrainToVerticesKevin[triangles[i+1]], verticeTerrainToVerticesKevin[triangles[i+2]]);
-            var edge3 = new Edge(verticeTerrainToVerticesKevin[triangles[i+2]], verticeTerrainToVerticesKevin[triangles[i]]);
+            var vertice0 = verticeTerrainToVerticesKevin[triangles[i]];
+            var vertice1 = verticeTerrainToVerticesKevin[triangles[i+1]];
+            var vertice2 = verticeTerrainToVerticesKevin[triangles[i+2]];    
            
-           edgesKevin.push(edge1);
-           edgesKevin.push(edge2);
-           edgesKevin.push(edge3);
+            var edgesTriangleTemp = [];
+              
+            var edge1 = this.findEdge(vertice0, vertice1, edgesKevin);
+            if(!edge1) {
+                var edge1 = new Edge(vertice0, vertice1);
+            }
+            edgesTriangleTemp.push(edge1);
            
-           var triangle = new Triangle(edge1, edge2, edge3);
-                      
-           trianglesKevin.push(triangle);
+            var edge2 = this.findEdge(vertice1, vertice2, edgesKevin);
+            if(!edge2   ) {
+                var edge2 = new Edge(vertice1, vertice2);
+            }
+            edgesTriangleTemp.push(edge2);
+           
+            var edge3 = this.findEdge(vertice2, vertice0, edgesKevin);
+            if(!edge3) {
+                var edge3 = new Edge(vertice2, vertice0);
+            }
+            edgesTriangleTemp.push(edge3);
+           
+            if(!this.hasTriangle(edgesTriangleTemp, trianglesKevin)) {
+                var triangle = new Triangle(edge1, edge2, edge3);
+                trianglesKevin.push(triangle);
+            }
         }
         
-        // TODO: remplir les edges et les vertices, toussa
-        
-        //var catmullClark = new CatmullClark(verticesKevin, edgesKevin, trianglesKevin);
-        //var mesh = catmullClark.launchCatmullClark();
-        //console.log(mesh);
+        this.setAllBidule(trianglesKevin);
+        var kobbelt = new Kobbelt(verticesKevin, edgesKevin, trianglesKevin);
+        var mesh = kobbelt.launchKobbelt();
+        console.log(mesh);
     },
 
 	update : function ( tw , deltaTime )
@@ -589,5 +605,85 @@ var GuillaumeScript = {
         }
         
         return terrain;
+    },
+    
+    setAllBidule : function(triangles)
+        {
+            var triangle = null;
+            var edges = null;
+            var edge = null;
+            for(var i = 0; i < triangles.length; ++i)
+            {
+                triangle = triangles[i];
+                edges = triangle.getEdges();
+
+                for(var j = 0; j < edges.length; ++j)
+                {
+                    edge = edges[j];
+                    
+                    edge.setTriangle(triangle);
+
+                    if(edge.v1.incidentEdges.indexOf(edge) < 0)
+                        edge.v1.pushIncidentEdge(edge);
+
+                    if(edge.v2.incidentEdges.indexOf(edge) < 0)
+                        edge.v2.pushIncidentEdge(edge);
+                }
+            }
+        },
+    
+    findEdge : function(v1, v2, edges) {
+        // parcourt de chaque edges
+        for(var i = 0; i < edges.length; ++i)
+        {
+            var tmpEdge = edges[i];
+
+            // Comparaison des id des vertices
+            if((v1.id == tmpEdge.v1.id && v2.id == tmpEdge.v2.id) || (v1.id == tmpEdge.v2.id && v2.id == tmpEdge.v1.id))
+            //if((v1 === tmpEdge.v1 || v1 === tmpEdge.v2) && (v2 === tmpEdge.v1 || v2 === tmpEdge.v2))
+            {
+                return tmpEdge;
+            }
+        }
+        return null;
+    },
+    
+    hasTriangle : function(edges, triangles) {
+        var edgesFound = 0;
+        var foundAnEdge = false;
+        // parcourt de chaque triangle
+        for(var i = 0; i < triangles.length; ++i)
+        {
+            var tmpEdges = triangles[i].getEdges;
+            edgesFound = 0;
+            foundAnEdge = false;
+            
+            if(edges.length == tmpEdges.length)
+            {
+                for(var j = 0; j < edges.length; ++j)
+                {
+                    for(var k = 0; k < tmpEdges.length; ++k)
+                    {
+                        if(edges[j].id == tmpEdges[k].id)
+                        {
+                            foundAnEdge = true;
+                            break;
+                        }
+                    }
+                    
+                    if(foundAnEdge)
+                    {
+                        ++edgesFound;
+                        foundAnEdge = false;
+                    }
+                    else
+                        break;
+                }
+                
+                if(edgesFound == edges.length)
+                    return true;
+            }
+        }
+        return false;
     }
 }
